@@ -18,6 +18,7 @@ export default function Home() {
         <main className={`${styles.main} ${inter.className}`}>
           <div className={styles.title}>
             <Link href="/pkw-partikelfilter">PKW Partikelfilter</Link>
+            <div> 03.09 16.54</div>
           </div>
           <div className={styles.description}>
             <p>
