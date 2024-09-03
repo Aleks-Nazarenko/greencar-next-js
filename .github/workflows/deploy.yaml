@@ -1,0 +1,39 @@
+name: Build and Deploy Next.js
+
+on:
+  #push:
+    #branches:
+    #  - master  # The branch you want to trigger deployments from
+  workflow_dispatch:  # This trigger allows you to manually run the workflow
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: v20.x  # Adjust to the version you use
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Build Next.js application
+        run: npm run build
+
+      - name: Deploy to LAMP server
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+          SERVER_USER: ${{ secrets.SERVER_USER }}
+          SERVER_HOST: ${{ secrets.SERVER_HOST }}
+          SERVER_PATH: ${{ secrets.SERVER_PATH }}
+        run: |
+          mkdir -p ~/.ssh
+          echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          ssh-keyscan $SERVER_HOST >> ~/.ssh/known_hosts
+          rsync -avz out/ $SERVER_USER@$SERVER_HOST:$SERVER_PATH
