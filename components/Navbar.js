@@ -26,9 +26,13 @@ export default function NavbarNazarenko() {
                                 </Link>
                             </NavDropdown.Item>
                         </NavDropdown>
-                        <Link href="/about" passHref legacyBehavior>
-                            <a className="nav-link">About</a>
-                        </Link>
+                        <NavDropdown title="Informationen">
+                            <NavDropdown.Item >
+                                <Link href="/partikelfilter-info/filter-lkw-infos" passHref legacyBehavior>
+                                    <a className="nav-link">Über GREENCAR</a>
+                                </Link>
+                            </NavDropdown.Item>
+                        </NavDropdown>
                         <Link href="/kontakt-greencar" passHref legacyBehavior>
                             <a className="nav-link">Kontakt</a>
                         </Link>
