@@ -10,7 +10,7 @@ const inter = Inter({ subsets: ["latin"] });
 export async function getStaticProps() {
     // Fetch data from Joomla API
     const res = await axios.get('https://joomla.nazarenko.de/index.php?option=com_nazarenkoapi&view=products&format=json');
-    const products = res.data;
+    const products = await res.data;
     console.log(products);
     // Pass data to the page via props
     return { props: { products } };

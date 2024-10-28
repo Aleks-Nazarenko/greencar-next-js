@@ -23,7 +23,7 @@ export default function Products({ products }) {
                 <div>
                     <h1>PKW</h1>
                     <div className={styles.title}>
-                        <Link href="/pkw-partikelfilter/nachruestfilter">PKW Partikelfilter</Link>
+                        <Link href="/pkw-partikelfilter/pkw-nachruestfilter">PKW Nachrüstfilter</Link>
                     </div>
                 </div>
             </main>

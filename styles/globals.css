@@ -100,8 +100,11 @@ a {
   text-decoration: none;
 }
 
+.container-greencar{max-width: 1000px; background: #daeffb}
+
 @media (prefers-color-scheme: dark) {
   html {
     color-scheme: dark;
   }
 }
+
