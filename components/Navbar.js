@@ -29,8 +29,8 @@ export default function NavbarNazarenko() {
                         <Link href="/about" passHref legacyBehavior>
                             <a className="nav-link">About</a>
                         </Link>
-                        <Link href="/contact" passHref legacyBehavior>
-                            <a className="nav-link">Contact</a>
+                        <Link href="/kontakt-greencar" passHref legacyBehavior>
+                            <a className="nav-link">Kontakt</a>
                         </Link>
                     </Nav>
                 </Navbar.Collapse>
