@@ -22,13 +22,13 @@ export async function getStaticPaths() {
 }
 export async function getStaticProps({ params }) {
     // Base URL of your Joomla server (adjust this to your Joomla installation URL)
-    const joomlaBaseUrl = 'https://joomla.nazarenko.de';
+    const joomlaBaseUrl = 'https://joomla2.nazarenko.de';
     // Fetch data from Joomla API
-    const res = await axios.get(`https://joomla.nazarenko.de/index.php?option=com_nazarenkoapi&view=product&code=${params.slug}&format=json`);
+    const res = await axios.get(`https://joomla2.nazarenko.de/index.php?option=com_nazarenkoapi&view=product&code=${params.slug}&format=json`);
     const product = res.data;
    // console.log(product);
     // Fetch data for the footer from Joomla API
-    const resFooter = await fetch('https://joomla.nazarenko.de/index.php?option=com_nazarenkoapi&task=articleWithModules&id=4&format=json');
+    const resFooter = await fetch('https://joomla2.nazarenko.de/index.php?option=com_nazarenkoapi&task=articleWithModules&id=2&format=json');
     const footerData = await resFooter.json();
     // Extract the footer article from the response
     const footerArticle = footerData.article || null;

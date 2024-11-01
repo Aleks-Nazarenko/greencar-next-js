@@ -2,7 +2,7 @@ import { convertRelativeUrls } from '@/utils/convertRelativeUrls';
 
 export async function getStaticProps() {
     // Fetch data from Joomla API
-    const res = await fetch('https://joomla.nazarenko.de/index.php?option=com_nazarenkoapi&task=articleWithModules&id=4&format=json');
+    const res = await fetch('https://joomla2.nazarenko.de/index.php?option=com_nazarenkoapi&task=articleWithModules&id=2&format=json');
     const data= await res.json();
     console.log("API Response FOOTER:", data);
 
@@ -10,7 +10,7 @@ export async function getStaticProps() {
     const article = data.article || null;
 
     // Base URL of your Joomla server (adjust this to your Joomla installation URL)
-    const joomlaBaseUrl = 'https://joomla.nazarenko.de';
+    const joomlaBaseUrl = 'https://joomla2.nazarenko.de';
 
     // Convert relative URLs in the article content to absolute URLs
     if (article && article.introtext) {
