@@ -12,8 +12,8 @@ export async function getStaticProps() {
     // Base URL of your Joomla server (adjust this to your Joomla installation URL)
     const joomlaBaseUrl = 'https://joomla2.nazarenko.de';
     // Fetch data from Joomla API
-    const res = await axios.get('https://joomla2.nazarenko.de/index.php?option=com_nazarenkoapi&view=products&format=json');
-    const products = await res.data;
+    const res = await axios.get('https://joomla2.nazarenko.de/index.php?option=com_nazarenkoapi&task=getSubcategories&category_id=15&format=json');
+    const categories = await res.data;
   //  console.log(products);
 
     // Fetch data for the footer from Joomla API
@@ -27,11 +27,11 @@ export async function getStaticProps() {
         footerArticle.introtext = convertRelativeUrls(footerArticle.introtext, joomlaBaseUrl);
     }
     // Pass data to the page via props
-    return { props: { products, footerArticle } };
+    return { props: { categories, footerArticle } };
 }
 
 
-export default function Products({ products, footerArticle }) {
+export default function NachruestfilterCategories({ categories, footerArticle }) {
     return (
         <>
             <main>
@@ -39,9 +39,9 @@ export default function Products({ products, footerArticle }) {
                     <div className="row g-0 p-4">
                         <h1>PKW - Nachrüstfilter</h1>
                         <ul>
-                            {products.map(product => (
-                                <li key={product.product_id}>
-                                    <Link href={`/pkw-partikelfilter/pkw-nachruestfilter/${product.product_code}`}>{product.product_name}</Link>
+                            {categories.map(category => (
+                                <li key={category.category_id}>
+                                    <Link href={`/pkw-partikelfilter/pkw-nachruestfilter/${category.category_id}-${category.category_name.toLowerCase()}`}>{category.category_name}</Link>
                                 </li>
                             ))}
                         </ul>

@@ -10,23 +10,30 @@ import {convertRelativeUrls} from "@/utils/convertRelativeUrls";
 const inter = Inter({ subsets: ["latin"] });
 
 export async function getStaticPaths() {
-    // Fetch the list of products
-    const res = await axios.get('https://joomla.nazarenko.de/index.php?option=com_nazarenkoapi&view=products&format=json');
-    const products = res.data;
-
-    // Generate paths with `id` param
-    const paths = products.map(product => ({
-        params: { slug: product.product_code},
+    // Fetch categories dynamically from your Joomla API
+    const res = await axios.get('https://joomla2.nazarenko.de/index.php?option=com_nazarenkoapi&task=getSubcategories&category_id=15&format=json');
+    const categories = await res.data;
+    // Map the fetched categories to paths with the `id-name` format
+    const paths = categories.map((category) => ({
+        params: {
+            "id-name": `${category.category_id}-${category.category_name.toLowerCase().replace(/\s+/g, '-')}`
+        },
     }));
-    return { paths, fallback: false };
+
+    return {
+        paths,
+        fallback: false,
+    };
 }
 export async function getStaticProps({ params }) {
     // Base URL of your Joomla server (adjust this to your Joomla installation URL)
     const joomlaBaseUrl = 'https://joomla2.nazarenko.de';
-    // Fetch data from Joomla API
-    const res = await axios.get(`https://joomla2.nazarenko.de/index.php?option=com_nazarenkoapi&view=product&code=${params.slug}&format=json`);
-    const product = res.data;
-   // console.log(product);
+    // Split `id-name` into `id` and `name`
+    const [id, name] = params["id-name"].split('-');
+    // Fetch data based on the extracted ID
+    const res = await axios.get(`https://joomla2.nazarenko.de/index.php?option=com_nazarenkoapi&task=getSubcategories&category_id=${id}`);
+    const subcategories = await res.data;
+
     // Fetch data for the footer from Joomla API
     const resFooter = await fetch('https://joomla2.nazarenko.de/index.php?option=com_nazarenkoapi&task=articleWithModules&id=2&format=json');
     const footerData = await resFooter.json();
@@ -38,11 +45,18 @@ export async function getStaticProps({ params }) {
         footerArticle.introtext = convertRelativeUrls(footerArticle.introtext, joomlaBaseUrl);
     }
     // Pass data to the page via props
-    return { props: { product, footerArticle } };
+    return {
+        props: {
+            subcategories,
+            categoryId: id,
+            categoryName: name,
+            footerArticle,
+        },
+    };
 }
 
 
-function Product({ product, footerArticle }) {
+function NachruestfilterSubcategories({ subcategories, categoryId, categoryName, footerArticle }) {
     const router = useRouter();
 
     if (router.isFallback) {
@@ -57,7 +71,14 @@ function Product({ product, footerArticle }) {
             <main>
                 <div className="container-fluid container-greencar">
                     <div className="row g-0 p-4">
-                        <h1>{product.product_name}</h1>
+                        <h1>{categoryName}</h1>
+                        <ul>
+                            {subcategories.map((subcategory) => (
+                                <li key={subcategory.category_id}>
+                                    <h2>{subcategory.category_name}</h2>
+                                </li>
+                            ))}
+                        </ul>
                     </div>
                 </div>
             </main>
@@ -72,4 +93,4 @@ function Product({ product, footerArticle }) {
     );
 }
 
-export default Product;
+export default NachruestfilterSubcategories;
