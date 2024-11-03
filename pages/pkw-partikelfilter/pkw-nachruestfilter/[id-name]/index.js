@@ -31,7 +31,7 @@ export async function getStaticProps({ params }) {
     // Split `id-name` into `id` and `name`
     const [id, name] = params["id-name"].split('-');
     // Fetch data based on the extracted ID
-    const res = await axios.get(`https://joomla2.nazarenko.de/index.php?option=com_nazarenkoapi&task=getSubcategories&category_id=${id}`);
+    const res = await axios.get(`https://joomla2.nazarenko.de/index.php?option=com_nazarenkoapi&task=getSubcategories&category_id=${id}&format=json`);
     const subcategories = await res.data;
 
     // Fetch data for the footer from Joomla API
@@ -75,7 +75,8 @@ function NachruestfilterSubcategories({ subcategories, categoryId, categoryName,
                         <ul>
                             {subcategories.map((subcategory) => (
                                 <li key={subcategory.category_id}>
-                                    <h2>{subcategory.category_name}</h2>
+                                    <Link href={`/pkw-partikelfilter/pkw-nachruestfilter/${categoryId}-${categoryName.toLowerCase()}/${subcategory.category_id}-${subcategory.category_name.toLowerCase().replace(/\s+/g, '-')}`}>{subcategory.category_name}</Link>
+
                                 </li>
                             ))}
                         </ul>
