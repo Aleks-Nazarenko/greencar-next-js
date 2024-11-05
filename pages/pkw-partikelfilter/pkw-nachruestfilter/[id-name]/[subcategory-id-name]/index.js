@@ -54,6 +54,12 @@ export async function getStaticProps({ params }) {
     // Fetch the products for the specified subcategory
     const res = await fetch(`https://joomla2.nazarenko.de/index.php?option=com_nazarenkoapi&task=getProductsBySubcategory&subcategory_id=${subcategoryId}&format=json`);
     const products = await res.json();
+    // Fetch all categories for the main category dropdown
+    const resCategories = await fetch('https://joomla2.nazarenko.de/index.php?option=com_nazarenkoapi&task=getSubcategories&category_id=15&format=json');
+    const categories = await resCategories.json();
+    // Fetch subcategories for the current category for the subcategory dropdown
+    const resSubcategories = await fetch(`https://joomla2.nazarenko.de/index.php?option=com_nazarenkoapi&task=getSubcategories&category_id=${categoryId}&format=json`);
+    const subcategories = await resSubcategories.json();
 
     // Fetch data for the footer from Joomla API
     const resFooter = await fetch('https://joomla2.nazarenko.de/index.php?option=com_nazarenkoapi&task=articleWithModules&id=2&format=json');
@@ -74,16 +80,72 @@ export async function getStaticProps({ params }) {
             subcategoryName: params["subcategory-id-name"].split('-').slice(1).join('-'), // Display-friendly name
             subcategoryId,
             footerArticle,
+            categories,
+            subcategories,
         },
 
     };
 }
 
-export default function ProductListPage({ products, categoryName, categoryId, subcategoryName, subcategoryId, footerArticle  }) {
+export default function ProductListPage({ products, categoryName, categoryId, subcategoryName, subcategoryId, footerArticle, categories, subcategories  }) {
+    const router = useRouter();
+    const handleCategoryChange = (event) => {
+        const selectedCategory = event.target.value;
+        if (selectedCategory) {
+            router.push(`/pkw-partikelfilter/pkw-nachruestfilter/${selectedCategory}`);
+        }
+    };
+    const handleSubcategoryChange = (event) => {
+        const selectedSubcategory = event.target.value;
+        if (selectedSubcategory) {
+            router.push(`/pkw-partikelfilter/pkw-nachruestfilter/${categoryId}-${categoryName}/${selectedSubcategory}`);
+        }
+    };
     return (
         <>
             <main>
                 <div className="container-fluid container-greencar">
+                    <div className="row g-0 p-4">
+                        <h1>Products in {subcategoryName}</h1>
+
+                        {/* Category Select */}
+                        <div>
+                            <select
+                                id="categorySelect"
+                                onChange={handleCategoryChange}
+                                value={`${categoryId}-${categoryName.toLowerCase()}`}
+                            >
+                                <option value="" disabled>- Hersteller PKW -</option>
+                                {categories.map((category) => (
+                                    <option
+                                        key={category.category_id}
+                                        value={`${category.category_id}-${category.category_name.toLowerCase().replace(/\s+/g, '-')}`}
+                                    >
+                                        {category.category_name}
+                                    </option>
+                                ))}
+                            </select>
+                        </div>
+
+                        {/* Subcategory Select */}
+                        <div>
+                            <select
+                                id="subcategorySelect"
+                                onChange={handleSubcategoryChange}
+                                value={`${subcategoryId}-${subcategoryName.toLowerCase()}`}
+                            >
+                                <option value="" disabled>- Modellreihe -</option>
+                                {subcategories.map((subcategory) => (
+                                    <option
+                                        key={subcategory.category_id}
+                                        value={`${subcategory.category_id}-${subcategory.category_name.toLowerCase().replace(/\s+/g, '-')}`}
+                                    >
+                                        {subcategory.category_name}
+                                    </option>
+                                ))}
+                            </select>
+                        </div>
+                    </div>
                     <div className="row g-0 p-4">
                         <h1>Products in {subcategoryName}</h1>
                         <table>
@@ -104,9 +166,7 @@ export default function ProductListPage({ products, categoryName, categoryId, su
                                         />
                                     </td>
                                     <td>
-                                        <a
-                                            href={`/pkw-partikelfilter/pkw-nachruestfilter/${categoryId}-${categoryName}/${subcategoryId}-${subcategoryName}/${product.product_id}-${product.product_name.toLowerCase().replace(/\s+/g, '-')}`}
-                                        >
+                                        <a href={`/pkw-partikelfilter/pkw-nachruestfilter/${categoryId}-${categoryName}/${subcategoryId}-${subcategoryName}/${product.product_id}-${product.product_name.toLowerCase().replace(/\s+/g, '-')}`}>
                                             {product.product_name}
                                         </a>
                                     </td>

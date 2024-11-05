@@ -5,6 +5,7 @@ import styles from "@/styles/Home.module.css";
 import axios from 'axios';
 import Link from "next/link";
 import {convertRelativeUrls} from "@/utils/convertRelativeUrls";
+import { useRouter } from 'next/router';
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -32,6 +33,14 @@ export async function getStaticProps() {
 
 
 export default function NachruestfilterCategories({ categories, footerArticle }) {
+    const router = useRouter();
+
+    const handleCategoryChange = (event) => {
+        const selectedCategory = event.target.value;
+        if (selectedCategory) {
+            router.push(`/pkw-partikelfilter/pkw-nachruestfilter/${selectedCategory}`);
+        }
+    };
     return (
         <>
             <main>
@@ -45,6 +54,21 @@ export default function NachruestfilterCategories({ categories, footerArticle })
                                 </li>
                             ))}
                         </ul>
+                        <select
+                            id="categorySelect"
+                            onChange={handleCategoryChange}
+                            defaultValue="" // Add a default option
+                        >
+                            <option value="" disabled>- Hersteller PKW -</option>
+                            {categories.map(category => (
+                                <option
+                                    key={category.category_id}
+                                    value={`${category.category_id}-${category.category_name.toLowerCase().replace(/\s+/g, '-')}`}
+                                >
+                                    {category.category_name}
+                                </option>
+                            ))}
+                        </select>
                     </div>
                 </div>
             </main>
