@@ -92,7 +92,7 @@ function NachruestfilterSubcategories({ subcategories, categories, categoryId, c
                         <ul>
                             {subcategories.map((subcategory) => (
                                 <li key={subcategory.category_id}>
-                                    <Link href={`/pkw-partikelfilter/pkw-nachruestfilter/${categoryId}-${categoryName.toLowerCase()}/${subcategory.category_id}-${subcategory.category_name.toLowerCase().replace(/\s+/g, '-')}`}>{subcategory.category_name}</Link>
+                                    <Link href={`/pkw-partikelfilter/pkw-nachruestfilter/${categoryId}-${categoryName.toLowerCase()}/${subcategory.category_id}-${subcategory.category_name.toLowerCase().replace(/\s+/g, '-').replace(/\//g, '-')}`}>{subcategory.category_name}</Link>
 
                                 </li>
                             ))}
@@ -126,7 +126,7 @@ function NachruestfilterSubcategories({ subcategories, categories, categoryId, c
                                 {subcategories.map((subcategory) => (
                                     <option
                                         key={subcategory.category_id}
-                                        value={`${subcategory.category_id}-${subcategory.category_name.toLowerCase().replace(/\s+/g, '-')}`}
+                                        value={`${subcategory.category_id}-${subcategory.category_name.toLowerCase().replace(/\s+/g, '-').replace(/\//g, '-')}`}
                                     >
                                         {subcategory.category_name}
                                     </option>

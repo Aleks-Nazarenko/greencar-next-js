@@ -18,6 +18,15 @@ function ProductImage({ src, alt, fallback }) {
         <img src={imgSrc} alt={alt}  />
     );
 }
+function replaceSlashesExceptTrailing(str) {
+    const hasTrailingSlash = str.endsWith('/');
+    // Remove the trailing slash temporarily for processing
+    const modifiedStr = hasTrailingSlash ? str.slice(0, -1) : str;
+    // Replace all other slashes with hyphens
+    const result = modifiedStr.replace(/\//g, '-');
+    // Add the trailing slash back if it was present
+    return hasTrailingSlash ? result + '/' : result;
+}
 export async function getStaticPaths() {
     const res = await fetch(`https://joomla2.nazarenko.de/index.php?option=com_nazarenkoapi&task=getSubcategories&category_id=15&format=json`);
     const categories = await res.json();
@@ -33,7 +42,7 @@ export async function getStaticPaths() {
             paths.push({
                 params: {
                     "id-name": `${category.category_id}-${category.category_name.toLowerCase().replace(/\s+/g, '-')}`,
-                    "subcategory-id-name": `${subcategory.category_id}-${subcategory.category_name.toLowerCase().replace(/\s+/g, '-')}`
+                    "subcategory-id-name": `${subcategory.category_id}-${subcategory.category_name.toLowerCase().replace(/\s+/g, '-').replace(/\//g, '-')}`
                 },
             });
         });
@@ -119,7 +128,7 @@ export default function ProductListPage({ products, categoryName, categoryId, su
                                 {categories.map((category) => (
                                     <option
                                         key={category.category_id}
-                                        value={`${category.category_id}-${category.category_name.toLowerCase().replace(/\s+/g, '-')}`}
+                                        value={`${category.category_id}-${category.category_name.toLowerCase().replace(/\s+/g, '-').replace(/\//g, '-')}`}
                                     >
                                         {category.category_name}
                                     </option>
@@ -138,7 +147,7 @@ export default function ProductListPage({ products, categoryName, categoryId, su
                                 {subcategories.map((subcategory) => (
                                     <option
                                         key={subcategory.category_id}
-                                        value={`${subcategory.category_id}-${subcategory.category_name.toLowerCase().replace(/\s+/g, '-')}`}
+                                        value={`${subcategory.category_id}-${subcategory.category_name.toLowerCase().replace(/\s+/g, '-').replace(/\//g, '-')}`}
                                     >
                                         {subcategory.category_name}
                                     </option>
