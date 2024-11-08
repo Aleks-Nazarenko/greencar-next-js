@@ -24,6 +24,9 @@ export default function NavbarNazarenko() {
                                 <Link href="/pkw-partikelfilter/pkw-nachruestfilter" passHref legacyBehavior>
                                     <a className="nav-link">Preisliste PKW Nachrüstfilter</a>
                                 </Link>
+                                <Link href="/pkw-partikelfilter/pkw-austauschfilter" passHref legacyBehavior>
+                                    <a className="nav-link">Preisliste PKW Austauschfilter</a>
+                                </Link>
                             </NavDropdown.Item>
                         </NavDropdown>
                         <NavDropdown title="Informationen">

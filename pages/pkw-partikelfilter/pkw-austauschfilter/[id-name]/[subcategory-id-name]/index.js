@@ -28,7 +28,7 @@ function replaceSlashesExceptTrailing(str) {
     return hasTrailingSlash ? result + '/' : result;
 }
 export async function getStaticPaths() {
-    const res = await fetch(`https://joomla2.nazarenko.de/index.php?option=com_nazarenkoapi&task=getSubcategories&category_id=15&format=json`);
+    const res = await fetch(`https://joomla2.nazarenko.de/index.php?option=com_nazarenkoapi&task=getSubcategories&category_id=70&format=json`);
     const categories = await res.json();
     // Step 2: For each category, fetch its subcategories
     const paths = [];
@@ -69,7 +69,7 @@ export async function getStaticProps({ params }) {
     const products = await res.json();
 
     // Fetch all categories for the main category dropdown
-    const resCategories = await fetch('https://joomla2.nazarenko.de/index.php?option=com_nazarenkoapi&task=getSubcategories&category_id=15&format=json');
+    const resCategories = await fetch('https://joomla2.nazarenko.de/index.php?option=com_nazarenkoapi&task=getSubcategories&category_id=70&format=json');
     const categories = await resCategories.json();
 
     // Fetch subcategories for the current category for the subcategory dropdown
@@ -106,13 +106,13 @@ export default function ProductListPage({ products, categoryName, categoryId, su
     const handleCategoryChange = (event) => {
         const selectedCategory = event.target.value;
         if (selectedCategory) {
-            router.push(`/pkw-partikelfilter/pkw-nachruestfilter/${selectedCategory}`);
+            router.push(`/pkw-partikelfilter/pkw-austauschfilter/${selectedCategory}`);
         }
     };
     const handleSubcategoryChange = (event) => {
         const selectedSubcategory = event.target.value;
         if (selectedSubcategory) {
-            router.push(`/pkw-partikelfilter/pkw-nachruestfilter/${categoryId}-${categoryName}/${selectedSubcategory}`);
+            router.push(`/pkw-partikelfilter/pkw-austauschfilter/${categoryId}-${categoryName}/${selectedSubcategory}`);
         }
     };
     return (
@@ -180,7 +180,7 @@ export default function ProductListPage({ products, categoryName, categoryId, su
                                         />
                                     </td>
                                     <td>
-                                        <a href={`/pkw-partikelfilter/pkw-nachruestfilter/${categoryId}-${categoryName}/${subcategoryId}-${subcategoryName}/${product.product_id}-${product.product_name.toLowerCase().replace(/\s+/g, '-')}`}>
+                                        <a href={`/pkw-partikelfilter/pkw-austauschfilter/${categoryId}-${categoryName}/${subcategoryId}-${subcategoryName}/${product.product_id}-${product.product_name.toLowerCase().replace(/\s+/g, '-')}`}>
                                             {product.product_name}
                                         </a>
                                     </td>

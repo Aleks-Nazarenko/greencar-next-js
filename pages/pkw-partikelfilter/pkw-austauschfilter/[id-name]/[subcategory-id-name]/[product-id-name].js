@@ -13,14 +13,14 @@ function ProductImage({ src, alt, fallback, className }) {
     }, [src, fallback]);
 
     return (
-        <img src={imgSrc} alt={alt} className={className} />
+        <img src={imgSrc} alt={alt}  className={className}/>
     );
 }
 export async function getStaticPaths() {
     const paths = [];
 
     // Step 1: Fetch all categories
-    const categoryRes = await fetch(`https://joomla2.nazarenko.de/index.php?option=com_nazarenkoapi&task=getSubcategories&category_id=15&format=json`);
+    const categoryRes = await fetch(`https://joomla2.nazarenko.de/index.php?option=com_nazarenkoapi&task=getSubcategories&category_id=70&format=json`);
     const categories = await categoryRes.json();
 
     // Step 2: Fetch subcategories for each category
@@ -95,7 +95,7 @@ export default function ProductPage({ product, footerArticle }) {
                                 src={`https://joomla2.nazarenko.de/media/com_hikashop/upload/${product.product_image}`}
                                 alt={product.product_name}
                                 fallback="https://joomla2.nazarenko.de/media/com_hikashop/upload/beispielphoto.jpg"
-                        />
+                            />
                         </p>
                         <p>{product.product_description}</p>
                         <p>Price: ${product.price_value}</p>
