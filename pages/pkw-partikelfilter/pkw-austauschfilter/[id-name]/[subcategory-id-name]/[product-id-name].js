@@ -83,6 +83,83 @@ export async function getStaticProps({ params }) {
 
 export default function ProductPage({ product, footerArticle }) {
     const router = useRouter();
+    // Constants for pricing
+    const formatPrice = (price) => {
+        return new Intl.NumberFormat('de-DE', {
+            style: 'currency',
+            currency: 'EUR',
+        }).format(price);
+    };
+    const BASE_PRICE = 449.00; // Base product price
+    const DELIVERY_COST = 29.75; // Delivery cost
+    const DEPOSIT_COST = 523.60; // Deposit cost
+    const INSTALLATION_COST = 226.10; // Cost for installation
+
+    // State to manage form selections
+    const [installationOption, setInstallationOption] = useState('with'); // Default to 'with installation'
+    const [selectedLand, setSelectedLand] = useState('');
+    const [selectedCity, setSelectedCity] = useState('');
+    const [lands, setLands] = useState([]);
+    const [cities, setCities] = useState([]);
+    const [totalPrice, setTotalPrice] = useState(BASE_PRICE + DELIVERY_COST + DEPOSIT_COST + INSTALLATION_COST);
+
+    // Fetch lands when the component loads
+    useEffect(() => {
+        const fetchLands = async () => {
+            try {
+                const response = await fetch('https://joomla2.nazarenko.de/index.php?option=com_nazarenkoapi&task=getLands&format=json');
+                const data = await response.json();
+                setLands(data);
+            } catch (error) {
+                console.error('Failed to fetch lands:', error);
+            }
+        };
+        fetchLands();
+    }, []);
+
+    // Fetch cities when a land is selected
+    useEffect(() => {
+        if (selectedLand) {
+            const fetchCities = async () => {
+                try {
+                    const response = await fetch(`https://joomla2.nazarenko.de/index.php?option=com_nazarenkoapi&task=getCities&land_id=${selectedLand}&format=json'`);
+                    const data = await response.json();
+                    setCities(data);
+                } catch (error) {
+                    console.error('Failed to fetch cities:', error);
+                }
+            };
+            fetchCities();
+        } else {
+            setCities([]); // Clear cities if no land is selected
+        }
+    }, [selectedLand]);
+
+    // Handle changes in installation option
+    const handleInstallationChange = (e) => {
+        const selectedOption = e.target.value;
+        setInstallationOption(selectedOption);
+
+        // Update total price based on installation option
+        let newTotalPrice = BASE_PRICE + DELIVERY_COST + DEPOSIT_COST;
+
+        if (selectedOption === 'with') {
+            newTotalPrice += INSTALLATION_COST;
+        }
+
+        setTotalPrice(newTotalPrice);
+    };
+
+    // Handle changes in land selection
+    const handleLandChange = (e) => {
+        setSelectedLand(e.target.value);
+    };
+
+    // Handle changes in city selection
+    const handleCityChange = (e) => {
+        setSelectedCity(e.target.value);
+    };
+
     return (
         <>
             <main>
@@ -100,6 +177,61 @@ export default function ProductPage({ product, footerArticle }) {
                         <p>{product.product_description}</p>
                         <p>Price: ${product.price_value}</p>
                         {/* Additional product details */}
+                    </div>
+                    <div className="row g-0 p-4">
+                        <div className="product-info">
+                            <p>Product Price: 449,00 €</p>
+                            <p>Delivery Cost: 29,75 €</p>
+                            <p>Kaution: 523,60 €</p>
+                            <p>Kaution wird nach Erhalt des schadlosen Rücknahmeteils storniert</p>
+                        </div>
+
+                        <div className="installation-options">
+                            <label>
+                                Installation:
+                                <select value={installationOption} onChange={handleInstallationChange}>
+                                    <option value="with">With Installation + {formatPrice(INSTALLATION_COST)}</option>
+                                    <option value="without">No Installation</option>
+                                </select>
+                            </label>
+                        </div>
+                        {installationOption === 'with' && (
+                            <>
+                                <div className="land-selection">
+                                    <label>
+                                        Select Land:
+                                        <select value={selectedLand} onChange={handleLandChange}>
+                                            <option value="">-- Select a Land --</option>
+                                            {lands.map((land) => (
+                                                <option key={land.id} value={land.id}>
+                                                    {land.title}
+                                                </option>
+                                            ))}
+                                        </select>
+                                    </label>
+                                </div>
+
+                                {selectedLand && (
+                                    <div className="city-selection">
+                                        <label>
+                                            Select City:
+                                            <select value={selectedCity} onChange={handleCityChange}>
+                                                <option value="">-- Select a City --</option>
+                                                {cities.map((city) => (
+                                                    <option key={city.id} value={city.id}>
+                                                        {city.title}
+                                                    </option>
+                                                ))}
+                                            </select>
+                                        </label>
+                                    </div>
+                                )}
+                            </>
+                        )}
+
+                        <div className="total-price">
+                            <h2>Total Price: {formatPrice(totalPrice)}</h2>
+                        </div>
                     </div>
                     <div className="row g-0 p-4">
                         <Link href={`/anfrage`}>
