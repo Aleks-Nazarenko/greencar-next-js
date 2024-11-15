@@ -60,7 +60,7 @@ export default function FilterreinigungPage({ product, footerArticle }) {
     const getNextValidDay = (date) => {
         // If the date falls on Saturday (6) or Sunday (0), adjust it to the next Monday
         while (date.getDay() === 0 || date.getDay() === 6) {
-            date.setDate(date.getDate() + 1);
+            date.setDate(date.getDate() + 2);
         }
         return date;
     };
@@ -68,6 +68,31 @@ export default function FilterreinigungPage({ product, footerArticle }) {
     const BASE_PRICE = 359.00; // Base product price
     const DELIVERY_COST = 47.36; // Delivery cost
     const INSTALLATION_COST = 240.00; // Cost for installation
+
+    // Product options configuration
+    const productOptions = {
+        installation: { //Aus- und Einbau
+            isAvailable: true,
+            cost: INSTALLATION_COST,
+            label: "Aus- und Einbau",
+            withoutLabel: "No Installation",
+        },
+        delivery: { //Anholung
+            isAvailable: true,
+            cost: DELIVERY_COST,
+            label: "Abholung",
+        },
+        deposit: { //Kaution
+            isAvailable: false,
+            cost: 523.60,
+            label: "Kaution",
+        },
+        advancePayment: {//Vorauszahlung
+            isAvailable: true,
+            cost: 10,
+            label: "Vorauszahlung",
+        },
+    };
 
     // State to manage form selections
     const [installationOption, setInstallationOption] = useState('with'); // Default to 'with installation'
@@ -170,6 +195,29 @@ export default function FilterreinigungPage({ product, footerArticle }) {
                 newTotalPrice += DELIVERY_COST;
             }
         }
+        // Set selected date to null if delivery is not desired
+        if (selectedDelivery === 'no') {
+            setSelectedDate(null);
+            setNextDay(null);
+        } else {
+            // Set initial date to tomorrow in "YYYY-MM-DD" format if delivery is desired
+            let tomorrow = new Date();
+            tomorrow.setDate(tomorrow.getDate() + 1);
+            if (tomorrow.getDay() === 6) {
+                // If it's Saturday, add 2 days to get to Monday
+                tomorrow.setDate(tomorrow.getDate() + 2);
+            } else if (tomorrow.getDay() === 0) {
+                // If it's Sunday, add 1 day to get to Monday
+                tomorrow.setDate(tomorrow.getDate() + 1);
+            }
+            setSelectedDate(tomorrow.toISOString().split('T')[0]);
+
+            // Set the next day after the selected date, skipping weekends
+            let next = new Date(tomorrow);
+            next.setDate(next.getDate() + 2);
+            next = getNextValidDay(next);
+            setNextDay(formatDateToGerman(next));
+        }
 
         setTotalPrice(newTotalPrice);
     };
@@ -186,9 +234,68 @@ export default function FilterreinigungPage({ product, footerArticle }) {
 
         // Set the next day after the selected date, skipping weekends
         let next = new Date(selected);
-        next.setDate(selected.getDate() + 1);
+        next.setDate(selected.getDate() + 2);
         next = getNextValidDay(next);
         setNextDay(formatDateToGerman(next));
+    };
+    // Handle add to cart
+    const handleAddToCart = (e) => {
+        e.preventDefault();
+
+        if (installationOption === 'with' && (!selectedLand || !selectedCity)) {
+            alert('Please select both a land and a city before proceeding.');
+            return;
+        }
+        // Format selected date
+        const formattedSelectedDate = selectedDate ? formatDateToGerman(new Date(selectedDate)) : null;
+        // Construct the cart item with selected options
+        const cartItem = {
+            productName: product.product_name,
+            basePrice: formatPrice(BASE_PRICE),
+            options: {
+                // Aus- und Einbau
+                installation: productOptions.installation.isAvailable && installationOption === 'with'
+                    ? {
+                        label: productOptions.installation.label,
+                        cost: formatPrice(productOptions.installation.cost),
+                    }
+                    : null,
+                // Abholung
+                delivery: productOptions.delivery.isAvailable && deliveryDesired === 'yes'
+                    ? {
+                        label: productOptions.delivery.label,
+                        cost: formatPrice(productOptions.delivery.cost),
+                    }
+                    : null,
+                // Kaution
+                deposit: productOptions.deposit.isAvailable
+                    ? {
+                        label: productOptions.deposit.label,
+                        cost: formatPrice(productOptions.deposit.cost),
+                    }
+                    : null,
+                // Vorauszahlung
+                advancePayment: productOptions.advancePayment.isAvailable
+                    ? {
+                        label: productOptions.advancePayment.label,
+                        cost: formatPrice(productOptions.advancePayment.cost),
+                    }
+                    : null,
+            },
+            landName: selectedLand ? lands.find((land) => parseInt(land.id, 10) === parseInt(selectedLand, 10))?.title : null,
+            cityName: selectedCity ? cities.find((city) => parseInt(city.id, 10) === parseInt(selectedCity, 10))?.title : null,
+            totalPrice: formatPrice(totalPrice),
+            totalPriceUnformatted: totalPrice,
+            selectedDate: formattedSelectedDate, // set null wenn nicht verfügbar
+            nextDay: nextDay, // set null wenn nicht verfügbar
+        };
+
+        // Save to local storage
+        localStorage.setItem('cart', JSON.stringify(cartItem));
+        localStorage.setItem('productOptions', JSON.stringify(productOptions));
+
+        // Navigate to checkout
+        router.push('/checkout');
     };
 
     return (
@@ -222,7 +329,7 @@ export default function FilterreinigungPage({ product, footerArticle }) {
                                     Abholung gewünscht?
                                     <select value={deliveryDesired} onChange={handleDeliveryChange}>
                                         <option value="yes">Ja ( + {formatPrice(DELIVERY_COST)} (inkl. MwSt.) )</option>
-                                        <option value="no">No</option>
+                                        <option value="no">Nein</option>
                                     </select>
                                 </label>
                             </div>
@@ -262,25 +369,29 @@ export default function FilterreinigungPage({ product, footerArticle }) {
                                 )}
                             </>
                         )}
-                        <div className="date-selection">
-                            <div>48h Express-Service Rechner!</div>
+                        {deliveryDesired === 'yes' && (
+                            <>
+                                <div className="date-selection">
+                                    <div>48h Express-Service Rechner!</div>
 
-                            <div>Abholdatum des ausgebauten Partikelfilters:</div>
-                                <input
-                                    type="date"
-                                    value={selectedDate}
-                                    onChange={handleDateChange}
-                                    min={new Date().toISOString().split('T')[0]}
-                                />
-                            <div>bis 16:00 Uhr</div>
-                        </div>
+                                    <div>Abholdatum des ausgebauten Partikelfilters:</div>
+                                        <input
+                                            type="date"
+                                            value={selectedDate || ''}
+                                            onChange={handleDateChange}
+                                            min={new Date().toISOString().split('T')[0]}
+                                        />
+                                    <div>bis 16:00 Uhr</div>
+                                </div>
 
-                        <div className="next-day">
-                            <div>Zustellung des gereinigten Partikelfilters</div>
-                            <input type="text" value={nextDay} readOnly />
-                            <div>bis 12:00 Uhr garantiert!</div>
+                                <div className="next-day">
+                                    <div>Zustellung des gereinigten Partikelfilters</div>
+                                    <input type="text" value={nextDay || ''} readOnly />
+                                    <div>bis 12:00 Uhr garantiert!</div>
 
-                        </div>
+                                </div>
+                            </>
+                        )}
                         <div className="total-price">
                             <h2>{getTotalPriceLabel()}: {formatPrice(totalPrice)}</h2>
                         </div>
@@ -289,6 +400,11 @@ export default function FilterreinigungPage({ product, footerArticle }) {
                         <Link href={`/anfrage`}>
                             <button className="btn btn-primary">Unverbindliches Angebot anfordern</button>
                         </Link>
+                    </div>
+                    <div className="row g-0 p-4">
+                        <button className="btn btn-primary" type="button" onClick={handleAddToCart}>
+                            In den Warenkorb
+                        </button>
                     </div>
                 </div>
             </main>
