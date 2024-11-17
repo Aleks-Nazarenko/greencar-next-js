@@ -71,13 +71,13 @@ export default function FilterreinigungPage({ product, footerArticle }) {
 
     // Product options configuration
     const productOptions = {
-        installation: { //Aus- und Einbau
+        installation: { //Aus- und Einbau bzw. Mit Einbau
             isAvailable: true,
             cost: INSTALLATION_COST,
             label: "Aus- und Einbau",
             withoutLabel: "No Installation",
         },
-        delivery: { //Anholung
+        delivery: { //Anholung bzw. Versand
             isAvailable: true,
             cost: DELIVERY_COST,
             label: "Abholung",
@@ -243,7 +243,7 @@ export default function FilterreinigungPage({ product, footerArticle }) {
         e.preventDefault();
 
         if (installationOption === 'with' && (!selectedLand || !selectedCity)) {
-            alert('Please select both a land and a city before proceeding.');
+            alert('Einbauort-Wahl unvollständig');
             return;
         }
         // Format selected date
@@ -315,23 +315,19 @@ export default function FilterreinigungPage({ product, footerArticle }) {
                         </div>
 
                         <div className="installation-options">
-                            <label>
-                                Aus und Einbau
-                                <select value={installationOption} onChange={handleInstallationChange}>
-                                    <option value="with">GREENCAR Werkstatt ( + {formatPrice(INSTALLATION_COST)} (inkl. MwSt.) )</option>
-                                    <option value="without">eigene Werkstatt</option>
-                                </select>
-                            </label>
+                            <div>Aus und Einbau</div>
+                            <select value={installationOption} onChange={handleInstallationChange}>
+                                <option value="with">GREENCAR Werkstatt ( + {formatPrice(INSTALLATION_COST)} (inkl. MwSt.) )</option>
+                                <option value="without">eigene Werkstatt</option>
+                            </select>
                         </div>
                         {installationOption === 'without' && (
                             <div className="delivery-options">
-                                <label>
-                                    Abholung gewünscht?
-                                    <select value={deliveryDesired} onChange={handleDeliveryChange}>
-                                        <option value="yes">Ja ( + {formatPrice(DELIVERY_COST)} (inkl. MwSt.) )</option>
-                                        <option value="no">Nein</option>
-                                    </select>
-                                </label>
+                                <div>Abholung gewünscht?</div>
+                                <select value={deliveryDesired} onChange={handleDeliveryChange}>
+                                    <option value="yes">Ja ( + {formatPrice(DELIVERY_COST)} (inkl. MwSt.) )</option>
+                                    <option value="no">Nein</option>
+                                </select>
                             </div>
                         )}
 
@@ -339,32 +335,26 @@ export default function FilterreinigungPage({ product, footerArticle }) {
                             <>
                                 <div>Bitte wählen Sie Ihren gewünschten Einbauort.</div>
                                 <div className="land-selection">
-                                    <label>
-                                        Select Land:
-                                        <select value={selectedLand} onChange={handleLandChange}>
-                                            <option value="">- Bundesland -</option>
-                                            {lands.map((land) => (
-                                                <option key={land.id} value={land.id}>
-                                                    {land.title}
-                                                </option>
-                                            ))}
-                                        </select>
-                                    </label>
+                                    <select value={selectedLand} onChange={handleLandChange}>
+                                        <option value="">- Bundesland -</option>
+                                        {lands.map((land) => (
+                                            <option key={land.id} value={land.id}>
+                                                {land.title}
+                                            </option>
+                                        ))}
+                                    </select>
                                 </div>
 
                                 {selectedLand && (
                                     <div className="city-selection">
-                                        <label>
-                                            Select City:
-                                            <select value={selectedCity} onChange={handleCityChange}>
-                                                <option value="">- Ort -</option>
-                                                {cities.map((city) => (
-                                                    <option key={city.id} value={city.id}>
-                                                        {city.title}
-                                                    </option>
-                                                ))}
-                                            </select>
-                                        </label>
+                                        <select value={selectedCity} onChange={handleCityChange}>
+                                            <option value="">- Ort -</option>
+                                            {cities.map((city) => (
+                                                <option key={city.id} value={city.id}>
+                                                    {city.title}
+                                                </option>
+                                            ))}
+                                        </select>
                                     </div>
                                 )}
                             </>
