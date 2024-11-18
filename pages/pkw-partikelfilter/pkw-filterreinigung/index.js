@@ -68,7 +68,7 @@ export default function FilterreinigungPage({ product, footerArticle }) {
     const BASE_PRICE = 359.00; // Base product price
     const DELIVERY_COST = 47.36; // Delivery cost
     const INSTALLATION_COST = 240.00; // Cost for installation
-
+    const VAT_SHARE = 1.19; // VAT share
     // Product options configuration
     const productOptions = {
         installation: { //Aus- und Einbau bzw. Mit Einbau
@@ -286,6 +286,7 @@ export default function FilterreinigungPage({ product, footerArticle }) {
             cityName: selectedCity ? cities.find((city) => parseInt(city.id, 10) === parseInt(selectedCity, 10))?.title : null,
             totalPrice: formatPrice(totalPrice),
             totalPriceUnformatted: totalPrice,
+            vatShare: VAT_SHARE,
             selectedDate: formattedSelectedDate, // set null wenn nicht verfügbar
             nextDay: nextDay, // set null wenn nicht verfügbar
         };

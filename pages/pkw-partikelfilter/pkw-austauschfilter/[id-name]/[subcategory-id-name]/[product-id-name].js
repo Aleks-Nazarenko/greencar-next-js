@@ -104,6 +104,7 @@ export default function ProductPage({ product, footerArticle }) {
     const DELIVERY_COST = 29.75; // Delivery cost
     const DEPOSIT_COST = 523.60; // Deposit cost
     const INSTALLATION_COST = 226.10; // Cost for installation
+    const VAT_SHARE = 1.19; // VAT share
     // Product options configuration
     const productOptions = {
         installation: { //Aus- und Einbau bzw. Mit Einbau
@@ -240,6 +241,7 @@ export default function ProductPage({ product, footerArticle }) {
             cityName: selectedCity ? cities.find((city) => parseInt(city.id, 10) === parseInt(selectedCity, 10))?.title : null,
             totalPrice: formatPrice(totalPrice),
             totalPriceUnformatted: totalPrice,
+            vatShare: VAT_SHARE,
 
         };
 

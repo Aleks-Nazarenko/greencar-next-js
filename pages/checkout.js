@@ -25,6 +25,8 @@ export async function getStaticProps({ params }) {
 export default function CheckoutPage({footerArticle }) {
     const [cartItem, setCartItem] = useState(null);
     const [productOptions, setProductOptions] = useState(null);
+    const [vatShare, setVatShare] = useState(0); // State to store the VAT share
+    const [displayTotalPrice, setDisplayTotalPrice] = useState(0); // Total price to display
     const [address, setAddress] = useState({
         fullName: '',
         street: '',
@@ -41,13 +43,22 @@ export default function CheckoutPage({footerArticle }) {
     useEffect(() => {
         const cartData = JSON.parse(localStorage.getItem('cart'));
         const optionsData = JSON.parse(localStorage.getItem('productOptions'));
-        console.log(cartData);
-        console.log(optionsData);
-        if (cartData) {
+
+
+        if (cartData && optionsData){
             setCartItem(cartData);
-        }
-        if (optionsData) {
             setProductOptions(optionsData);
+            // Calculate VAT share
+            const totalPriceUnformatted = cartData.totalPriceUnformatted || 0;
+            let calculatedTotalPrice = totalPriceUnformatted;
+            if (productOptions?.installation?.isAvailable && cartData.options.installation) {
+                // Calculate advance payment based on total price and advance payment percentage
+                calculatedTotalPrice = calculateAdvancePayment(totalPriceUnformatted, productOptions.advancePayment.cost);
+            }
+            setDisplayTotalPrice(calculatedTotalPrice);
+            const netPrice = calculatedTotalPrice / cartData.vatShare; // Calculate net price
+            const calculatedVatShare = calculatedTotalPrice - netPrice; // VAT is the difference
+            setVatShare(calculatedVatShare);
         }
     }, []);
 
@@ -132,11 +143,18 @@ export default function CheckoutPage({footerArticle }) {
                                             <p><strong>Zustellung des gereinigten Partikelfilters:</strong> {cartItem.nextDay}</p>
                                         </>
                                     )}
-                                    <p><strong>Total Price:</strong> {cartItem.totalPrice}</p>
 
-                                    {productOptions?.installation?.isAvailable && cartItem.options.installation && (
-                                        <div>Anteil <b>Vorauszahlung*</b> für Produkte mit Einbau {formatPrice(calculateAdvancePayment(cartItem.totalPriceUnformatted, productOptions.advancePayment.cost))}</div>
+                                    {productOptions?.installation?.isAvailable && cartItem.options.installation ? (
+                                        <>
+                                            <div>Summe {cartItem.totalPrice}</div>
+                                            <div>Anteil <b>Vorauszahlung*</b> für Produkte mit Einbau {formatPrice(calculateAdvancePayment(cartItem.totalPriceUnformatted, productOptions.advancePayment.cost))}</div>
+                                        </>
+                                    ) : (
+                                        <div>Summe {formatPrice(displayTotalPrice)}</div>
                                     )}
+                                    <p><strong>MwSt.</strong> {formatPrice(vatShare)}</p>
+                                    <p><strong>Gesamtsumme</strong> {formatPrice(displayTotalPrice)}</p>
+
                                 </div>
                                 {/* Restbetrag wenn Vorauszahlung */}
                                 {productOptions?.installation?.isAvailable && cartItem.options.installation && (
@@ -162,7 +180,7 @@ export default function CheckoutPage({footerArticle }) {
                                 )}
                             </>
                         ) : (
-                            <p>Your cart is empty</p>
+                            <p>Ihr Warenkorb is leer</p>
                         )}
                     </section>
 
