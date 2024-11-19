@@ -66,8 +66,9 @@ export default function FilterreinigungPage({ product, footerArticle }) {
     };
 
     const BASE_PRICE = 359.00; // Base product price
-    const DELIVERY_COST = 47.36; // Delivery cost
-    const INSTALLATION_COST = 240.00; // Cost for installation
+    const DELIVERY_COST = 47.36; // Abholung
+    const DEPOSIT_COST = 0; // Kaution
+    const INSTALLATION_COST = 240.00; //  Aus- und Einbau
     const VAT_SHARE = 1.19; // VAT share
     // Product options configuration
     const productOptions = {
@@ -84,7 +85,7 @@ export default function FilterreinigungPage({ product, footerArticle }) {
         },
         deposit: { //Kaution
             isAvailable: false,
-            cost: 523.60,
+            cost: DEPOSIT_COST,
             label: "Kaution",
         },
         advancePayment: {//Vorauszahlung
@@ -274,11 +275,11 @@ export default function FilterreinigungPage({ product, footerArticle }) {
                         cost: formatPrice(productOptions.deposit.cost),
                     }
                     : null,
-                // Vorauszahlung
+                // Vorauszahlung hier unnötig !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
                 advancePayment: productOptions.advancePayment.isAvailable
                     ? {
                         label: productOptions.advancePayment.label,
-                        cost: formatPrice(productOptions.advancePayment.cost),
+                        cost: productOptions.advancePayment.cost,
                     }
                     : null,
             },

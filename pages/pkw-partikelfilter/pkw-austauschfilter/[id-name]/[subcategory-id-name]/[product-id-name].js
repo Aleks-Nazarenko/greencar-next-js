@@ -101,10 +101,10 @@ export default function ProductPage({ product, footerArticle }) {
         }
     };
     const BASE_PRICE = 449.00; // Base product price
-    const DELIVERY_COST = 29.75; // Delivery cost
-    const DEPOSIT_COST = 523.60; // Deposit cost
-    const INSTALLATION_COST = 226.10; // Cost for installation
-    const VAT_SHARE = 1.19; // VAT share
+    const DELIVERY_COST = 29.75; // Versand
+    const DEPOSIT_COST = 523.60; // Kaution
+    const INSTALLATION_COST = 226.10; // Einbau
+    const VAT_SHARE = 1.19; // MwSt.
     // Product options configuration
     const productOptions = {
         installation: { //Aus- und Einbau bzw. Mit Einbau
@@ -120,7 +120,7 @@ export default function ProductPage({ product, footerArticle }) {
         },
         deposit: { //Kaution
             isAvailable: true,
-            cost: 523.60,
+            cost: DEPOSIT_COST,
             label: "Kaution",
         },
         advancePayment: {//Vorauszahlung
@@ -229,11 +229,11 @@ export default function ProductPage({ product, footerArticle }) {
                         cost: formatPrice(productOptions.deposit.cost),
                     }
                     : null,
-                // Vorauszahlung
+                // Vorauszahlung hier unnötig !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
                 advancePayment: productOptions.advancePayment.isAvailable
                     ? {
                         label: productOptions.advancePayment.label,
-                        cost: formatPrice(productOptions.advancePayment.cost),
+                        cost: productOptions.advancePayment.cost,
                     }
                     : null,
             },

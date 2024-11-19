@@ -43,17 +43,16 @@ export default function CheckoutPage({footerArticle }) {
     useEffect(() => {
         const cartData = JSON.parse(localStorage.getItem('cart'));
         const optionsData = JSON.parse(localStorage.getItem('productOptions'));
-
-
+        console.log(cartData, optionsData);
         if (cartData && optionsData){
             setCartItem(cartData);
             setProductOptions(optionsData);
             // Calculate VAT share
             const totalPriceUnformatted = cartData.totalPriceUnformatted || 0;
             let calculatedTotalPrice = totalPriceUnformatted;
-            if (productOptions?.installation?.isAvailable && cartData.options.installation) {
+            if (optionsData.installation?.isAvailable && cartData.options.installation) {
                 // Calculate advance payment based on total price and advance payment percentage
-                calculatedTotalPrice = calculateAdvancePayment(totalPriceUnformatted, productOptions.advancePayment.cost);
+                calculatedTotalPrice = calculateAdvancePayment(totalPriceUnformatted, optionsData.advancePayment.cost);
             }
             setDisplayTotalPrice(calculatedTotalPrice);
             const netPrice = calculatedTotalPrice / cartData.vatShare; // Calculate net price
