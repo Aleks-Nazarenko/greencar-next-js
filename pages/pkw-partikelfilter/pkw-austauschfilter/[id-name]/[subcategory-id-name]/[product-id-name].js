@@ -113,7 +113,7 @@ export default function ProductPage({ product, footerArticle }) {
             label: "Aus- und Einbau",
             withoutLabel: "No Installation",
         },
-        delivery: { //Anholung bzw. Versand
+        delivery: { //Abholung bzw. Versand
             isAvailable: true,
             cost: DELIVERY_COST,
             label: "Versand",

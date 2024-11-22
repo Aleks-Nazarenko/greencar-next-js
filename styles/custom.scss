@@ -65,6 +65,7 @@ $grid-breakpoints: (
 @import "bootstrap/scss/nav";
 @import "bootstrap/scss/navbar"; // Requires nav
 @import "bootstrap/scss/dropdown";
+@import "bootstrap/scss/forms";
 //@import "bootstrap/scss/helpers";
 
 // 7. Optionally include utilities API last to generate classes based on the Sass map in `_utilities.scss`

@@ -78,7 +78,7 @@ export default function FilterreinigungPage({ product, footerArticle }) {
             label: "Aus- und Einbau",
             withoutLabel: "No Installation",
         },
-        delivery: { //Anholung bzw. Versand
+        delivery: { //Abholung bzw. Versand
             isAvailable: true,
             cost: DELIVERY_COST,
             label: "Abholung",
@@ -118,7 +118,7 @@ export default function FilterreinigungPage({ product, footerArticle }) {
     });
     const [nextDay, setNextDay] = useState(() => {
         let dayAfterTomorrow = new Date();
-        dayAfterTomorrow.setDate(dayAfterTomorrow.getDate() + 2);
+        dayAfterTomorrow.setDate(dayAfterTomorrow.getDate() + 3);
         dayAfterTomorrow = getNextValidDay(dayAfterTomorrow);
         return formatDateToGerman(dayAfterTomorrow); // Correctly format the initial value
     });

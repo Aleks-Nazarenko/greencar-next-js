@@ -1,6 +1,10 @@
 import { useEffect, useState } from 'react';
 import {convertRelativeUrls} from "@/utils/convertRelativeUrls";
-
+import Form from 'react-bootstrap/Form';
+import Button from 'react-bootstrap/Button';
+import InputGroup from 'react-bootstrap/InputGroup';
+import Col from 'react-bootstrap/Col';
+import Row from 'react-bootstrap/Row';
 export async function getStaticProps({ params }) {
     // Base URL of your Joomla server (adjust this to your Joomla installation URL)
     const joomlaBaseUrl = 'https://joomla2.nazarenko.de';
@@ -27,18 +31,28 @@ export default function CheckoutPage({footerArticle }) {
     const [productOptions, setProductOptions] = useState(null);
     const [vatShare, setVatShare] = useState(0); // State to store the VAT share
     const [displayTotalPrice, setDisplayTotalPrice] = useState(0); // Total price to display
-    const [address, setAddress] = useState({
+    const [validated, setValidated] = useState(false);
+    const [billingAddress, setBillingAddress] = useState({
         fullName: '',
+        email: '',
+        phone: '',
         street: '',
         city: '',
         state: '',
         zipCode: '',
-        country: '',
-        phoneNumber: '',
-        email: '',
     });
-
+    const [shippingAddress, setShippingAddress] = useState({
+        fullName: '',
+        email: '',
+        phone: '',
+        street: '',
+        city: '',
+        state: '',
+        zipCode: '',
+    });
+    const [sameAsBilling, setSameAsBilling] = useState(true);
     const [paymentMethod, setPaymentMethod] = useState('pay-on-delivery');
+    const [emailError, setEmailError] = useState('');
 
     useEffect(() => {
         const cartData = JSON.parse(localStorage.getItem('cart'));
@@ -61,34 +75,58 @@ export default function CheckoutPage({footerArticle }) {
         }
     }, []);
 
-    const handleAddressChange = (e) => {
+    // Handle changes for shipping address fields
+    const handleShippingAddressChange = (e) => {
         const { name, value } = e.target;
-        setAddress((prevAddress) => ({
-            ...prevAddress,
+        setShippingAddress((prev) => ({
+            ...prev,
             [name]: value,
         }));
+    };
+
+    // Handle changes for billing address fields
+    const handleBillingAddressChange = (e) => {
+        const { name, value } = e.target;
+        setBillingAddress((prev) => ({
+            ...prev,
+            [name]: value,
+        }));
+    };
+    const validateEmail = (email) => {
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return emailRegex.test(email);
     };
 
     const handlePaymentChange = (e) => {
         setPaymentMethod(e.target.value);
     };
 
-    const handleSubmit = (e) => {
-        e.preventDefault();
-
+    const handleSubmit = (event) => {
         if (!cartItem) {
-            alert('Your cart is empty!');
+            alert('Ihr Warenkorb is leer!');
             return;
         }
+        const form = event.currentTarget;
+        if (form.checkValidity() === false) {
+            event.preventDefault();
+            event.stopPropagation();
+            setValidated(true);
+            return;
+        } else {
+          //  event.preventDefault(); // Prevent default submission for testing
+            alert('Form submitted successfully!');
+            const orderDetails = {
+                cartItem,
+                billingAddress,
+                paymentMethod,
+            };
 
-        // Process the order
-        console.log('Order Details:', {
-            cartItem,
-            address,
-            paymentMethod,
-        });
+            if (!sameAsBilling) {
+                orderDetails.shippingAddress = shippingAddress;
+            }
 
-        alert('Order has been placed successfully!');
+            console.log('Order Details:', orderDetails);
+        }
     };
 // Function to calculate advance payment cost
     const calculateAdvancePayment = (totalPrice, percentage) => {
@@ -124,16 +162,16 @@ export default function CheckoutPage({footerArticle }) {
                             <>
                                 <div className="cart-item">
                                     <p><strong>Product:</strong> {cartItem.productName}</p>
-                                    <p><strong>Price:</strong> {cartItem.basePrice}</p>
+                                    <p><strong>Price:</strong> {cartItem.basePrice} (inkl. MwSt.)</p>
                                     {/* Conditionally render available options */}
                                     {productOptions?.deposit?.isAvailable && (
-                                        <div><strong>{cartItem.options.deposit.label}:</strong> {cartItem.options.deposit.cost}</div>
+                                        <div><strong>{cartItem.options.deposit.label}:</strong> {cartItem.options.deposit.cost} (inkl. MwSt.)</div>
                                     )}
                                     {productOptions?.installation?.isAvailable && cartItem.options.installation &&(
-                                        <div><strong>{cartItem.options.installation.label}:</strong> {cartItem.options.installation.cost}</div>
+                                        <div><strong>{cartItem.options.installation.label}:</strong> {cartItem.options.installation.cost} (inkl. MwSt.)</div>
                                     )}
                                     {productOptions?.delivery?.isAvailable && cartItem.options.delivery && (
-                                        <p><strong>{cartItem.options.delivery.label}:</strong> {cartItem.options.delivery.cost}</p>
+                                        <p><strong>{cartItem.options.delivery.label}:</strong> {cartItem.options.delivery.cost} (inkl. MwSt.)</p>
 
                                     )}
                                     {cartItem.selectedDate && (
@@ -145,11 +183,11 @@ export default function CheckoutPage({footerArticle }) {
 
                                     {productOptions?.installation?.isAvailable && cartItem.options.installation ? (
                                         <>
-                                            <div>Summe {cartItem.totalPrice}</div>
-                                            <div>Anteil <b>Vorauszahlung*</b> für Produkte mit Einbau {formatPrice(calculateAdvancePayment(cartItem.totalPriceUnformatted, productOptions.advancePayment.cost))}</div>
+                                            <div>Summe {cartItem.totalPrice} (inkl. MwSt.)</div>
+                                            <div>Anteil <b>Vorauszahlung*</b> für Produkte mit Einbau {formatPrice(calculateAdvancePayment(cartItem.totalPriceUnformatted, productOptions.advancePayment.cost))} (inkl. MwSt.)</div>
                                         </>
                                     ) : (
-                                        <div>Summe {formatPrice(displayTotalPrice)}</div>
+                                        <div>Summe {formatPrice(displayTotalPrice)} (inkl. MwSt.)</div>
                                     )}
                                     <p><strong>MwSt.</strong> {formatPrice(vatShare)}</p>
                                     <p><strong>Gesamtsumme</strong> {formatPrice(displayTotalPrice)}</p>
@@ -183,30 +221,240 @@ export default function CheckoutPage({footerArticle }) {
                         )}
                     </section>
 
-                    {/* Address Section */}
+                    {/* Billing Address Section */}
                     <section>
-                        <h2>Shipping Address</h2>
-                        <form onSubmit={handleSubmit}>
-                            {/* Address Form Fields */}
-                            <div className="address-section">
-                                {/* Form input fields */}
-                            </div>
+                        <Form noValidate validated={validated} onSubmit={handleSubmit}>
+                            <h2>Billing Address</h2>
+                            <Row className="mb-3">
+                                <Form.Group as={Col} md="6" controlId="billingFullName">
+                                    <Form.Label>Full Name</Form.Label>
+                                    <Form.Control
+                                        required
+                                        type="text"
+                                        placeholder="Enter your full name"
+                                        name="fullName"
+                                        value={billingAddress.fullName}
+                                        onChange={handleBillingAddressChange}
+                                    />
+                                    <Form.Control.Feedback type="invalid">
+                                        Please provide your full name.
+                                    </Form.Control.Feedback>
+                                </Form.Group>
+                                <Form.Group as={Col} md="6" controlId="billingEmail">
+                                    <Form.Label>Email</Form.Label>
+                                    <Form.Control
+                                        required
+                                        type="email"
+                                        placeholder="Enter your email"
+                                        name="email"
+                                        value={billingAddress.email}
+                                        onChange={handleBillingAddressChange}
+                                    />
+                                    <Form.Control.Feedback type="invalid">
+                                        Please provide a valid email address.
+                                    </Form.Control.Feedback>
+                                </Form.Group>
+                            </Row>
 
-                            {/* Payment Section */}
-                            <h2>Payment</h2>
-                            <div className="payment-section">
-                                <label>
-                                    Payment Method:
-                                    <select value={paymentMethod} onChange={handlePaymentChange}>
-                                        <option value="pay-on-delivery">Pay on Delivery</option>
-                                        <option value="credit-card">Credit Card</option>
-                                    </select>
-                                </label>
-                            </div>
+                            <Row className="mb-3">
+                                <Form.Group as={Col} md="6" controlId="billingPhone">
+                                    <Form.Label>Phone</Form.Label>
+                                    <Form.Control
+                                        required
+                                        type="tel"
+                                        placeholder="Enter your phone number"
+                                        name="phone"
+                                        value={billingAddress.phone}
+                                        onChange={handleBillingAddressChange}
+                                    />
+                                    <Form.Control.Feedback type="invalid">
+                                        Please provide a valid phone number.
+                                    </Form.Control.Feedback>
+                                </Form.Group>
+                                <Form.Group as={Col} md="6" controlId="billingStreet">
+                                    <Form.Label>Street Address</Form.Label>
+                                    <Form.Control
+                                        required
+                                        type="text"
+                                        placeholder="Enter your street address"
+                                        name="street"
+                                        value={billingAddress.street}
+                                        onChange={handleBillingAddressChange}
+                                    />
+                                    <Form.Control.Feedback type="invalid">
+                                        Please provide a valid street address.
+                                    </Form.Control.Feedback>
+                                </Form.Group>
+                            </Row>
 
-                            {/* Submit Button */}
-                            <button type="submit">Place Order</button>
-                        </form>
+                            <Row className="mb-3">
+                                <Form.Group as={Col} md="4" controlId="billingCity">
+                                    <Form.Label>City</Form.Label>
+                                    <Form.Control
+                                        required
+                                        type="text"
+                                        placeholder="Enter your city"
+                                        name="city"
+                                        value={billingAddress.city}
+                                        onChange={handleBillingAddressChange}
+                                    />
+                                    <Form.Control.Feedback type="invalid">
+                                        Please provide a valid city.
+                                    </Form.Control.Feedback>
+                                </Form.Group>
+                                <Form.Group as={Col} md="4" controlId="billingState">
+                                    <Form.Label>State</Form.Label>
+                                    <Form.Control
+                                        required
+                                        type="text"
+                                        placeholder="Enter your state"
+                                        name="state"
+                                        value={billingAddress.state}
+                                        onChange={handleBillingAddressChange}
+                                    />
+                                    <Form.Control.Feedback type="invalid">
+                                        Please provide a valid state.
+                                    </Form.Control.Feedback>
+                                </Form.Group>
+                                <Form.Group as={Col} md="4" controlId="billingZipCode">
+                                    <Form.Label>Zip Code</Form.Label>
+                                    <Form.Control
+                                        required
+                                        type="text"
+                                        placeholder="Enter your zip code"
+                                        name="zipCode"
+                                        value={billingAddress.zipCode}
+                                        onChange={handleBillingAddressChange}
+                                    />
+                                    <Form.Control.Feedback type="invalid">
+                                        Please provide a valid zip code.
+                                    </Form.Control.Feedback>
+                                </Form.Group>
+                            </Row>
+
+                            <Form.Group className="mb-3">
+                                <Form.Check
+                                    type="checkbox"
+                                    label="Shipping address is the same as billing address"
+                                    checked={sameAsBilling}
+                                    onChange={() => setSameAsBilling((prev) => !prev)}
+                                />
+                            </Form.Group>
+
+                            {!sameAsBilling &&(
+                                <>
+                                    <h2>Shipping Address</h2>
+                                    {/* Repeat shipping address fields, using handleShippingAddressChange */}
+                                    <Row className="mb-3">
+                                        <Form.Group as={Col} md="6" controlId="shippingFullName">
+                                            <Form.Label>Full Name</Form.Label>
+                                            <Form.Control
+                                                required
+                                                type="text"
+                                                placeholder="Enter your full name"
+                                                name="fullName"
+                                                value={shippingAddress.fullName}
+                                                onChange={handleShippingAddressChange}
+                                            />
+                                            <Form.Control.Feedback type="invalid">
+                                                Please provide your full name.
+                                            </Form.Control.Feedback>
+                                        </Form.Group>
+                                        <Form.Group as={Col} md="6" controlId="shippingEmail">
+                                            <Form.Label>Email</Form.Label>
+                                            <Form.Control
+                                                required
+                                                type="email"
+                                                placeholder="Enter your email"
+                                                name="email"
+                                                value={shippingAddress.email}
+                                                onChange={handleShippingAddressChange}
+                                            />
+                                            <Form.Control.Feedback type="invalid">
+                                                Please provide a valid email address.
+                                            </Form.Control.Feedback>
+                                        </Form.Group>
+                                    </Row>
+                                    <Row className="mb-3">
+                                        <Form.Group as={Col} md="6" controlId="shippingPhone">
+                                            <Form.Label>Phone</Form.Label>
+                                            <Form.Control
+                                                required
+                                                type="tel"
+                                                placeholder="Enter your phone number"
+                                                name="phone"
+                                                value={shippingAddress.phone}
+                                                onChange={handleShippingAddressChange}
+                                            />
+                                            <Form.Control.Feedback type="invalid">
+                                                Please provide a valid phone number.
+                                            </Form.Control.Feedback>
+                                        </Form.Group>
+                                        <Form.Group as={Col} md="6" controlId="shippingStreet">
+                                            <Form.Label>Street Address</Form.Label>
+                                            <Form.Control
+                                                required
+                                                type="text"
+                                                placeholder="Enter your street address"
+                                                name="street"
+                                                value={shippingAddress.street}
+                                                onChange={handleShippingAddressChange}
+                                            />
+                                            <Form.Control.Feedback type="invalid">
+                                                Please provide a valid street address.
+                                            </Form.Control.Feedback>
+                                        </Form.Group>
+                                    </Row>
+
+                                    <Row className="mb-3">
+                                        <Form.Group as={Col} md="4" controlId="shippingCity">
+                                            <Form.Label>City</Form.Label>
+                                            <Form.Control
+                                                required
+                                                type="text"
+                                                placeholder="Enter your city"
+                                                name="city"
+                                                value={shippingAddress.city}
+                                                onChange={handleShippingAddressChange}
+                                            />
+                                            <Form.Control.Feedback type="invalid">
+                                                Please provide a valid city.
+                                            </Form.Control.Feedback>
+                                        </Form.Group>
+                                        <Form.Group as={Col} md="4" controlId="shippingState">
+                                            <Form.Label>State</Form.Label>
+                                            <Form.Control
+                                                required
+                                                type="text"
+                                                placeholder="Enter your state"
+                                                name="state"
+                                                value={shippingAddress.state}
+                                                onChange={handleShippingAddressChange}
+                                            />
+                                            <Form.Control.Feedback type="invalid">
+                                                Please provide a valid state.
+                                            </Form.Control.Feedback>
+                                        </Form.Group>
+                                        <Form.Group as={Col} md="4" controlId="shippingZipCode">
+                                            <Form.Label>Zip Code</Form.Label>
+                                            <Form.Control
+                                                required
+                                                type="text"
+                                                placeholder="Enter your zip code"
+                                                name="zipCode"
+                                                value={shippingAddress.zipCode}
+                                                onChange={handleShippingAddressChange}
+                                            />
+                                            <Form.Control.Feedback type="invalid">
+                                                Please provide a valid zip code.
+                                            </Form.Control.Feedback>
+                                        </Form.Group>
+                                    </Row>
+                                </>
+                            )}
+
+                            <Button type="submit">Submit</Button>
+                        </Form>
                     </section>
                 </div>
             </main>
