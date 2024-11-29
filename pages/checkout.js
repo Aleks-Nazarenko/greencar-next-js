@@ -5,6 +5,7 @@ import Button from 'react-bootstrap/Button';
 import InputGroup from 'react-bootstrap/InputGroup';
 import Col from 'react-bootstrap/Col';
 import Row from 'react-bootstrap/Row';
+import PayPalButton from "@/components/PayPalButton";
 export async function getStaticProps({ params }) {
     // Base URL of your Joomla server (adjust this to your Joomla installation URL)
     const joomlaBaseUrl = 'https://joomla2.nazarenko.de';
@@ -51,7 +52,7 @@ export default function CheckoutPage({footerArticle }) {
         zipCode: '',
     });
     const [sameAsBilling, setSameAsBilling] = useState(true);
-    const [paymentMethod, setPaymentMethod] = useState('pay-on-delivery');
+    const [paymentMethod, setPaymentMethod] = useState('advance-payment');
     const [emailError, setEmailError] = useState('');
 
     useEffect(() => {
@@ -92,11 +93,12 @@ export default function CheckoutPage({footerArticle }) {
             [name]: value,
         }));
     };
+    /*
     const validateEmail = (email) => {
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         return emailRegex.test(email);
     };
-
+*/
     const handlePaymentChange = (e) => {
         setPaymentMethod(e.target.value);
     };
@@ -114,7 +116,7 @@ export default function CheckoutPage({footerArticle }) {
             return;
         } else {
           //  event.preventDefault(); // Prevent default submission for testing
-            alert('Form submitted successfully!');
+        //    alert('Form submitted successfully!');
             const orderDetails = {
                 cartItem,
                 billingAddress,
@@ -126,6 +128,7 @@ export default function CheckoutPage({footerArticle }) {
             }
 
             console.log('Order Details:', orderDetails);
+            console.log('Form Submitted!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!');
         }
     };
 // Function to calculate advance payment cost
@@ -452,11 +455,37 @@ export default function CheckoutPage({footerArticle }) {
                                     </Row>
                                 </>
                             )}
-
+                            <h2>Payment Method</h2>
+                            <Row className="mb-3">
+                                <Col sm={12}>
+                                    {/* Advance Payment Option */}
+                                    <Form.Check
+                                        type="radio"
+                                        label="Advance Payment"
+                                        name="paymentMethod"
+                                        value="advance-payment"
+                                        checked={paymentMethod === "advance-payment"}
+                                        onChange={handlePaymentChange}
+                                        id="advancePaymentOption"
+                                    />
+                                    {/* PayPal Option */}
+                                    <Form.Check
+                                        type="radio"
+                                        label="PayPal"
+                                        name="paymentMethod"
+                                        value="paypal"
+                                        checked={paymentMethod === "paypal"}
+                                        onChange={handlePaymentChange}
+                                        id="paypalOption"
+                                    />
+                                </Col>
+                            </Row>
+                            <PayPalButton totalAmount={displayTotalPrice}/>
                             <Button type="submit">Submit</Button>
                         </Form>
                     </section>
                 </div>
+
             </main>
             <footer>
                 <div className="container-fluid container-footer container-greencar">
