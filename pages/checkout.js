@@ -53,6 +53,7 @@ export default function CheckoutPage({footerArticle }) {
     });
     const [sameAsBilling, setSameAsBilling] = useState(true);
     const [paymentMethod, setPaymentMethod] = useState('advance-payment');
+    const [paypalReady, setPaypalReady] = useState(false);
     const [emailError, setEmailError] = useState('');
 
     useEffect(() => {
@@ -101,6 +102,7 @@ export default function CheckoutPage({footerArticle }) {
 */
     const handlePaymentChange = (e) => {
         setPaymentMethod(e.target.value);
+        setPaypalReady(e.target.value === "paypal"); // Enable PayPal when PayPal option is selected
     };
 
     const handleSubmit = (event) => {
@@ -150,6 +152,15 @@ export default function CheckoutPage({footerArticle }) {
             style: 'currency',
             currency: 'EUR',
         }).format(price);
+    };
+    const handlePayPalSuccess = (details) => {
+        alert(`Transaction completed by ${details.payer.name.given_name}`);
+        console.log("Transaction details:", details);
+    };
+
+    const handlePayPalError = (error) => {
+        alert("An error occurred during the PayPal transaction.");
+        console.error("PayPal Error:", error);
     };
 
     return (
@@ -480,7 +491,10 @@ export default function CheckoutPage({footerArticle }) {
                                     />
                                 </Col>
                             </Row>
-                            <PayPalButton totalAmount={displayTotalPrice}/>
+                            {/* Render PayPal Button */}
+                            {paypalReady && (
+                                <PayPalButton totalAmount={displayTotalPrice} nSuccess={handlePayPalSuccess} onError={handlePayPalError}/>
+                            )}
                             <Button type="submit">Submit</Button>
                         </Form>
                     </section>

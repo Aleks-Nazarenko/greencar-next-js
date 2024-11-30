@@ -1,17 +1,29 @@
 import React, { useEffect } from "react";
 
-export default function PayPalButton({ totalAmount }) {
+export default function PayPalButton({ totalAmount, onSuccess, onError }) {
     useEffect(() => {
+        if (!window.paypal) {
+            console.error("PayPal SDK not loaded.");
+            return;
+        }
+        const buttonContainerId = "paypal-button-container";
+        // Ensure the container is not already rendered
+        const container = document.getElementById(buttonContainerId);
+        if (container?.childElementCount > 0) {
+            container.innerHTML = ""; // Clear previous buttons
+        }
         // Initialize PayPal Buttons
         if (window.paypal) {
             window.paypal
                 .Buttons({
+                    fundingSource: window.paypal.FUNDING.PAYPAL,
                     createOrder: (data, actions) => {
                         return actions.order.create({
                             purchase_units: [
                                 {
                                     amount: {
-                                        value: totalAmount, // Total amount for the transaction
+                                        value: totalAmount.toFixed(2), // Total amount for the transaction
+                                        currency_code: "EUR",
                                     },
                                 },
                             ],
@@ -19,18 +31,17 @@ export default function PayPalButton({ totalAmount }) {
                     },
                     onApprove: (data, actions) => {
                         return actions.order.capture().then((details) => {
-                            alert(`Transaction completed by ${details.payer.name.given_name}`);
-                            // Handle successful payment (e.g., save order to database)
+                            onSuccess(details); // Pass transaction details to parent
                         });
                     },
                     onError: (err) => {
                         console.error("PayPal Checkout Error:", err);
-                        alert("An error occurred during the payment process.");
+                        onError(err); // Notify parent about the error
                     },
                 })
-                .render("#paypal-button-container");
+                .render(`#${buttonContainerId}`);
         }
-    }, [totalAmount]);
+    }, [totalAmount, onSuccess, onError]);
 
     return <div id="paypal-button-container"></div>;
 }
