@@ -2,10 +2,10 @@ import { useEffect, useState } from 'react';
 import {convertRelativeUrls} from "@/utils/convertRelativeUrls";
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
-import InputGroup from 'react-bootstrap/InputGroup';
+import { useRouter } from 'next/router';
 import Col from 'react-bootstrap/Col';
 import Row from 'react-bootstrap/Row';
-import PayPalButton from "@/components/PayPalButton";
+
 export async function getStaticProps({ params }) {
     // Base URL of your Joomla server (adjust this to your Joomla installation URL)
     const joomlaBaseUrl = 'https://joomla2.nazarenko.de';
@@ -53,13 +53,12 @@ export default function CheckoutPage({footerArticle }) {
     });
     const [sameAsBilling, setSameAsBilling] = useState(true);
     const [paymentMethod, setPaymentMethod] = useState('advance-payment');
-    const [paypalReady, setPaypalReady] = useState(false);
-    const [emailError, setEmailError] = useState('');
+    const router = useRouter();
+
 
     useEffect(() => {
         const cartData = JSON.parse(localStorage.getItem('cart'));
         const optionsData = JSON.parse(localStorage.getItem('productOptions'));
-        console.log(cartData, optionsData);
         if (cartData && optionsData){
             setCartItem(cartData);
             setProductOptions(optionsData);
@@ -94,44 +93,38 @@ export default function CheckoutPage({footerArticle }) {
             [name]: value,
         }));
     };
-    /*
-    const validateEmail = (email) => {
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        return emailRegex.test(email);
-    };
-*/
+
     const handlePaymentChange = (e) => {
         setPaymentMethod(e.target.value);
-        setPaypalReady(e.target.value === "paypal"); // Enable PayPal when PayPal option is selected
+
     };
 
     const handleSubmit = (event) => {
+        event.preventDefault();
         if (!cartItem) {
             alert('Ihr Warenkorb is leer!');
             return;
         }
         const form = event.currentTarget;
         if (form.checkValidity() === false) {
-            event.preventDefault();
             event.stopPropagation();
             setValidated(true);
             return;
-        } else {
-          //  event.preventDefault(); // Prevent default submission for testing
-        //    alert('Form submitted successfully!');
-            const orderDetails = {
+        }
+        // Save data to localStorage for Step 2
+        localStorage.setItem(
+            "checkoutDetails",
+            JSON.stringify({
                 cartItem,
                 billingAddress,
+                shippingAddress: sameAsBilling ? billingAddress : shippingAddress,
                 paymentMethod,
-            };
+            })
+        );
 
-            if (!sameAsBilling) {
-                orderDetails.shippingAddress = shippingAddress;
-            }
+        // Navigate to Step 2
+        router.push("/checkout-2");
 
-            console.log('Order Details:', orderDetails);
-            console.log('Form Submitted!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!');
-        }
     };
 // Function to calculate advance payment cost
     const calculateAdvancePayment = (totalPrice, percentage) => {
@@ -152,15 +145,6 @@ export default function CheckoutPage({footerArticle }) {
             style: 'currency',
             currency: 'EUR',
         }).format(price);
-    };
-    const handlePayPalSuccess = (details) => {
-        alert(`Transaction completed by ${details.payer.name.given_name}`);
-        console.log("Transaction details:", details);
-    };
-
-    const handlePayPalError = (error) => {
-        alert("An error occurred during the PayPal transaction.");
-        console.error("PayPal Error:", error);
     };
 
     return (
@@ -491,10 +475,7 @@ export default function CheckoutPage({footerArticle }) {
                                     />
                                 </Col>
                             </Row>
-                            {/* Render PayPal Button */}
-                            {paypalReady && (
-                                <PayPalButton totalAmount={displayTotalPrice} nSuccess={handlePayPalSuccess} onError={handlePayPalError}/>
-                            )}
+
                             <Button type="submit">Submit</Button>
                         </Form>
                     </section>
