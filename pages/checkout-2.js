@@ -40,10 +40,45 @@ export default function CheckoutStep2({footerArticle }) {
     }, [router]);
 
     const handleConfirmOrder = async () => {
+        const orderData = JSON.parse(localStorage.getItem("checkoutDetails"));
+
+        if (!orderData) {
+            alert("Order data is missing. Please try again.");
+            return;
+        }
+
+        // Send the request to Joomla controller
+        const response = await fetch('https://joomla2.nazarenko.de/index.php?option=com_nazarenkoapi&task=confirmOrder&format=json', {
+            method: "POST", // Use POST for sending data securely
+            headers: {
+                "Content-Type": "application/json", // Ensure the server knows it's JSON
+            },
+            body: JSON.stringify(orderData), // Convert the data to JSON string
+        });
+
+        // Check if the response is OK
+        if (!response.ok) {
+            const errorData = await response.json();
+            console.error("Error from server:", errorData);
+            alert("Failed to confirm order. Please try again.");
+            return;
+        }
+
+        // Process the server response
+        const result = await response.json();
+        console.log("Order confirmation successful:", result);
+
+        // Clear localStorage and navigate to Thank You page
         alert("Order placed successfully!");
         localStorage.removeItem("checkoutDetails");
         localStorage.removeItem("cart");
         router.push("/thank-you");
+    };
+    const formatPrice = (price) => {
+        return new Intl.NumberFormat('de-DE', {
+            style: 'currency',
+            currency: 'EUR',
+        }).format(price);
     };
 
     return (
@@ -59,10 +94,9 @@ export default function CheckoutStep2({footerArticle }) {
                         <h1>Checkout Step 2</h1>
                         {checkoutDetails && (
                             <>
-                                <h2>Order Summary</h2>
+                                <h2>Bestellzusammenfassung</h2>
                                 <div>
-                                    <h3>Billing Address</h3>
-                                    <p>{checkoutDetails.cartItem.totalPrice}</p>
+                                    <div>{ checkoutDetails.cartItem.productName} {checkoutDetails.cartItem.basePrice} (inkl. MwSt.)</div>
                                     {checkoutDetails.cartItem.options.deposit && (
                                         <div>{checkoutDetails.cartItem.options.deposit.label}: {checkoutDetails.cartItem.options.deposit.cost} (inkl. MwSt.)</div>
                                     )}
@@ -72,30 +106,52 @@ export default function CheckoutStep2({footerArticle }) {
                                     {checkoutDetails.cartItem.options.delivery && (
                                         <div>{checkoutDetails.cartItem.options.delivery.label}:{checkoutDetails.cartItem.options.delivery.cost} (inkl. MwSt.)</div>
                                     )}
-                                    {/* Other details */}
+                                    {checkoutDetails.cartItem.selectedDate && (
+                                        <>
+                                            <div>Abholdatum des ausgebauten Partikelfilters: {checkoutDetails.cartItem.selectedDate}</div>
+                                            <div>Zustellung des gereinigten Partikelfilters: {checkoutDetails.cartItem.nextDay}</div>
+                                        </>
+                                    )}
+                                    {checkoutDetails.cartItem.options.installation ? (
+                                        <>
+                                            <div>Summe {checkoutDetails.cartItem.totalPrice} (inkl. MwSt.)</div>
+                                            <div>Anteil <b>Vorauszahlung*</b> für Produkte mit Einbau {formatPrice(checkoutDetails.cartItem.advancePayment)} (inkl. MwSt.)</div>
+                                        </>
+                                    ) : (
+                                        <div>Summe {formatPrice(checkoutDetails.cartItem.totalPriceUnformatted)} (inkl. MwSt.)</div>
+                                    )}
+                                    <p><strong>MwSt.</strong> {checkoutDetails.cartItem.vatShare}</p>
+                                    <p><strong>Gesamtsumme</strong> {checkoutDetails.cartItem.advancePayment ? formatPrice(checkoutDetails.cartItem.advancePayment) : formatPrice(checkoutDetails.cartItem.totalPriceUnformatted)}</p>
                                 </div>
 
                                 {checkoutDetails.paymentMethod === "paypal" ? (
-                                    <PayPalButtons
-                                        fundingSource="paypal"
-                                        totalAmount={checkoutDetails.cartItem.totalPriceUnformatted.toFixed(2)}
-                                        onSuccess={(details) => {
-                                            alert("Payment successful!");
-                                            handleConfirmOrder()
-                                                .then(() => {
-                                                    console.log("Order confirmed successfully.");
-                                                })
-                                                .catch((err) => {
-                                                    console.error("Error confirming order:", err);
-                                                });
-                                        }}
-                                        onError={(err) => {
-                                            alert("Payment failed!");
-                                            console.error(err);
-                                        }}
-                                    />
+                                     <>
+                                        <div>Text zum auf PayPal klicken und Kaufen</div>
+
+                                        <PayPalButtons
+                                            fundingSource="paypal"
+                                            totalAmount={checkoutDetails.cartItem.advancePayment ? checkoutDetails.cartItem.advancePayment : checkoutDetails.cartItem.totalPriceUnformatted.toFixed(2)}
+                                            onSuccess={(details) => {
+                                                alert("Payment successful!");
+                                                handleConfirmOrder()
+                                                    .then(() => {
+                                                        console.log("Order confirmed successfully.");
+                                                    })
+                                                    .catch((err) => {
+                                                        console.error("Error confirming order:", err);
+                                                    });
+                                            }}
+                                            onError={(err) => {
+                                                alert("Payment failed!");
+                                                console.error(err);
+                                            }}
+                                        />
+                                     </>
                                 ) : (
-                                    <button onClick={handleConfirmOrder}>Submit Order</button>
+                                    <>
+                                        <div>Text zum klicken und Kaufen</div>
+                                        <button onClick={handleConfirmOrder}>Submit Order</button>
+                                    </>
                                 )}
                             </>
                         )}

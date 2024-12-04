@@ -68,11 +68,17 @@ export default function CheckoutPage({footerArticle }) {
             if (optionsData.installation?.isAvailable && cartData.options.installation) {
                 // Calculate advance payment based on total price and advance payment percentage
                 calculatedTotalPrice = calculateAdvancePayment(totalPriceUnformatted, optionsData.advancePayment.cost);
+                cartData.advancePayment = calculatedTotalPrice;
+                cartData.remainingAmount = formatPrice(calculateRemainingAmount(totalPriceUnformatted, calculatedTotalPrice));
+            }else{
+                cartData.advancePayment = null;
+                cartData.remainingAmount = null;
             }
             setDisplayTotalPrice(calculatedTotalPrice);
             const netPrice = calculatedTotalPrice / cartData.vatShare; // Calculate net price
             const calculatedVatShare = calculatedTotalPrice - netPrice; // VAT is the difference
             setVatShare(calculatedVatShare);
+            cartData.vatShare = calculatedVatShare ? formatPrice(calculatedVatShare) : null;
         }
     }, []);
 
@@ -161,7 +167,7 @@ export default function CheckoutPage({footerArticle }) {
                                 <div className="cart-item">
                                     <p><strong>Product:</strong> {cartItem.productName}</p>
                                     <p><strong>Price:</strong> {cartItem.basePrice} (inkl. MwSt.)</p>
-                                    {/* Conditionally render available options */}
+                                    {/* Conditionally render available options. ProductOptions sind hier absolut unnnötig !!!!!!!!!!!!!!!!!!!!!!!!! */}
                                     {productOptions?.deposit?.isAvailable && (
                                         <div><strong>{cartItem.options.deposit.label}:</strong> {cartItem.options.deposit.cost} (inkl. MwSt.)</div>
                                     )}

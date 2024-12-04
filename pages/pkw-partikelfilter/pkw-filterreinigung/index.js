@@ -307,7 +307,7 @@ export default function FilterreinigungPage({ product, footerArticle }) {
                     <div className="row g-0 p-4">
                         <h1>{product.product_name}</h1>
                         <p>48h Expressreinigung von der Abholung bis zur Zustellung</p>
-                        <p>Price: ${product.price_value}</p>
+                        <p>Price: {formatPrice(product.price_value)}</p>
                         {/* Additional product details */}
                     </div>
                     <div className="row g-0 p-4">
