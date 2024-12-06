@@ -157,11 +157,9 @@ export default function CheckoutPage({footerArticle }) {
         <>
             <main>
                 <div className="container-fluid container-greencar">
-                    <h1>Checkout Page</h1>
-
                     {/* Cart Section */}
                     <section>
-                        <h2>Cart</h2>
+                        <h2>Warenkorb</h2>
                         {cartItem ? (
                             <>
                                 <div className="cart-item">
@@ -228,7 +226,7 @@ export default function CheckoutPage({footerArticle }) {
                     {/* Billing Address Section */}
                     <section>
                         <Form noValidate validated={validated} onSubmit={handleSubmit}>
-                            <h2>Billing Address</h2>
+                            <h2>Ihre Rechnungsadresse</h2>
                             <Row className="mb-3">
                                 <Form.Group as={Col} md="6" controlId="billingFullName">
                                     <Form.Label>Full Name</Form.Label>
@@ -339,7 +337,7 @@ export default function CheckoutPage({footerArticle }) {
                             <Form.Group className="mb-3">
                                 <Form.Check
                                     type="checkbox"
-                                    label="Shipping address is the same as billing address"
+                                    label="Rechnungsadresse entspricht der Abhol- und Zustelladresse"
                                     checked={sameAsBilling}
                                     onChange={() => setSameAsBilling((prev) => !prev)}
                                 />
@@ -347,7 +345,7 @@ export default function CheckoutPage({footerArticle }) {
 
                             {!sameAsBilling &&(
                                 <>
-                                    <h2>Shipping Address</h2>
+                                    <h2>Abhol- und Zustelladresse</h2>
                                     {/* Repeat shipping address fields, using handleShippingAddressChange */}
                                     <Row className="mb-3">
                                         <Form.Group as={Col} md="6" controlId="shippingFullName">
@@ -482,11 +480,13 @@ export default function CheckoutPage({footerArticle }) {
                                 </Col>
                             </Row>
 
-                            <Button type="submit">Submit</Button>
+                            <Button type="submit">weiter</Button>
                         </Form>
                     </section>
+                    <div className="row g-0 p-4">
+                        <button onClick={() => router.back()} className="btn btn-primary">zurück</button>
+                    </div>
                 </div>
-
             </main>
             <footer>
                 <div className="container-fluid container-footer container-greencar">

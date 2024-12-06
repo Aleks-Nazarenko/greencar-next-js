@@ -248,6 +248,9 @@ export default function ProductPage({ product, footerArticle }) {
         // Save to local storage
         localStorage.setItem('cart', JSON.stringify(cartItem));
         localStorage.setItem('productOptions', JSON.stringify(productOptions));
+        // Get the current page URL using the router
+        const productUrl = `${window.location.origin}${router.asPath}`;
+        localStorage.setItem('lastVisitedProduct', productUrl);
 
         // Navigate to checkout
         router.push('/checkout');

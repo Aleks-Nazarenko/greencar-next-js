@@ -57,7 +57,7 @@ export default function Home({article, footerArticle}) {
                 </div>
             </main>
             <footer>
-                <div className="container-fluid container-footer">
+                <div className="container-fluid container-greencar container-footer">
                     <div className="row g-0 p-4">
                         <div dangerouslySetInnerHTML={{ __html: footerArticle.introtext}} />
                     </div>

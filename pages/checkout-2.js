@@ -4,6 +4,7 @@ import { useRouter } from "next/router";
 import { PayPalButtons } from "@paypal/react-paypal-js";
 import { PayPalScriptProvider } from "@paypal/react-paypal-js";
 import {convertRelativeUrls} from "@/utils/convertRelativeUrls";
+import Form from 'react-bootstrap/Form';
 
 export async function getStaticProps({ params }) {
     // Base URL of your Joomla server (adjust this to your Joomla installation URL)
@@ -29,6 +30,7 @@ export async function getStaticProps({ params }) {
 export default function CheckoutStep2({footerArticle }) {
     const router = useRouter();
     const [checkoutDetails, setCheckoutDetails] = useState(null);
+    const [termsAccepted, setTermsAccepted] = useState(false);
 
     useEffect(() => {
         const details = JSON.parse(localStorage.getItem("checkoutDetails"));
@@ -40,13 +42,25 @@ export default function CheckoutStep2({footerArticle }) {
     }, [router]);
 
     const handleConfirmOrder = async () => {
-        const orderData = JSON.parse(localStorage.getItem("checkoutDetails"));
+        if (!termsAccepted) {
+            alert("Bitte akzeptieren Sie die allgemeinen Geschäftsbedingungen, um fortzufahren.");
+            return;
+        }
+        function generateOrderNumber() {
+            const prefix = "GC";
+            const now = Date.now(); // Current timestamp in milliseconds
+            const randomPart = Math.floor(Math.random() * 1000000); // Random number
+            const uniquePart = (now + randomPart).toString(36).toUpperCase(); // Convert to Base36
+            return `${prefix}-${uniquePart}`;
+        }
 
+        const orderNumber = generateOrderNumber();
+        const orderData = JSON.parse(localStorage.getItem("checkoutDetails"));
         if (!orderData) {
             alert("Order data is missing. Please try again.");
             return;
         }
-
+        orderData.orderNumber = orderNumber;
         // Send the request to Joomla controller
         const response = await fetch('https://joomla2.nazarenko.de/index.php?option=com_nazarenkoapi&task=confirmOrder&format=json', {
             method: "POST", // Use POST for sending data securely
@@ -55,12 +69,11 @@ export default function CheckoutStep2({footerArticle }) {
             },
             body: JSON.stringify(orderData), // Convert the data to JSON string
         });
-
         // Check if the response is OK
         if (!response.ok) {
             const errorData = await response.json();
             console.error("Error from server:", errorData);
-            alert("Failed to confirm order. Please try again.");
+            alert("Bestellung konnte nicht bestätigt werden. Bitte versuchen Sie es erneut.");
             return;
         }
 
@@ -69,10 +82,11 @@ export default function CheckoutStep2({footerArticle }) {
         console.log("Order confirmation successful:", result);
 
         // Clear localStorage and navigate to Thank You page
-        alert("Order placed successfully!");
+       // alert("Order placed successfully!");
         localStorage.removeItem("checkoutDetails");
         localStorage.removeItem("cart");
-        router.push("/thank-you");
+        localStorage.removeItem("productOptions");
+        router.push( {pathname: '/thank-you', query: { paymentMethod: checkoutDetails.paymentMethod, orderNumber: orderNumber, }});
     };
     const formatPrice = (price) => {
         return new Intl.NumberFormat('de-DE', {
@@ -91,7 +105,6 @@ export default function CheckoutStep2({footerArticle }) {
             <main>
                 <div className="container-fluid container-greencar">
                     <div className="row g-0 p-4">
-                        <h1>Checkout Step 2</h1>
                         {checkoutDetails && (
                             <>
                                 <h2>Bestellzusammenfassung</h2>
@@ -123,38 +136,76 @@ export default function CheckoutStep2({footerArticle }) {
                                     <p><strong>MwSt.</strong> {checkoutDetails.cartItem.vatShare}</p>
                                     <p><strong>Gesamtsumme</strong> {checkoutDetails.cartItem.advancePayment ? formatPrice(checkoutDetails.cartItem.advancePayment) : formatPrice(checkoutDetails.cartItem.totalPriceUnformatted)}</p>
                                 </div>
+                                <div>
+                                    <Form.Check
+                                        type="checkbox"
+                                        label="Ich akzeptiere die allgemeinen Geschäftsbedingungen (AGB)"
+                                        checked={termsAccepted}
+                                        onChange={(e) => setTermsAccepted(e.target.checked)}
+                                        className="my-3"
+                                    />
+                                </div>
 
                                 {checkoutDetails.paymentMethod === "paypal" ? (
+                                    termsAccepted ? (
                                      <>
-                                        <div>Text zum auf PayPal klicken und Kaufen</div>
-
-                                        <PayPalButtons
-                                            fundingSource="paypal"
-                                            totalAmount={checkoutDetails.cartItem.advancePayment ? checkoutDetails.cartItem.advancePayment : checkoutDetails.cartItem.totalPriceUnformatted.toFixed(2)}
-                                            onSuccess={(details) => {
-                                                alert("Payment successful!");
-                                                handleConfirmOrder()
-                                                    .then(() => {
-                                                        console.log("Order confirmed successfully.");
-                                                    })
-                                                    .catch((err) => {
-                                                        console.error("Error confirming order:", err);
-                                                    });
-                                            }}
-                                            onError={(err) => {
-                                                alert("Payment failed!");
-                                                console.error(err);
-                                            }}
-                                        />
+                                        <div>Bitte klicken Sie auf den Button unten, um Ihre Bestellung zu bestätigen und mit PayPal zu bezahlen.</div>
+                                         <PayPalButtons
+                                             fundingSource="paypal"
+                                             createOrder={(data, actions) => {
+                                                 // Define the order details
+                                                 return actions.order.create({
+                                                     purchase_units: [
+                                                         {
+                                                             amount: {
+                                                                 value: checkoutDetails.cartItem.advancePayment
+                                                                     ? checkoutDetails.cartItem.advancePayment.toFixed(2)
+                                                                     : checkoutDetails.cartItem.totalPriceUnformatted.toFixed(2),
+                                                                 currency_code: "EUR",
+                                                             },
+                                                             description: `Order for ${checkoutDetails.cartItem.productName}`,
+                                                         },
+                                                     ],
+                                                 });
+                                             }}
+                                             onApprove={(data, actions) => {
+                                                 return actions.order.capture().then((details) => {
+                                                     console.log("Transaction details:", details);
+                                                     handleConfirmOrder()
+                                                         .then(() => {
+                                                             console.log("Order confirmed successfully.");
+                                                         })
+                                                         .catch((err) => {
+                                                             console.error("Error confirming order:", err);
+                                                         });
+                                                 });
+                                             }}
+                                             onError={(err) => {
+                                                 alert("Zahlung fehlgeschlagen! Bitte versuchen Sie es erneut.");
+                                                 console.error(err);
+                                             }}
+                                         />
                                      </>
+                                    ) : (
+                                        <>
+                                        <div>Bitte akzeptieren Sie die allgemeinen Geschäftsbedingungen, um fortzufahren.</div>
+                                        </>
+                                    )
                                 ) : (
                                     <>
-                                        <div>Text zum klicken und Kaufen</div>
-                                        <button onClick={handleConfirmOrder}>Submit Order</button>
+                                        <div>Zahlungsmethode Vorauskasse / Banküberweisung </div>
+                                        <div>Durch Anklicken des Buttons 'Kaufen' geben Sie eine verbindliche Bestellung der oben aufgelisteten Waren ab.
+                                            Die Auftragsbestätigung erhalten Sie per E-Mail unmittelbar nach dem Absenden der Bestellung. Damit ist der Kaufvertrag geschlossen.</div>
+                                        <button className="btn btn-primary" onClick={handleConfirmOrder}  disabled={!termsAccepted}>Kaufen</button>
                                     </>
                                 )}
                             </>
                         )}
+                    </div>
+                    <div className="row g-0 p-4">
+                        <div className={"col col-sm-4"}>
+                            <button onClick={() => router.back()} className="btn btn-primary">zurück</button>
+                        </div>
                     </div>
                 </div>
             </main>
