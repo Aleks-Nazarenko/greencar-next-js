@@ -80,6 +80,14 @@ export default function CheckoutPage({footerArticle }) {
             setVatShare(calculatedVatShare);
             cartData.vatShare = calculatedVatShare ? formatPrice(calculatedVatShare) : null;
         }
+        //preserve the form field values
+        const savedDetails = JSON.parse(localStorage.getItem("checkoutDetails"));
+        if (savedDetails) {
+            setBillingAddress(savedDetails.billingAddress || {});
+            setShippingAddress(savedDetails.shippingAddress || {});
+            setSameAsBilling(JSON.stringify(savedDetails.billingAddress) === JSON.stringify(savedDetails.shippingAddress));
+            setPaymentMethod(savedDetails.paymentMethod || "advance-payment");
+        }
     }, []);
 
     // Handle changes for shipping address fields

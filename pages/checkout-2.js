@@ -5,11 +5,12 @@ import { PayPalButtons } from "@paypal/react-paypal-js";
 import { PayPalScriptProvider } from "@paypal/react-paypal-js";
 import {convertRelativeUrls} from "@/utils/convertRelativeUrls";
 import Form from 'react-bootstrap/Form';
+import PayPalPlaceholder from "@/pages/PayPalPlaceholder";
+import { Modal, Button } from "react-bootstrap";
 
 export async function getStaticProps({ params }) {
     // Base URL of your Joomla server (adjust this to your Joomla installation URL)
     const joomlaBaseUrl = 'https://joomla2.nazarenko.de';
-
     // Fetch data for the footer from Joomla API
     const resFooter = await fetch('https://joomla2.nazarenko.de/index.php?option=com_nazarenkoapi&task=articleWithModules&id=2&format=json');
     const footerData = await resFooter.json();
@@ -19,18 +20,41 @@ export async function getStaticProps({ params }) {
     // Convert relative URLs in the footer content to absolute URLs
     if (footerArticle && footerArticle.introtext) {
         footerArticle.introtext = convertRelativeUrls(footerArticle.introtext, joomlaBaseUrl);
+    }else{
+        footerArticle.introtext = '';
+        console.log('footerArticle.introtext not found');
     }
+    // Fetch data for the footer from Joomla API
+    const resTerms = await fetch('https://joomla2.nazarenko.de/index.php?option=com_nazarenkoapi&task=articleWithModules&id=5&format=json');
+    const termsData = await resTerms.json();
+    // Extract the footer article from the response
+    const termsArticle = termsData.article || null;
 
+    // Convert relative URLs in the footer content to absolute URLs
+    if (termsArticle && termsArticle.introtext) {
+        termsArticle.introtext = convertRelativeUrls(termsArticle.introtext, joomlaBaseUrl);
+    }else{
+        termsArticle.introtext = '';
+        console.log('termsArticle.introtext not found');
+    }
     return {
         props: {
             footerArticle,
+            termsArticle,
         },
     };
 }
-export default function CheckoutStep2({footerArticle }) {
+export default function CheckoutStep2({footerArticle, termsArticle})   {
     const router = useRouter();
     const [checkoutDetails, setCheckoutDetails] = useState(null);
     const [termsAccepted, setTermsAccepted] = useState(false);
+    const [showModal, setShowModal] = useState(false);
+    const handleModalOpen = () => {
+        setShowModal(true);
+    };
+    const handleModalClose = () => {
+        setShowModal(false);
+    };
 
     useEffect(() => {
         const details = JSON.parse(localStorage.getItem("checkoutDetails"));
@@ -139,17 +163,47 @@ export default function CheckoutStep2({footerArticle }) {
                                 <div>
                                     <Form.Check
                                         type="checkbox"
-                                        label="Ich akzeptiere die allgemeinen Geschäftsbedingungen (AGB)"
+                                        label={
+                                            <>
+                                                Ich akzeptiere die{" "}
+                                                <a className={"gc-green"}
+                                                    href="#"
+                                                    onClick={(e) => {
+                                                        e.preventDefault();
+                                                        handleModalOpen();
+                                                    }}
+                                                >
+                                                    allgemeinen Geschäftsbedingungen (AGB)
+                                                </a>
+                                            </>
+                                        }
                                         checked={termsAccepted}
                                         onChange={(e) => setTermsAccepted(e.target.checked)}
                                         className="my-3"
                                     />
                                 </div>
+                                {/* Bootstrap Modal */}
+                                <Modal show={showModal} onHide={handleModalClose} size="lg" centered>
+                                    <Modal.Header closeButton>
+                                    </Modal.Header>
+                                    <Modal.Body>
+                                        {/* Render Joomla Article Content if available*/}
+                                        {termsArticle?.introtext && (
+                                            <div dangerouslySetInnerHTML={{ __html: termsArticle.introtext}} />
+                                        )}
+                                    </Modal.Body>
+                                    <Modal.Footer>
+                                        <Button variant="secondary" onClick={handleModalClose}>
+                                            Schließen
+                                        </Button>
+                                    </Modal.Footer>
+                                </Modal>
 
                                 {checkoutDetails.paymentMethod === "paypal" ? (
                                     termsAccepted ? (
                                      <>
                                         <div>Bitte klicken Sie auf den Button unten, um Ihre Bestellung zu bestätigen und mit PayPal zu bezahlen.</div>
+                                         <div className={"col-sm-6"}>
                                          <PayPalButtons
                                              fundingSource="paypal"
                                              createOrder={(data, actions) => {
@@ -185,10 +239,15 @@ export default function CheckoutStep2({footerArticle }) {
                                                  console.error(err);
                                              }}
                                          />
+                                         </div>
                                      </>
                                     ) : (
                                         <>
-                                        <div>Bitte akzeptieren Sie die allgemeinen Geschäftsbedingungen, um fortzufahren.</div>
+                                            <div style={{ visibility: !termsAccepted ? "hidden" : "visible" }}>Bitte akzeptieren Sie die allgemeinen Geschäftsbedingungen, um fortzufahren.</div>
+                                            <div className={"paypal-button-label-container col-sm-6 d-flex flex-column align-items-center"}>
+                                                <PayPalPlaceholder />
+                                            </div>
+
                                         </>
                                     )
                                 ) : (
@@ -212,7 +271,9 @@ export default function CheckoutStep2({footerArticle }) {
             <footer>
                 <div className="container-fluid container-footer container-greencar">
                     <div className="row g-0 p-4">
-                        <div dangerouslySetInnerHTML={{ __html: footerArticle.introtext}} />
+                        {termsArticle?.introtext && (
+                            <div dangerouslySetInnerHTML={{ __html: footerArticle.introtext}} />
+                        )}
                     </div>
                 </div>
             </footer>
