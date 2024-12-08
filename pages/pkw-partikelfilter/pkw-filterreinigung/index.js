@@ -2,25 +2,29 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import {convertRelativeUrls} from "@/utils/convertRelativeUrls";
+import { JOOMLA_API_BASE } from '@/utils/config';
+import { JOOMLA_URL_BASE } from '@/utils/config';
 
 export async function getStaticProps() {
     // Base URL of your Joomla server (adjust this to your Joomla installation URL)
-    const joomlaBaseUrl = 'https://joomla2.nazarenko.de';
+    const joomlaBaseUrl = JOOMLA_URL_BASE;
     // Extract product ID from `product-id-name`
 
     // Fetch the product details from the Joomla API
-    const res = await fetch(`https://joomla2.nazarenko.de/index.php?option=com_nazarenkoapi&task=getProduct&product_id=14435&format=json`);
+    const res = await fetch(`${JOOMLA_API_BASE}&task=getProduct&product_id=14435&format=json`);
     const product = await res.json();
 
     // Fetch data for the footer from Joomla API
-    const resFooter = await fetch('https://joomla2.nazarenko.de/index.php?option=com_nazarenkoapi&task=articleWithModules&id=2&format=json');
+    const resFooter = await fetch(`${JOOMLA_API_BASE}&task=articleWithModules&id=2&format=json`);
     const footerData = await resFooter.json();
     // Extract the footer article from the response
     const footerArticle = footerData.article || null;
-
     // Convert relative URLs in the footer content to absolute URLs
     if (footerArticle && footerArticle.introtext) {
         footerArticle.introtext = convertRelativeUrls(footerArticle.introtext, joomlaBaseUrl);
+    }else{
+        footerArticle.introtext = '';
+        console.log('footerArticle.introtext not found');
     }
 
     return {
@@ -126,7 +130,7 @@ export default function FilterreinigungPage({ product, footerArticle }) {
     useEffect(() => {
         const fetchLands = async () => {
             try {
-                const response = await fetch('https://joomla2.nazarenko.de/index.php?option=com_nazarenkoapi&task=getLands&format=json');
+                const response = await fetch(`${JOOMLA_API_BASE}&task=getLands&format=json`);
                 const data = await response.json();
                 setLands(data);
             } catch (error) {
@@ -141,7 +145,7 @@ export default function FilterreinigungPage({ product, footerArticle }) {
         if (selectedLand) {
             const fetchCities = async () => {
                 try {
-                    const response = await fetch(`https://joomla2.nazarenko.de/index.php?option=com_nazarenkoapi&task=getCities&land_id=${selectedLand}&format=json'`);
+                    const response = await fetch(`${JOOMLA_API_BASE}&task=getCities&land_id=${selectedLand}&format=json`);
                     const data = await response.json();
                     setCities(data);
                 } catch (error) {
@@ -406,7 +410,9 @@ export default function FilterreinigungPage({ product, footerArticle }) {
             <footer>
                 <div className="container-fluid container-footer container-greencar">
                     <div className="row g-0 p-4">
-                        <div dangerouslySetInnerHTML={{ __html: footerArticle.introtext}} />
+                        {footerArticle?.introtext && (
+                            <div dangerouslySetInnerHTML={{ __html: footerArticle.introtext}} />
+                        )}
                     </div>
                 </div>
             </footer>

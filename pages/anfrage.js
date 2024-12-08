@@ -1,5 +1,7 @@
 import { useRouter } from 'next/router';
 import { useState } from 'react';
+import {JOOMLA_API_BASE} from "@/utils/config";
+import {JOOMLA_URL_BASE} from "@/utils/config";
 
 export default function OrderForm() {
     const router = useRouter();
@@ -26,7 +28,7 @@ export default function OrderForm() {
         e.preventDefault();
 
         // Send data to Joomla API for email processing
-        const response = await fetch('https://joomla2.nazarenko.de/index.php?option=com_nazarenkoapi&task=anfrage&format=json', {
+        const response = await fetch(`${JOOMLA_API_BASE}&task=anfrage&format=json`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(formData),

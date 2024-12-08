@@ -3,6 +3,8 @@ import Link from "next/link";
 import { useRouter } from 'next/router';
 import {convertRelativeUrls} from "@/utils/convertRelativeUrls";
 import { useState, useEffect } from 'react';
+import { JOOMLA_API_BASE } from '@/utils/config';
+import { JOOMLA_URL_BASE } from '@/utils/config';
 
 function ProductImage({ src, alt, fallback }) {
     const [imgSrc, setImgSrc] = useState(src);
@@ -28,13 +30,13 @@ function replaceSlashesExceptTrailing(str) {
     return hasTrailingSlash ? result + '/' : result;
 }
 export async function getStaticPaths() {
-    const res = await fetch(`https://joomla2.nazarenko.de/index.php?option=com_nazarenkoapi&task=getSubcategories&category_id=70&format=json`);
+    const res = await fetch(`${JOOMLA_API_BASE}&task=getSubcategories&category_id=70&format=json`);
     const categories = await res.json();
     // Step 2: For each category, fetch its subcategories
     const paths = [];
 
     for (const category of categories) {
-        const res = await fetch(`https://joomla2.nazarenko.de/index.php?option=com_nazarenkoapi&task=getSubcategories&category_id=${category.category_id}&format=json`);
+        const res = await fetch(`${JOOMLA_API_BASE}&task=getSubcategories&category_id=${category.category_id}&format=json`);
         const subcategories = await res.json();
 
         // Step 3: Generate paths for each subcategory within the category
@@ -55,7 +57,7 @@ export async function getStaticPaths() {
 }
 export async function getStaticProps({ params }) {
     // Base URL of your Joomla server (adjust this to your Joomla installation URL)
-    const joomlaBaseUrl = 'https://joomla2.nazarenko.de';
+    const joomlaBaseUrl = JOOMLA_URL_BASE;
 
     // Extract and handle multi-word category and subcategory names
     const [categoryId, ...categoryNameParts] = params["id-name"].split('-');
@@ -65,19 +67,19 @@ export async function getStaticProps({ params }) {
     const subcategoryName = subcategoryNameParts.join('-');
 
     // Fetch the products for the specified subcategory
-    const res = await fetch(`https://joomla2.nazarenko.de/index.php?option=com_nazarenkoapi&task=getProductsBySubcategory&subcategory_id=${subcategoryId}&format=json`);
+    const res = await fetch(`${JOOMLA_API_BASE}&task=getProductsBySubcategory&subcategory_id=${subcategoryId}&format=json`);
     const products = await res.json();
 
     // Fetch all categories for the main category dropdown
-    const resCategories = await fetch('https://joomla2.nazarenko.de/index.php?option=com_nazarenkoapi&task=getSubcategories&category_id=70&format=json');
+    const resCategories = await fetch(`${JOOMLA_API_BASE}&task=getSubcategories&category_id=70&format=json`);
     const categories = await resCategories.json();
 
     // Fetch subcategories for the current category for the subcategory dropdown
-    const resSubcategories = await fetch(`https://joomla2.nazarenko.de/index.php?option=com_nazarenkoapi&task=getSubcategories&category_id=${categoryId}&format=json`);
+    const resSubcategories = await fetch(`${JOOMLA_API_BASE}&task=getSubcategories&category_id=${categoryId}&format=json`);
     const subcategories = await resSubcategories.json();
 
     // Fetch data for the footer from Joomla API
-    const resFooter = await fetch('https://joomla2.nazarenko.de/index.php?option=com_nazarenkoapi&task=articleWithModules&id=2&format=json');
+    const resFooter = await fetch(`${JOOMLA_API_BASE}&task=articleWithModules&id=2&format=json`);
     const footerData = await resFooter.json();
     const footerArticle = footerData.article || null;
 
@@ -174,9 +176,9 @@ export default function ProductListPage({ products, categoryName, categoryId, su
                                 <tr key={product.product_id}>
                                     <td>
                                         <ProductImage
-                                            src={`https://joomla2.nazarenko.de/media/com_hikashop/upload/thumbnail_100X100/${product.product_image}`}
+                                            src={`${JOOMLA_URL_BASE}/media/com_hikashop/upload/thumbnail_100X100/${product.product_image}`}
                                             alt={product.product_name}
-                                            fallback="https://joomla2.nazarenko.de/media/com_hikashop/upload/thumbnail_100X100/beispielphoto.jpg"
+                                            fallback={`${JOOMLA_URL_BASE}/media/com_hikashop/upload/thumbnail_100X100/beispielphoto.jpg`}
                                         />
                                     </td>
                                     <td>

@@ -7,12 +7,14 @@ import {convertRelativeUrls} from "@/utils/convertRelativeUrls";
 import Form from 'react-bootstrap/Form';
 import PayPalPlaceholder from "@/pages/PayPalPlaceholder";
 import { Modal, Button } from "react-bootstrap";
+import {JOOMLA_API_BASE} from "@/utils/config";
+import {JOOMLA_URL_BASE} from "@/utils/config";
 
 export async function getStaticProps({ params }) {
     // Base URL of your Joomla server (adjust this to your Joomla installation URL)
-    const joomlaBaseUrl = 'https://joomla2.nazarenko.de';
+    const joomlaBaseUrl = JOOMLA_URL_BASE;
     // Fetch data for the footer from Joomla API
-    const resFooter = await fetch('https://joomla2.nazarenko.de/index.php?option=com_nazarenkoapi&task=articleWithModules&id=2&format=json');
+    const resFooter = await fetch(`${JOOMLA_API_BASE}&task=articleWithModules&id=2&format=json`);
     const footerData = await resFooter.json();
     // Extract the footer article from the response
     const footerArticle = footerData.article || null;
@@ -25,7 +27,7 @@ export async function getStaticProps({ params }) {
         console.log('footerArticle.introtext not found');
     }
     // Fetch data for the footer from Joomla API
-    const resTerms = await fetch('https://joomla2.nazarenko.de/index.php?option=com_nazarenkoapi&task=articleWithModules&id=5&format=json');
+    const resTerms = await fetch(`${JOOMLA_API_BASE}&task=articleWithModules&id=5&format=json`);
     const termsData = await resTerms.json();
     // Extract the footer article from the response
     const termsArticle = termsData.article || null;
@@ -86,7 +88,7 @@ export default function CheckoutStep2({footerArticle, termsArticle})   {
         }
         orderData.orderNumber = orderNumber;
         // Send the request to Joomla controller
-        const response = await fetch('https://joomla2.nazarenko.de/index.php?option=com_nazarenkoapi&task=confirmOrder&format=json', {
+        const response = await fetch(`${JOOMLA_API_BASE}&task=confirmOrder&format=json`, {
             method: "POST", // Use POST for sending data securely
             headers: {
                 "Content-Type": "application/json", // Ensure the server knows it's JSON
@@ -271,7 +273,7 @@ export default function CheckoutStep2({footerArticle, termsArticle})   {
             <footer>
                 <div className="container-fluid container-footer container-greencar">
                     <div className="row g-0 p-4">
-                        {termsArticle?.introtext && (
+                        {footerArticle?.introtext && (
                             <div dangerouslySetInnerHTML={{ __html: footerArticle.introtext}} />
                         )}
                     </div>

@@ -6,48 +6,69 @@ import axios from 'axios';
 import Link from "next/link";
 import { useRouter } from 'next/router';
 import {convertRelativeUrls} from "@/utils/convertRelativeUrls";
+import {JOOMLA_API_BASE} from "@/utils/config";
+import {JOOMLA_URL_BASE} from "@/utils/config";
 
 const inter = Inter({ subsets: ["latin"] });
 
 export async function getStaticPaths() {
     // Fetch categories dynamically from your Joomla API
-    const res = await axios.get('https://joomla2.nazarenko.de/index.php?option=com_nazarenkoapi&task=getSubcategories&category_id=15&format=json');
-    const categories = await res.data;
-    // Map the fetched categories to paths with the `id-name` format
-    const paths = categories.map((category) => ({
-        params: {
-            "id-name": `${category.category_id}-${category.category_name.toLowerCase().replace(/\s+/g, '-')}`
-        },
-    }));
-
-    return {
-        paths,
-        fallback: false,
-    };
+    try {
+        const res = await axios.get(`${JOOMLA_API_BASE}&task=getSubcategories&category_id=15&format=json`);
+        const categories = await res.data;
+        // Map the fetched categories to paths with the `id-name` format
+        const paths = categories.map((category) => ({
+            params: {
+                "id-name": `${category.category_id}-${category.category_name.toLowerCase().replace(/\s+/g, '-')}`
+            },
+        }));
+        return {
+            paths,
+            fallback: false,
+        };
+    } catch (error) {
+        console.log('Failed to fetch categories:', error.message);
+        return {
+            paths: [],
+            fallback: false,
+        };
+    }
 }
 export async function getStaticProps({ params }) {
     // Base URL of your Joomla server (adjust this to your Joomla installation URL)
-    const joomlaBaseUrl = 'https://joomla2.nazarenko.de';
+    const joomlaBaseUrl = JOOMLA_URL_BASE;
     // Split `id-name` into `id` and `name`
     const [id, ...nameParts] = params["id-name"].split('-');
     const name = nameParts.join('-');
     // Fetch data based on the extracted ID
-    const res = await axios.get(`https://joomla2.nazarenko.de/index.php?option=com_nazarenkoapi&task=getSubcategories&category_id=${id}&format=json`);
-    const subcategories = await res.data;
+    const subcategories= await axios
+        .get(`${JOOMLA_API_BASE}&task=getSubcategories&category_id=${id}&format=json`)
+        .then((res) => res.data || [])
+        .catch((error) => {
+            console.log('Failed to fetch subcategories:', error.message);
+            return []; // Return an empty array if the request fails
+        });
 
     // Fetch categories for the main dropdown (assuming you want to navigate between categories)
-    const resCategories = await axios.get('https://joomla2.nazarenko.de/index.php?option=com_nazarenkoapi&task=getSubcategories&category_id=15&format=json');
-    const categories = await resCategories.data;
+    const categories = await axios
+        .get(`${JOOMLA_API_BASE}&task=getSubcategories&category_id=15&format=json`)
+        .then((res) => res.data || [])
+        .catch((error) => {
+            console.log('Failed to fetch categories:', error.message);
+            return []; // Return an empty array if the request fails
+        });
 
     // Fetch data for the footer from Joomla API
-    const resFooter = await fetch('https://joomla2.nazarenko.de/index.php?option=com_nazarenkoapi&task=articleWithModules&id=2&format=json');
+    const resFooter = await fetch(`${JOOMLA_API_BASE}&task=articleWithModules&id=2&format=json`);
     const footerData = await resFooter.json();
     // Extract the footer article from the response
     const footerArticle = footerData.article || null;
-
     // Convert relative URLs in the footer content to absolute URLs
     if (footerArticle && footerArticle.introtext) {
         footerArticle.introtext = convertRelativeUrls(footerArticle.introtext, joomlaBaseUrl);
+    }else{
+        footerArticle.introtext = '';
+        console.log('footerArticle.introtext not found');
     }
     // Pass data to the page via props
     return {
@@ -89,50 +110,61 @@ function NachruestfilterSubcategories({ subcategories, categories, categoryId, c
             <main>
                 <div className="container-fluid container-greencar">
                     <div className="row g-0 p-4">
-                        <h1>{categoryName}</h1>
-                        <ul>
-                            {subcategories.map((subcategory) => (
-                                <li key={subcategory.category_id}>
-                                    <Link href={`/pkw-partikelfilter/pkw-nachruestfilter/${categoryId}-${categoryName.toLowerCase()}/${subcategory.category_id}-${subcategory.category_name.toLowerCase().replace(/\s+/g, '-').replace(/\//g, '-')}`}>{subcategory.category_name}</Link>
+                        {subcategories.length > 0 && (
+                            <>
+                                <h1>{categoryName}</h1>
+                                <ul>
+                                    {subcategories.map((subcategory) => (
+                                        <li key={subcategory.category_id}>
+                                            <Link href={`/pkw-partikelfilter/pkw-nachruestfilter/${categoryId}-${categoryName.toLowerCase()}/${subcategory.category_id}-${subcategory.category_name.toLowerCase().replace(/\s+/g, '-').replace(/\//g, '-')}`}>{subcategory.category_name}</Link>
 
-                                </li>
-                            ))}
-                        </ul>
+                                        </li>
+                                    ))}
+                                </ul>
+                            </>
+                        )}
                         <div>
-                            <select
-                                id="categorySelect"
-                                onChange={handleCategoryChange}
-                                value={`${categoryId}-${categoryName.toLowerCase()}`}
-                            >
-                                <option value="" disabled>- Hersteller -</option>
-                                {categories.map((category) => (
-                                    <option
-                                        key={category.category_id}
-                                        value={`${category.category_id}-${category.category_name.toLowerCase().replace(/\s+/g, '-')}`}
+                            {categories.length > 0 && (
+                                <>
+                                    <select
+                                        id="categorySelect"
+                                        onChange={handleCategoryChange}
+                                        value={`${categoryId}-${categoryName.toLowerCase()}`}
                                     >
-                                        {category.category_name}
-                                    </option>
-                                ))}
-                            </select>
+                                        <option value="" disabled>- Hersteller -</option>
+                                        {categories.map((category) => (
+                                            <option
+                                                key={category.category_id}
+                                                value={`${category.category_id}-${category.category_name.toLowerCase().replace(/\s+/g, '-')}`}
+                                            >
+                                                {category.category_name}
+                                            </option>
+                                        ))}
+                                    </select>
+                                </>
+                            )}
                         </div>
-
                         {/* Subcategory Select */}
                         <div>
-                            <select
-                                id="subcategorySelect"
-                                onChange={handleSubcategoryChange}
-                                defaultValue=""
-                            >
-                                <option value="" disabled>- Modellreihe -</option>
-                                {subcategories.map((subcategory) => (
-                                    <option
-                                        key={subcategory.category_id}
-                                        value={`${subcategory.category_id}-${subcategory.category_name.toLowerCase().replace(/\s+/g, '-').replace(/\//g, '-')}`}
+                            {subcategories.length > 0 && (
+                                <>
+                                    <select
+                                        id="subcategorySelect"
+                                        onChange={handleSubcategoryChange}
+                                        defaultValue=""
                                     >
-                                        {subcategory.category_name}
-                                    </option>
-                                ))}
-                            </select>
+                                        <option value="" disabled>- Modellreihe -</option>
+                                        {subcategories.map((subcategory) => (
+                                            <option
+                                                key={subcategory.category_id}
+                                                value={`${subcategory.category_id}-${subcategory.category_name.toLowerCase().replace(/\s+/g, '-').replace(/\//g, '-')}`}
+                                            >
+                                                {subcategory.category_name}
+                                            </option>
+                                        ))}
+                                    </select>
+                                </>
+                                )}
                         </div>
 
                     </div>
@@ -141,7 +173,9 @@ function NachruestfilterSubcategories({ subcategories, categories, categoryId, c
             <footer>
                 <div className="container-fluid container-footer container-greencar">
                     <div className="row g-0 p-4">
-                        <div dangerouslySetInnerHTML={{ __html: footerArticle.introtext}} />
+                        {footerArticle?.introtext && (
+                            <div dangerouslySetInnerHTML={{ __html: footerArticle.introtext}} />
+                        )}
                     </div>
                 </div>
             </footer>

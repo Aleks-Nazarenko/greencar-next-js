@@ -4,18 +4,20 @@ import axios from 'axios';
 import Link from "next/link";
 import {convertRelativeUrls} from "@/utils/convertRelativeUrls";
 import { useRouter } from 'next/router';
+import {JOOMLA_API_BASE} from "@/utils/config";
+import {JOOMLA_URL_BASE} from "@/utils/config";
 
 
 export async function getStaticProps() {
     // Base URL of your Joomla server (adjust this to your Joomla installation URL)
-    const joomlaBaseUrl = 'https://joomla2.nazarenko.de';
+    const joomlaBaseUrl = joomlaBaseUrl;
     // Fetch data from Joomla API
-    const res = await axios.get('https://joomla2.nazarenko.de/index.php?option=com_nazarenkoapi&task=getSubcategories&category_id=70&format=json');
+    const res = await axios.get(`${JOOMLA_API_BASE}&task=getSubcategories&category_id=70&format=json`);
     const categories = await res.data;
     //  console.log(products);
 
     // Fetch data for the footer from Joomla API
-    const resFooter = await fetch('https://joomla2.nazarenko.de/index.php?option=com_nazarenkoapi&task=articleWithModules&id=2&format=json');
+    const resFooter = await fetch(`${JOOMLA_API_BASE}&task=articleWithModules&id=2&format=json`);
     const footerData = await resFooter.json();
     // Extract the footer article from the response
     const footerArticle = footerData.article || null;

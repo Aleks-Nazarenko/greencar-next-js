@@ -5,20 +5,24 @@ import Button from 'react-bootstrap/Button';
 import { useRouter } from 'next/router';
 import Col from 'react-bootstrap/Col';
 import Row from 'react-bootstrap/Row';
+import {JOOMLA_URL_BASE} from "@/utils/config";
+import {JOOMLA_API_BASE} from "@/utils/config";
 
 export async function getStaticProps({ params }) {
     // Base URL of your Joomla server (adjust this to your Joomla installation URL)
-    const joomlaBaseUrl = 'https://joomla2.nazarenko.de';
+    const joomlaBaseUrl = 'JOOMLA_URL_BASE';
 
     // Fetch data for the footer from Joomla API
-    const resFooter = await fetch('https://joomla2.nazarenko.de/index.php?option=com_nazarenkoapi&task=articleWithModules&id=2&format=json');
+    const resFooter = await fetch(`${JOOMLA_API_BASE}&task=articleWithModules&id=2&format=json`);
     const footerData = await resFooter.json();
     // Extract the footer article from the response
     const footerArticle = footerData.article || null;
-
     // Convert relative URLs in the footer content to absolute URLs
     if (footerArticle && footerArticle.introtext) {
         footerArticle.introtext = convertRelativeUrls(footerArticle.introtext, joomlaBaseUrl);
+    }else{
+        footerArticle.introtext = '';
+        console.log('footerArticle.introtext not found');
     }
 
     return {
@@ -499,7 +503,9 @@ export default function CheckoutPage({footerArticle }) {
             <footer>
                 <div className="container-fluid container-footer container-greencar">
                     <div className="row g-0 p-4">
-                        <div dangerouslySetInnerHTML={{ __html: footerArticle.introtext}} />
+                        {footerArticle?.introtext && (
+                            <div dangerouslySetInnerHTML={{ __html: footerArticle.introtext}} />
+                        )}
                     </div>
                 </div>
             </footer>

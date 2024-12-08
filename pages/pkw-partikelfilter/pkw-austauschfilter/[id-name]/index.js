@@ -4,12 +4,14 @@ import axios from 'axios';
 import Link from "next/link";
 import { useRouter } from 'next/router';
 import {convertRelativeUrls} from "@/utils/convertRelativeUrls";
+import {JOOMLA_API_BASE} from "@/utils/config";
+import {JOOMLA_URL_BASE} from "@/utils/config";
 
 //const inter = Inter({ subsets: ["latin"] });
 
 export async function getStaticPaths() {
     // Fetch categories dynamically from your Joomla API
-    const res = await axios.get('https://joomla2.nazarenko.de/index.php?option=com_nazarenkoapi&task=getSubcategories&category_id=70&format=json');
+    const res = await axios.get(`${JOOMLA_API_BASE}&task=getSubcategories&category_id=70&format=json`);
     const categories = await res.data;
     // Map the fetched categories to paths with the `id-name` format
     const paths = categories.map((category) => ({
@@ -25,20 +27,20 @@ export async function getStaticPaths() {
 }
 export async function getStaticProps({ params }) {
     // Base URL of your Joomla server (adjust this to your Joomla installation URL)
-    const joomlaBaseUrl = 'https://joomla2.nazarenko.de';
+    const joomlaBaseUrl = JOOMLA_URL_BASE;
     // Split `id-name` into `id` and `name`
     const [id, ...nameParts] = params["id-name"].split('-');
     const name = nameParts.join('-');
     // Fetch data based on the extracted ID
-    const res = await axios.get(`https://joomla2.nazarenko.de/index.php?option=com_nazarenkoapi&task=getSubcategories&category_id=${id}&format=json`);
+    const res = await axios.get(`${JOOMLA_API_BASE}&task=getSubcategories&category_id=${id}&format=json`);
     const subcategories = await res.data;
 
     // Fetch categories for the main dropdown (assuming you want to navigate between categories)
-    const resCategories = await axios.get('https://joomla2.nazarenko.de/index.php?option=com_nazarenkoapi&task=getSubcategories&category_id=70&format=json');
+    const resCategories = await axios.get(`${JOOMLA_API_BASE}&task=getSubcategories&category_id=70&format=json`);
     const categories = await resCategories.data;
 
     // Fetch data for the footer from Joomla API
-    const resFooter = await fetch('https://joomla2.nazarenko.de/index.php?option=com_nazarenkoapi&task=articleWithModules&id=2&format=json');
+    const resFooter = await fetch(`${JOOMLA_API_BASE}&task=articleWithModules&id=2&format=json`);
     const footerData = await resFooter.json();
     // Extract the footer article from the response
     const footerArticle = footerData.article || null;
