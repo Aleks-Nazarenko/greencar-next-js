@@ -48,7 +48,6 @@ export async function getStaticProps({ params }) {
             console.log('Failed to fetch subcategories:', error.message);
             return []; // Return an empty array if the request fails
         });
-
     // Fetch categories for the main dropdown (assuming you want to navigate between categories)
     const categories = await axios
         .get(`${JOOMLA_API_BASE}&task=getSubcategories&category_id=15&format=json`)
@@ -57,7 +56,6 @@ export async function getStaticProps({ params }) {
             console.log('Failed to fetch categories:', error.message);
             return []; // Return an empty array if the request fails
         });
-
     // Fetch data for the footer from Joomla API
     const resFooter = await fetch(`${JOOMLA_API_BASE}&task=articleWithModules&id=2&format=json`);
     const footerData = await resFooter.json();
@@ -164,7 +162,7 @@ function NachruestfilterSubcategories({ subcategories, categories, categoryId, c
                                         ))}
                                     </select>
                                 </>
-                                )}
+                            )}
                         </div>
 
                     </div>
