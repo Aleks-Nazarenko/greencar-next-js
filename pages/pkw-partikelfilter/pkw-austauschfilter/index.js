@@ -10,7 +10,7 @@ import {JOOMLA_URL_BASE} from "@/utils/config";
 
 export async function getStaticProps() {
     // Base URL of your Joomla server (adjust this to your Joomla installation URL)
-    const joomlaBaseUrl = joomlaBaseUrl;
+    const joomlaBaseUrl = JOOMLA_URL_BASE;
     // Fetch data from Joomla API
     const res = await axios.get(`${JOOMLA_API_BASE}&task=getSubcategories&category_id=70&format=json`);
     const categories = await res.data;
@@ -22,9 +22,11 @@ export async function getStaticProps() {
     // Extract the footer article from the response
     const footerArticle = footerData.article || null;
 
-    // Convert relative URLs in the footer content to absolute URLs
-    if (footerArticle && footerArticle.introtext) {
-        footerArticle.introtext = convertRelativeUrls(footerArticle.introtext, joomlaBaseUrl);
+    if (footerArticle) {
+        footerArticle.introtext = footerArticle.introtext ? convertRelativeUrls(footerArticle.introtext, joomlaBaseUrl) : '';
+        if (!footerArticle.introtext) {
+            console.log('footerArticle.introtext not found');
+        }
     }
     // Pass data to the page via props
     return { props: { categories, footerArticle } };
@@ -74,7 +76,9 @@ export default function NachruestfilterCategories({ categories, footerArticle })
             <footer>
                 <div className="container-fluid container-footer container-greencar">
                     <div className="row g-0 p-4">
-                        <div dangerouslySetInnerHTML={{ __html: footerArticle.introtext}} />
+                        {footerArticle?.introtext && (
+                            <div dangerouslySetInnerHTML={{ __html: footerArticle.introtext}} />
+                        )}
                     </div>
                 </div>
             </footer>

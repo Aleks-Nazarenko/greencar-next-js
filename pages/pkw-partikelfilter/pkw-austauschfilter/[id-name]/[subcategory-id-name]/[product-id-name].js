@@ -71,8 +71,11 @@ export async function getStaticProps({ params }) {
     const footerArticle = footerData.article || null;
 
     // Convert relative URLs in the footer content to absolute URLs
-    if (footerArticle && footerArticle.introtext) {
-        footerArticle.introtext = convertRelativeUrls(footerArticle.introtext, joomlaBaseUrl);
+    if (footerArticle) {
+        footerArticle.introtext = footerArticle.introtext ? convertRelativeUrls(footerArticle.introtext, joomlaBaseUrl) : '';
+        if (!footerArticle.introtext) {
+            console.log('footerArticle.introtext not found');
+        }
     }
 
     return {
@@ -349,7 +352,9 @@ export default function ProductPage({ product, footerArticle }) {
             <footer>
                 <div className="container-fluid container-footer container-greencar">
                     <div className="row g-0 p-4">
-                        <div dangerouslySetInnerHTML={{ __html: footerArticle.introtext}} />
+                        {footerArticle?.introtext && (
+                            <div dangerouslySetInnerHTML={{ __html: footerArticle.introtext}} />
+                        )}
                     </div>
                 </div>
             </footer>

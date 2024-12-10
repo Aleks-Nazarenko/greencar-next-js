@@ -22,14 +22,12 @@ export async function getStaticProps() {
     // Extract article from the response
     const article = data.article || null;
     // Convert relative URLs in the footer content to absolute URLs
-    if (article && article.introtext) {
-        article.introtext = convertRelativeUrls(article.introtext, joomlaBaseUrl);
-    }else{
-        article.introtext = '';
-        console.log('article.introtext not found');
+    if (article) {
+        article.introtext = article.introtext ? convertRelativeUrls(article.introtext, joomlaBaseUrl) : '';
+        if(!article.introtext) {
+            console.log('article.introtext not found');
+        }
     }
-
-
     // Fetch data for the footer from Joomla API
     const resFooter = await fetch(`${JOOMLA_API_BASE}&task=articleWithModules&id=2&format=json`);
     const footerData = await resFooter.json();
@@ -38,11 +36,11 @@ export async function getStaticProps() {
     const footerArticle = footerData.article || null;
 
     // Convert relative URLs in the footer content to absolute URLs
-    if (footerArticle && footerArticle.introtext) {
-        footerArticle.introtext = convertRelativeUrls(footerArticle.introtext, joomlaBaseUrl);
-    }else{
-        footerArticle.introtext = '';
-        console.log('footerArticle.introtext not found');
+    if (footerArticle) {
+        footerArticle.introtext = footerArticle.introtext ? convertRelativeUrls(footerArticle.introtext, joomlaBaseUrl) : '';
+        if (!footerArticle.introtext) {
+            console.log('footerArticle.introtext not found');
+        }
     }
 
     // Return the expected props structure

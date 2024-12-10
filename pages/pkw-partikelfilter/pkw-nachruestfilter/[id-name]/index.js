@@ -60,13 +60,11 @@ export async function getStaticProps({ params }) {
     const resFooter = await fetch(`${JOOMLA_API_BASE}&task=articleWithModules&id=2&format=json`);
     const footerData = await resFooter.json();
     // Extract the footer article from the response
-    const footerArticle = footerData.article || null;
-    // Convert relative URLs in the footer content to absolute URLs
-    if (footerArticle && footerArticle.introtext) {
-        footerArticle.introtext = convertRelativeUrls(footerArticle.introtext, joomlaBaseUrl);
-    }else{
-        footerArticle.introtext = '';
-        console.log('footerArticle.introtext not found');
+    if (footerArticle) {
+        footerArticle.introtext = footerArticle.introtext ? convertRelativeUrls(footerArticle.introtext, joomlaBaseUrl) : '';
+        if (!footerArticle.introtext) {
+            console.log('footerArticle.introtext not found');
+        }
     }
     // Pass data to the page via props
     return {
