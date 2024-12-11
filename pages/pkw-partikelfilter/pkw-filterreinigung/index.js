@@ -12,7 +12,8 @@ export async function getStaticProps() {
 
     // Fetch the product details from the Joomla API
     const res = await fetch(`${JOOMLA_API_BASE}&task=getProduct&product_id=14435&format=json`);
-    const product = await res.json();
+    const resProduct = await res.json();
+    const product = resProduct.product || null;
 
     // Fetch data for the footer from Joomla API
     const resFooter = await fetch(`${JOOMLA_API_BASE}&task=articleWithModules&id=2&format=json`);
@@ -312,88 +313,94 @@ export default function FilterreinigungPage({ product, footerArticle }) {
             <main>
                 <div className="container-fluid container-greencar">
                     <div className="row g-0 p-4">
-                        <h1>{product.product_name}</h1>
-                        <p>48h Expressreinigung von der Abholung bis zur Zustellung</p>
-                        <p>Price: {formatPrice(product.price_value)}</p>
-                        {/* Additional product details */}
-                    </div>
-                    <div className="row g-0 p-4">
-                        <div className="product-info">
-                            <p>{formatPrice(BASE_PRICE)} pro Stück (inkl. MwSt.)</p>
-                            {installationOption === 'with' && <p>Abholung: {formatPrice(DELIVERY_COST)}</p>}
-                        </div>
-
-                        <div className="installation-options">
-                            <div>Aus und Einbau</div>
-                            <select value={installationOption} onChange={handleInstallationChange}>
-                                <option value="with">GREENCAR Werkstatt ( + {formatPrice(INSTALLATION_COST)} (inkl. MwSt.) )</option>
-                                <option value="without">eigene Werkstatt</option>
-                            </select>
-                        </div>
-                        {installationOption === 'without' && (
-                            <div className="delivery-options">
-                                <div>Abholung gewünscht?</div>
-                                <select value={deliveryDesired} onChange={handleDeliveryChange}>
-                                    <option value="yes">Ja ( + {formatPrice(DELIVERY_COST)} (inkl. MwSt.) )</option>
-                                    <option value="no">Nein</option>
-                                </select>
-                            </div>
-                        )}
-
-                        {installationOption === 'with' && (
-                            <>
-                                <div>Bitte wählen Sie Ihren gewünschten Einbauort.</div>
-                                <div className="land-selection">
-                                    <select value={selectedLand} onChange={handleLandChange}>
-                                        <option value="">- Bundesland -</option>
-                                        {lands.map((land) => (
-                                            <option key={land.id} value={land.id}>
-                                                {land.title}
-                                            </option>
-                                        ))}
-                                    </select>
+                        {product && (
+                            <div className="col">
+                                <div className="row g-0">
+                                    <h1>{product.product_name}</h1>
+                                    <p>48h Expressreinigung von der Abholung bis zur Zustellung</p>
+                                    <p>Price: {formatPrice(product.price_value)}</p>
+                                    {/* Additional product details */}
                                 </div>
+                                <div className="row g-0 ">
+                                    <div className="product-info">
+                                        <p>{formatPrice(BASE_PRICE)} pro Stück (inkl. MwSt.)</p>
+                                        {installationOption === 'with' && <p>Abholung: {formatPrice(DELIVERY_COST)}</p>}
+                                    </div>
 
-                                {selectedLand && (
-                                    <div className="city-selection">
-                                        <select value={selectedCity} onChange={handleCityChange}>
-                                            <option value="">- Ort -</option>
-                                            {cities.map((city) => (
-                                                <option key={city.id} value={city.id}>
-                                                    {city.title}
-                                                </option>
-                                            ))}
+                                    <div className="installation-options">
+                                        <div>Aus und Einbau</div>
+                                        <select value={installationOption} onChange={handleInstallationChange}>
+                                            <option value="with">GREENCAR Werkstatt ( + {formatPrice(INSTALLATION_COST)} (inkl. MwSt.) )</option>
+                                            <option value="without">eigene Werkstatt</option>
                                         </select>
                                     </div>
-                                )}
-                            </>
-                        )}
-                        {deliveryDesired === 'yes' && (
-                            <>
-                                <div className="date-selection">
-                                    <div>48h Express-Service Rechner!</div>
+                                    {installationOption === 'without' && (
+                                        <div className="delivery-options">
+                                            <div>Abholung gewünscht?</div>
+                                            <select value={deliveryDesired} onChange={handleDeliveryChange}>
+                                                <option value="yes">Ja ( + {formatPrice(DELIVERY_COST)} (inkl. MwSt.) )</option>
+                                                <option value="no">Nein</option>
+                                            </select>
+                                        </div>
+                                    )}
 
-                                    <div>Abholdatum des ausgebauten Partikelfilters:</div>
-                                        <input
-                                            type="date"
-                                            value={selectedDate || ''}
-                                            onChange={handleDateChange}
-                                            min={new Date().toISOString().split('T')[0]}
-                                        />
-                                    <div>bis 16:00 Uhr</div>
+                                    {installationOption === 'with' && (
+                                        <>
+                                            <div>Bitte wählen Sie Ihren gewünschten Einbauort.</div>
+                                            <div className="land-selection">
+                                                <select value={selectedLand} onChange={handleLandChange}>
+                                                    <option value="">- Bundesland -</option>
+                                                    {lands.map((land) => (
+                                                        <option key={land.id} value={land.id}>
+                                                            {land.title}
+                                                        </option>
+                                                    ))}
+                                                </select>
+                                            </div>
+
+                                            {selectedLand && (
+                                                <div className="city-selection">
+                                                    <select value={selectedCity} onChange={handleCityChange}>
+                                                        <option value="">- Ort -</option>
+                                                        {cities.map((city) => (
+                                                            <option key={city.id} value={city.id}>
+                                                                {city.title}
+                                                            </option>
+                                                        ))}
+                                                    </select>
+                                                </div>
+                                            )}
+                                        </>
+                                    )}
+                                    {deliveryDesired === 'yes' && (
+                                        <>
+                                            <div className="date-selection">
+                                                <div>48h Express-Service Rechner!</div>
+
+                                                <div>Abholdatum des ausgebauten Partikelfilters:</div>
+                                                    <input
+                                                        type="date"
+                                                        value={selectedDate || ''}
+                                                        onChange={handleDateChange}
+                                                        min={new Date().toISOString().split('T')[0]}
+                                                    />
+                                                <div>bis 16:00 Uhr</div>
+                                            </div>
+
+                                            <div className="next-day">
+                                                <div>Zustellung des gereinigten Partikelfilters</div>
+                                                <input type="text" value={nextDay || ''} readOnly />
+                                                <div>bis 12:00 Uhr garantiert!</div>
+
+                                            </div>
+                                        </>
+                                    )}
+                                    <div className="total-price">
+                                        <h2>{getTotalPriceLabel()}: {formatPrice(totalPrice)}</h2>
+                                    </div>
                                 </div>
-
-                                <div className="next-day">
-                                    <div>Zustellung des gereinigten Partikelfilters</div>
-                                    <input type="text" value={nextDay || ''} readOnly />
-                                    <div>bis 12:00 Uhr garantiert!</div>
-
-                                </div>
-                            </>
+                            </div>
                         )}
-                        <div className="total-price">
-                            <h2>{getTotalPriceLabel()}: {formatPrice(totalPrice)}</h2>
-                        </div>
                     </div>
                     <div className="row g-0 p-4">
                         <Link href={`/anfrage`}>

@@ -27,7 +27,7 @@ export async function getStaticPaths() {
             fallback: false,
         };
     } catch (error) {
-        console.log('Failed to fetch categories:', error.message);
+        console.log('Failed to fetch nachruestfilter categories:', error.message);
         return {
             paths: [],
             fallback: false,
@@ -60,6 +60,7 @@ export async function getStaticProps({ params }) {
     const resFooter = await fetch(`${JOOMLA_API_BASE}&task=articleWithModules&id=2&format=json`);
     const footerData = await resFooter.json();
     // Extract the footer article from the response
+    const footerArticle = footerData.article || null;
     if (footerArticle) {
         footerArticle.introtext = footerArticle.introtext ? convertRelativeUrls(footerArticle.introtext, joomlaBaseUrl) : '';
         if (!footerArticle.introtext) {

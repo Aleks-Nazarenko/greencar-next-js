@@ -30,30 +30,37 @@ function replaceSlashesExceptTrailing(str) {
     return hasTrailingSlash ? result + '/' : result;
 }
 export async function getStaticPaths() {
-    const res = await fetch(`${JOOMLA_API_BASE}&task=getSubcategories&category_id=70&format=json`);
-    const categories = await res.json();
-    // Step 2: For each category, fetch its subcategories
     const paths = [];
+    try {
+        const res = await fetch(`${JOOMLA_API_BASE}&task=getSubcategories&category_id=70&format=json`);
+        const categories = await res.json();
 
-    for (const category of categories) {
-        const res = await fetch(`${JOOMLA_API_BASE}&task=getSubcategories&category_id=${category.category_id}&format=json`);
-        const subcategories = await res.json();
-
-        // Step 3: Generate paths for each subcategory within the category
-        subcategories.forEach((subcategory) => {
-            paths.push({
-                params: {
-                    "id-name": `${category.category_id}-${category.category_name.toLowerCase().replace(/\s+/g, '-')}`,
-                    "subcategory-id-name": `${subcategory.category_id}-${subcategory.category_name.toLowerCase().replace(/\s+/g, '-').replace(/\//g, '-')}`
-                },
-            });
-        });
+        for (const category of categories) {
+            try {
+                const res = await fetch(`${JOOMLA_API_BASE}&task=getSubcategories&category_id=${category.category_id}&format=json`);
+                const subcategories = await res.json();
+                // Step 3: Generate paths for each subcategory within the category
+                subcategories.forEach((subcategory) => {
+                    paths.push({
+                        params: {
+                            "id-name": `${category.category_id}-${category.category_name.toLowerCase().replace(/\s+/g, '-')}`,
+                            "subcategory-id-name": `${subcategory.category_id}-${subcategory.category_name.toLowerCase().replace(/\s+/g, '-').replace(/\//g, '-')}`
+                        },
+                    });
+                });
+            } catch (error) {
+                console.log(`Failed to fetch path for subcategories for category ${category.category_id}:`, error.message);
+            }
+        }
+    } catch (error) {
+        console.log('Failed to fetch paths fpr austauschfilter subcategories:', error.message);
     }
 
     return {
         paths,
         fallback: false,
     };
+
 }
 export async function getStaticProps({ params }) {
     // Base URL of your Joomla server (adjust this to your Joomla installation URL)
@@ -66,18 +73,31 @@ export async function getStaticProps({ params }) {
     const [subcategoryId, ...subcategoryNameParts] = params["subcategory-id-name"].split('-');
     const subcategoryName = subcategoryNameParts.join('-');
 
+    let products = [];
+    let categories = [];
+    let subcategories = [];
+
     // Fetch the products for the specified subcategory
-    const res = await fetch(`${JOOMLA_API_BASE}&task=getProductsBySubcategory&subcategory_id=${subcategoryId}&format=json`);
-    const products = await res.json();
-
+    try {
+        const res = await fetch(`${JOOMLA_API_BASE}&task=getProductsBySubcategory&subcategory_id=${subcategoryId}&format=json`);
+        products = await res.json();
+    } catch (error) {
+        console.log(`Failed to fetch products for subcategory ${subcategoryId}:`, error.message);
+    }
     // Fetch all categories for the main category dropdown
-    const resCategories = await fetch(`${JOOMLA_API_BASE}&task=getSubcategories&category_id=70&format=json`);
-    const categories = await resCategories.json();
-
+    try {
+        const resCategories = await fetch(`${JOOMLA_API_BASE}&task=getSubcategories&category_id=70&format=json`);
+        categories = await resCategories.json();
+    }catch (error){
+        console.log('Failed to fetch austauschfilter categories:', error.message);
+    }
     // Fetch subcategories for the current category for the subcategory dropdown
-    const resSubcategories = await fetch(`${JOOMLA_API_BASE}&task=getSubcategories&category_id=${categoryId}&format=json`);
-    const subcategories = await resSubcategories.json();
-
+    try {
+        const resSubcategories = await fetch(`${JOOMLA_API_BASE}&task=getSubcategories&category_id=${categoryId}&format=json`);
+        subcategories = await resSubcategories.json();
+    }catch (error){
+        console.log('Failed to fetch austauschfilter subcategories:', error.message);
+    }
     // Fetch data for the footer from Joomla API
     const resFooter = await fetch(`${JOOMLA_API_BASE}&task=articleWithModules&id=2&format=json`);
     const footerData = await resFooter.json();
@@ -129,74 +149,78 @@ export default function ProductListPage({ products, categoryName, categoryId, su
 
                         {/* Category Select */}
                         <div>
-                            <select
-                                id="categorySelect"
-                                onChange={handleCategoryChange}
-                                value={`${categoryId}-${categoryName.toLowerCase()}`}
-                            >
-                                <option value="" disabled>- Hersteller PKW -</option>
-                                {categories.map((category) => (
-                                    <option
-                                        key={category.category_id}
-                                        value={`${category.category_id}-${category.category_name.toLowerCase().replace(/\s+/g, '-').replace(/\//g, '-')}`}
-                                    >
-                                        {category.category_name}
-                                    </option>
-                                ))}
-                            </select>
+                            {categories.length > 0 && (
+                                <select
+                                    id="categorySelect"
+                                    onChange={handleCategoryChange}
+                                    value={`${categoryId}-${categoryName.toLowerCase()}`}
+                                >
+                                    <option value="" disabled>- Hersteller PKW -</option>
+                                    {categories.map((category) => (
+                                        <option
+                                            key={category.category_id}
+                                            value={`${category.category_id}-${category.category_name.toLowerCase().replace(/\s+/g, '-').replace(/\//g, '-')}`}
+                                        >
+                                            {category.category_name}
+                                        </option>
+                                    ))}
+                                </select>
+                            )}
                         </div>
 
                         {/* Subcategory Select */}
                         <div>
-                            <select
-                                id="subcategorySelect"
-                                onChange={handleSubcategoryChange}
-                                value={`${subcategoryId}-${subcategoryName.toLowerCase()}`}
-                            >
-                                <option value="" disabled>- Modellreihe -</option>
-                                {subcategories.map((subcategory) => (
-                                    <option
-                                        key={subcategory.category_id}
-                                        value={`${subcategory.category_id}-${subcategory.category_name.toLowerCase().replace(/\s+/g, '-').replace(/\//g, '-')}`}
-                                    >
-                                        {subcategory.category_name}
-                                    </option>
-                                ))}
-                            </select>
+                            {subcategories.length > 0 && (
+                                <select
+                                    id="subcategorySelect"
+                                    onChange={handleSubcategoryChange}
+                                    value={`${subcategoryId}-${subcategoryName.toLowerCase()}`}
+                                >
+                                    <option value="" disabled>- Modellreihe -</option>
+                                    {subcategories.map((subcategory) => (
+                                        <option
+                                            key={subcategory.category_id}
+                                            value={`${subcategory.category_id}-${subcategory.category_name.toLowerCase().replace(/\s+/g, '-').replace(/\//g, '-')}`}
+                                        >
+                                            {subcategory.category_name}
+                                        </option>
+                                    ))}
+                                </select>
+                            )}
                         </div>
                     </div>
                     <div className="row g-0 p-4">
-                        <h1>Products in {subcategoryName}</h1>
-                        <table>
-                            <thead>
-                            <tr>
-                                <th>Image</th>
-                                <th>Product Name</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            {products.map((product) => (
-                                <tr key={product.product_id}>
-                                    <td>
-                                        <ProductImage
-                                            src={`${JOOMLA_URL_BASE}/media/com_hikashop/upload/thumbnail_100X100/${product.product_image}`}
-                                            alt={product.product_name}
-                                            fallback={`${JOOMLA_URL_BASE}/media/com_hikashop/upload/thumbnail_100X100/beispielphoto.jpg`}
-                                        />
-                                    </td>
-                                    <td>
-                                        <a href={`/pkw-partikelfilter/pkw-austauschfilter/${categoryId}-${categoryName}/${subcategoryId}-${subcategoryName}/${product.product_id}-${product.product_name.toLowerCase().replace(/\s+/g, '-')}`}>
-                                            {product.product_name}
-                                        </a>
-                                    </td>
-                                    <td>
-                                        {product.modell_liste}
-                                    </td>
+                        {products.length > 0 && (
+                            <table>
+                                <thead>
+                                <tr>
+                                    <th>Image</th>
+                                    <th>Product Name</th>
                                 </tr>
-                            ))}
-                            </tbody>
-                        </table>
-
+                                </thead>
+                                <tbody>
+                                {products.map((product) => (
+                                    <tr key={product.product_id}>
+                                        <td>
+                                            <ProductImage
+                                                src={`${JOOMLA_URL_BASE}/media/com_hikashop/upload/thumbnail_100X100/${product.product_image}`}
+                                                alt={product.product_name}
+                                                fallback={`${JOOMLA_URL_BASE}/media/com_hikashop/upload/thumbnail_100X100/beispielphoto.jpg`}
+                                            />
+                                        </td>
+                                        <td>
+                                            <a href={`/pkw-partikelfilter/pkw-austauschfilter/${categoryId}-${categoryName}/${subcategoryId}-${subcategoryName}/${product.product_id}-${product.product_name.toLowerCase().replace(/\s+/g, '-')}`}>
+                                                {product.product_name}
+                                            </a>
+                                        </td>
+                                        <td>
+                                            {product.modell_liste}
+                                        </td>
+                                    </tr>
+                                ))}
+                                </tbody>
+                            </table>
+                        )}
                     </div>
                 </div>
             </main>

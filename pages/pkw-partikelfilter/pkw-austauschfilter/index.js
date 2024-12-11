@@ -12,8 +12,13 @@ export async function getStaticProps() {
     // Base URL of your Joomla server (adjust this to your Joomla installation URL)
     const joomlaBaseUrl = JOOMLA_URL_BASE;
     // Fetch data from Joomla API
-    const res = await axios.get(`${JOOMLA_API_BASE}&task=getSubcategories&category_id=70&format=json`);
-    const categories = await res.data;
+    const categories = await axios
+        .get(`${JOOMLA_API_BASE}&task=getSubcategories&category_id=70&format=json`)
+        .then((res) => res.data || [])
+        .catch((error) => {
+            console.log('Failed to fetch categories:', error.message);
+            return []; // Return an empty array if the request fails
+        });
     //  console.log(products);
 
     // Fetch data for the footer from Joomla API
@@ -48,28 +53,32 @@ export default function NachruestfilterCategories({ categories, footerArticle })
                 <div className="container-fluid container-greencar">
                     <div className="row g-0 p-4">
                         <h1>PKW - Austauschfilter</h1>
-                        <ul>
-                            {categories.map(category => (
-                                <li key={category.category_id}>
-                                    <Link href={`/pkw-partikelfilter/pkw-austauschfilter/${category.category_id}-${category.category_name.toLowerCase().replace(/\s+/g, '-')}`}>{category.category_name}</Link>
-                                </li>
-                            ))}
-                        </ul>
-                        <select
-                            id="categorySelect"
-                            onChange={handleCategoryChange}
-                            defaultValue="" // Add a default option
-                        >
-                            <option value="" disabled>- Hersteller PKW -</option>
-                            {categories.map(category => (
-                                <option
-                                    key={category.category_id}
-                                    value={`${category.category_id}-${category.category_name.toLowerCase().replace(/\s+/g, '-')}`}
+                        {categories.length > 0 && (
+                            <>
+                                <ul>
+                                    {categories.map(category => (
+                                        <li key={category.category_id}>
+                                            <Link href={`/pkw-partikelfilter/pkw-austauschfilter/${category.category_id}-${category.category_name.toLowerCase().replace(/\s+/g, '-')}`}>{category.category_name}</Link>
+                                        </li>
+                                    ))}
+                                </ul>
+                                <select
+                                    id="categorySelect"
+                                    onChange={handleCategoryChange}
+                                    defaultValue="" // Add a default option
                                 >
-                                    {category.category_name}
-                                </option>
-                            ))}
-                        </select>
+                                    <option value="" disabled>- Hersteller PKW -</option>
+                                    {categories.map(category => (
+                                        <option
+                                            key={category.category_id}
+                                            value={`${category.category_id}-${category.category_name.toLowerCase().replace(/\s+/g, '-')}`}
+                                        >
+                                            {category.category_name}
+                                        </option>
+                                    ))}
+                                </select>
+                            </>
+                        )}
                     </div>
                 </div>
             </main>

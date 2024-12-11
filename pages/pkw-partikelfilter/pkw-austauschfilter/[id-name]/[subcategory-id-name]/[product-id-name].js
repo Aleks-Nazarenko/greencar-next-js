@@ -22,30 +22,43 @@ export async function getStaticPaths() {
     const paths = [];
 
     // Step 1: Fetch all categories
-    const categoryRes = await fetch(`${JOOMLA_API_BASE}&task=getSubcategories&category_id=70&format=json`);
-    const categories = await categoryRes.json();
-
-    // Step 2: Fetch subcategories for each category
-    for (const category of categories) {
-        const subcategoryRes = await fetch(`${JOOMLA_API_BASE}&task=getSubcategories&category_id=${category.category_id}&format=json`);
-        const subcategories = await subcategoryRes.json();
-
-        // Step 3: Fetch products for each subcategory
-        for (const subcategory of subcategories) {
-            const productRes = await fetch(`${JOOMLA_API_BASE}&task=getProductsBySubcategory&subcategory_id=${subcategory.category_id}&format=json`);
-            const products = await productRes.json();
-
-            // Generate paths for each product in the subcategory
-            products.forEach((product) => {
-                paths.push({
-                    params: {
-                        "id-name": `${category.category_id}-${category.category_name.toLowerCase().replace(/\s+/g, '-')}`,
-                        "subcategory-id-name": `${subcategory.category_id}-${subcategory.category_name.toLowerCase().replace(/\s+/g, '-')}`,
-                        "product-id-name": `${product.product_id}-${product.product_name.toLowerCase().replace(/\s+/g, '-')}`,
-                    },
-                });
-            });
+    try {
+        const categoryRes = await fetch(`${JOOMLA_API_BASE}&task=getSubcategories&category_id=70&format=json`);
+        //404 500 http errors
+        //  if (!categoryRes.ok) throw new Error(`Failed to fetch categories: ${categoryRes.status}`);
+        const categories = await categoryRes.json();
+        // Step 2: Fetch subcategories for each category
+        for (const category of categories) {
+            try {
+                const subcategoryRes = await fetch(`${JOOMLA_API_BASE}&task=getSubcategories&category_id=${category.category_id}&format=json`);
+                //     if (!subcategoryRes.ok) throw new Error(`Failed to fetch subcategories for category ID ${category.category_id}: ${subcategoryRes.status}`);
+                const subcategories = await subcategoryRes.json();
+                // Step 3: Fetch products for each subcategory
+                for (const subcategory of subcategories) {
+                    try {
+                        const productRes = await fetch(`${JOOMLA_API_BASE}&task=getProductsBySubcategory&subcategory_id=${subcategory.category_id}&format=json`);
+                        //        if (!productRes.ok) throw new Error(`Failed to fetch products for subcategory ${subcategory.category_id}: ${productRes.status}`);
+                        const products = await productRes.json();
+                        // Generate paths for each product in the subcategory
+                        products.forEach((product) => {
+                            paths.push({
+                                params: {
+                                    "id-name": `${category.category_id}-${category.category_name.toLowerCase().replace(/\s+/g, '-')}`,
+                                    "subcategory-id-name": `${subcategory.category_id}-${subcategory.category_name.toLowerCase().replace(/\s+/g, '-')}`,
+                                    "product-id-name": `${product.product_id}-${product.product_name.toLowerCase().replace(/\s+/g, '-')}`,
+                                },
+                            });
+                        });
+                    } catch (error) {
+                        console.error(`Error fetching austauschfilter products for subcategory ${subcategory.category_id}: ${error.message}`);
+                    }
+                }
+            } catch (error) {
+                console.error(`Failed to fetch austauschfilter subcategories for category ID ${category.category_id}:`, error.message);
+            }
         }
+    } catch (error) {
+        console.error("Failed to fetch austauschfilter categories:", error.message);
     }
 
     return {
@@ -59,17 +72,19 @@ export async function getStaticProps({ params }) {
     const joomlaBaseUrl = JOOMLA_URL_BASE;
     // Extract product ID from `product-id-name`
     const [productId] = params["product-id-name"].split('-');
-
+    let product = null;
     // Fetch the product details from the Joomla API
-    const res = await fetch(`${JOOMLA_API_BASE}&task=getProduct&product_id=${productId}&format=json`);
-    const product = await res.json();
-
+    try {
+        const res = await fetch(`${JOOMLA_API_BASE}&task=getProduct&product_id=${productId}&format=json`);
+        product = await res.json();
+    }catch (error) {
+        console.error(`Failed to fetch product with ID ${productId}:`, error.message);
+    }
     // Fetch data for the footer from Joomla API
     const resFooter = await fetch(`${JOOMLA_API_BASE}&task=articleWithModules&id=2&format=json`);
     const footerData = await resFooter.json();
     // Extract the footer article from the response
     const footerArticle = footerData.article || null;
-
     // Convert relative URLs in the footer content to absolute URLs
     if (footerArticle) {
         footerArticle.introtext = footerArticle.introtext ? convertRelativeUrls(footerArticle.introtext, joomlaBaseUrl) : '';
@@ -266,73 +281,79 @@ export default function ProductPage({ product, footerArticle }) {
             <main>
                 <div className="container-fluid container-greencar">
                     <div className="row g-0 p-4">
-                        <h1>{product.product_name}</h1>
-                        <p>
-                            <ProductImage
-                                className={"img-fluid"}
-                                src={`${JOOMLA_URL_BASE}/media/com_hikashop/upload/${product.product_image}`}
-                                alt={product.product_name}
-                                fallback={`${JOOMLA_URL_BASE}/media/com_hikashop/upload/beispielphoto.jpg`}
-                            />
-                        </p>
-                        <p>{product.product_description}</p>
-                        <p>Price: ${product.price_value}</p>
-                        {/* Additional product details */}
-                    </div>
-                    <div className="row g-0 p-4">
-                        <div className="product-info">
-                            <p>{formatPrice(BASE_PRICE)} pro Stück (inkl. MwSt.)</p>
-                            <p>Versand +{formatPrice(DELIVERY_COST)} (inkl. MwSt.)</p>
-                            <p>Kaution +{formatPrice(DEPOSIT_COST)} (inkl. MwSt.)</p>
-                            <p>Kaution wird nach Erhalt des schadlosen Rücknahmeteils storniert</p>
-                        </div>
-
-                        <div className="installation-options">
-                            <label>
-                                Mit Einbau:
-                                <select value={installationOption} onChange={handleInstallationChange}>
-                                    <option value="with">Ja + {formatPrice(INSTALLATION_COST)}</option>
-                                    <option value="without">Nein</option>
-                                </select>
-                            </label>
-                        </div>
-                        {installationOption === 'with' && (
-                            <>
-                                <div className="land-selection">
-                                    <label>
-                                        Select Land:
-                                        <select value={selectedLand} onChange={handleLandChange}>
-                                            <option value="">- Bundesland -</option>
-                                            {lands.map((land) => (
-                                                <option key={land.id} value={land.id}>
-                                                    {land.title}
-                                                </option>
-                                            ))}
-                                        </select>
-                                    </label>
+                        {product && (
+                            <div className={"col"}>
+                                <div className={"row g-0"}>
+                                    <h1>{product.product_name}</h1>
+                                    <p>
+                                        <ProductImage
+                                            className={"img-fluid"}
+                                            src={`${JOOMLA_URL_BASE}/media/com_hikashop/upload/${product.product_image}`}
+                                            alt={product.product_name}
+                                            fallback={`${JOOMLA_URL_BASE}/media/com_hikashop/upload/beispielphoto.jpg`}
+                                        />
+                                    </p>
+                                    <p>{product.product_description}</p>
+                                    <p>Price: ${product.price_value}</p>
+                                    {/* Additional product details */}
                                 </div>
+                                <div className="row g-0 p-4">
+                                    <div className="product-info">
+                                        <p>{formatPrice(BASE_PRICE)} pro Stück (inkl. MwSt.)</p>
+                                        <p>Versand +{formatPrice(DELIVERY_COST)} (inkl. MwSt.)</p>
+                                        <p>Kaution +{formatPrice(DEPOSIT_COST)} (inkl. MwSt.)</p>
+                                        <p>Kaution wird nach Erhalt des schadlosen Rücknahmeteils storniert</p>
+                                    </div>
 
-                                {selectedLand && (
-                                    <div className="city-selection">
+                                    <div className="installation-options">
                                         <label>
-                                            Select City:
-                                            <select value={selectedCity} onChange={handleCityChange}>
-                                                <option value="">- Ort -</option>
-                                                {cities.map((city) => (
-                                                    <option key={city.id} value={city.id}>
-                                                        {city.title}
-                                                    </option>
-                                                ))}
+                                            Mit Einbau:
+                                            <select value={installationOption} onChange={handleInstallationChange}>
+                                                <option value="with">Ja + {formatPrice(INSTALLATION_COST)}</option>
+                                                <option value="without">Nein</option>
                                             </select>
                                         </label>
                                     </div>
-                                )}
-                            </>
-                        )}
+                                    {installationOption === 'with' && (
+                                        <>
+                                            <div className="land-selection">
+                                                <label>
+                                                    Select Land:
+                                                    <select value={selectedLand} onChange={handleLandChange}>
+                                                        <option value="">- Bundesland -</option>
+                                                        {lands.map((land) => (
+                                                            <option key={land.id} value={land.id}>
+                                                                {land.title}
+                                                            </option>
+                                                        ))}
+                                                    </select>
+                                                </label>
+                                            </div>
 
-                        <div className="total-price">
-                            <h2>{getTotalPriceLabel()}: {formatPrice(totalPrice)}</h2>
-                        </div>
+                                            {selectedLand && (
+                                                <div className="city-selection">
+                                                    <label>
+                                                        Select City:
+                                                        <select value={selectedCity} onChange={handleCityChange}>
+                                                            <option value="">- Ort -</option>
+                                                            {cities.map((city) => (
+                                                                <option key={city.id} value={city.id}>
+                                                                    {city.title}
+                                                                </option>
+                                                            ))}
+                                                        </select>
+                                                    </label>
+                                                </div>
+                                            )}
+                                        </>
+                                    )}
+
+                                    <div className="total-price">
+                                        <h2>{getTotalPriceLabel()}: {formatPrice(totalPrice)}</h2>
+                                    </div>
+                                </div>
+                            </div>
+                        )}
                     </div>
                     <div className="row g-0 p-4">
                         <Link href={`/anfrage`}>
