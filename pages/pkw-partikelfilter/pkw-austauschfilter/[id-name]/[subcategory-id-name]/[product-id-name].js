@@ -72,13 +72,12 @@ export async function getStaticProps({ params }) {
     const joomlaBaseUrl = JOOMLA_URL_BASE;
     // Extract product ID from `product-id-name`
     const [productId] = params["product-id-name"].split('-');
-    let product = null;
     // Fetch the product details from the Joomla API
-    try {
-        const res = await fetch(`${JOOMLA_API_BASE}&task=getProduct&product_id=${productId}&format=json`);
-        product = await res.json();
-    }catch (error) {
-        console.error(`Failed to fetch product with ID ${productId}:`, error.message);
+    const res = await fetch(`${JOOMLA_API_BASE}&task=getProduct&product_id=${productId}&format=json`);
+    const productData = await res.json();
+    const product = productData.product_name ? productData : null;
+    if (!productData.product_name) {
+        console.error("Invalid product data received:", productData);
     }
     // Fetch data for the footer from Joomla API
     const resFooter = await fetch(`${JOOMLA_API_BASE}&task=articleWithModules&id=2&format=json`);
@@ -218,6 +217,11 @@ export default function ProductPage({ product, footerArticle }) {
     const handleAddToCart = (e) => {
         e.preventDefault();
 
+        if(!product){
+            alert('Produkt nicht gefunden');
+            return;
+        }
+
         if (installationOption === 'with' && (!selectedLand || !selectedCity)) {
             alert('Einbauort-Wahl unvollständig');
             return;
@@ -294,7 +298,7 @@ export default function ProductPage({ product, footerArticle }) {
                                         />
                                     </p>
                                     <p>{product.product_description}</p>
-                                    <p>Price: ${product.price_value}</p>
+                                    <p>Price: {formatPrice(product.price_value)}</p>
                                     {/* Additional product details */}
                                 </div>
                                 <div className="row g-0 p-4">

@@ -17,7 +17,7 @@ export async function getStaticProps() {
     // Fetch data from Joomla API
     const categories = await axios
         .get(`${JOOMLA_API_BASE}&task=getSubcategories&category_id=15&format=json`)
-        .then((res) => res.data || [])
+        .then((res) => res.data || []) // actually incorrect, because res.data is always an array d.h. true
         .catch((error) => {
             console.log('Failed to fetch categories:', error.message);
             return []; // Return an empty array if the request fails

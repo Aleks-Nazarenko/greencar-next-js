@@ -8,9 +8,9 @@ import Row from 'react-bootstrap/Row';
 import {JOOMLA_URL_BASE} from "@/utils/config";
 import {JOOMLA_API_BASE} from "@/utils/config";
 
-export async function getStaticProps({ params }) {
+export async function getStaticProps() {
     // Base URL of your Joomla server (adjust this to your Joomla installation URL)
-    const joomlaBaseUrl = 'JOOMLA_URL_BASE';
+    const joomlaBaseUrl = JOOMLA_URL_BASE;
 
     // Fetch data for the footer from Joomla API
     const resFooter = await fetch(`${JOOMLA_API_BASE}&task=articleWithModules&id=2&format=json`);

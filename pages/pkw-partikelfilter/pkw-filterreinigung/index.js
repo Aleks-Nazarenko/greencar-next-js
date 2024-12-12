@@ -12,11 +12,14 @@ export async function getStaticProps() {
 
     // Fetch the product details from the Joomla API
     const res = await fetch(`${JOOMLA_API_BASE}&task=getProduct&product_id=14435&format=json`);
-    const resProduct = await res.json();
-    const product = resProduct.product || null;
+    const productData = await res.json();
+    const product = productData.product_id ? productData : null;
+    if (!productData.product_id) {
+        console.error("Invalid product data received:", productData);
+    }
 
     // Fetch data for the footer from Joomla API
-    const resFooter = await fetch(`${JOOMLA_API_BASE}&task=articleWithModules&id=2&format=json`);
+    const resFooter = await fetch(`${JOOMLA_API_BASE}&task=articleWithModules&id=244&format=json`);
     const footerData = await resFooter.json();
     // Extract the footer article from the response
     const footerArticle = footerData.article || null;
@@ -247,6 +250,10 @@ export default function FilterreinigungPage({ product, footerArticle }) {
     // Handle add to cart
     const handleAddToCart = (e) => {
         e.preventDefault();
+        if (!product ) {
+            alert("Das Produkt ist nicht verfügbar. Bitte versuchen Sie es später erneut.");
+            return;
+        }
 
         if (installationOption === 'with' && (!selectedLand || !selectedCity)) {
             alert('Einbauort-Wahl unvollständig');
