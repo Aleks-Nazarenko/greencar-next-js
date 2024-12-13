@@ -104,6 +104,7 @@ a {
 .paypal-button-label-container{padding:12px 0 12px 0;  background: #ffc439;text-align: center; border-radius: 4px;}
 .paypal-logo-an {max-height: 22px;}
 .gc-green{color: #008000;}
+.required {color: red;}
 
 @media (prefers-color-scheme: dark) {
   html {

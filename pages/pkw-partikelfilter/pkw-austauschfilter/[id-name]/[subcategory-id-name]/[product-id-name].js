@@ -230,6 +230,7 @@ export default function ProductPage({ product, footerArticle }) {
         // Construct the cart item with selected options
         const cartItem = {
             productName: product.product_name,
+            productImage: product.product_image,
             basePrice: formatPrice(BASE_PRICE),
             options: {
                 // Aus- und Einbau bzw. Mit Einbau

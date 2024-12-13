@@ -8,6 +8,20 @@ import Row from 'react-bootstrap/Row';
 import {JOOMLA_URL_BASE} from "@/utils/config";
 import {JOOMLA_API_BASE} from "@/utils/config";
 
+function ProductImage({ src, alt, fallback }) {
+    const [imgSrc, setImgSrc] = useState(src);
+
+    useEffect(() => {
+        const img = new Image();
+        img.src = src;
+        img.onload = () => setImgSrc(src); // If the image loads, keep the original src
+        img.onerror = () => setImgSrc(fallback); // If the image fails to load, use fallback
+    }, [src, fallback]);
+
+    return (
+        <img src={imgSrc} alt={alt}  />
+    );
+}
 export async function getStaticProps() {
     // Base URL of your Joomla server (adjust this to your Joomla installation URL)
     const joomlaBaseUrl = JOOMLA_URL_BASE;
@@ -174,6 +188,21 @@ export default function CheckoutPage({footerArticle }) {
                         <h2>Warenkorb</h2>
                         {cartItem ? (
                             <>
+                                <div className={"row g-0 p-4"}>
+                                    {cartItem.productName.toLowerCase().includes('filterreinigung')? (
+                                        <ProductImage
+                                            src={`${JOOMLA_URL_BASE}/media/com_hikashop/upload/thumbnails/200x200/Filterreinigung-PKW-LKW-BUS-2.jpg`}
+                                            alt={cartItem.productName}
+                                            fallback={`${JOOMLA_URL_BASE}/media/com_hikashop/upload/thumbnails/200x200/Filterreinigung-PKW-LKW-BUS-2.jpg`}
+                                        />
+                                    ) : (
+                                        <ProductImage
+                                            src={`${JOOMLA_URL_BASE}/media/com_hikashop/upload/${cartItem.productImage}`}
+                                            alt={cartItem.productName}
+                                            fallback={`${JOOMLA_URL_BASE}/media/com_hikashop/upload/beispielphoto.jpg`}
+                                        />
+                                    )}
+                                </div>
                                 <div className="cart-item">
                                     <p><strong>Product:</strong> {cartItem.productName}</p>
                                     <p><strong>Price:</strong> {cartItem.basePrice} (inkl. MwSt.)</p>
@@ -241,7 +270,7 @@ export default function CheckoutPage({footerArticle }) {
                             <h2>Ihre Rechnungsadresse</h2>
                             <Row className="mb-3">
                                 <Form.Group as={Col} md="6" controlId="billingFullName">
-                                    <Form.Label>Full Name</Form.Label>
+                                    <Form.Label>Full Name <span className="required">*</span></Form.Label>
                                     <Form.Control
                                         required
                                         type="text"
@@ -255,7 +284,7 @@ export default function CheckoutPage({footerArticle }) {
                                     </Form.Control.Feedback>
                                 </Form.Group>
                                 <Form.Group as={Col} md="6" controlId="billingEmail">
-                                    <Form.Label>Email</Form.Label>
+                                    <Form.Label>Email <span className="required">*</span></Form.Label>
                                     <Form.Control
                                         required
                                         type="email"
@@ -272,7 +301,7 @@ export default function CheckoutPage({footerArticle }) {
 
                             <Row className="mb-3">
                                 <Form.Group as={Col} md="6" controlId="billingPhone">
-                                    <Form.Label>Phone</Form.Label>
+                                    <Form.Label>Phone <span className="required">*</span></Form.Label>
                                     <Form.Control
                                         required
                                         type="tel"
@@ -286,7 +315,7 @@ export default function CheckoutPage({footerArticle }) {
                                     </Form.Control.Feedback>
                                 </Form.Group>
                                 <Form.Group as={Col} md="6" controlId="billingStreet">
-                                    <Form.Label>Street Address</Form.Label>
+                                    <Form.Label>Street Address <span className="required">*</span></Form.Label>
                                     <Form.Control
                                         required
                                         type="text"
@@ -303,7 +332,7 @@ export default function CheckoutPage({footerArticle }) {
 
                             <Row className="mb-3">
                                 <Form.Group as={Col} md="4" controlId="billingCity">
-                                    <Form.Label>City</Form.Label>
+                                    <Form.Label>City <span className="required">*</span></Form.Label>
                                     <Form.Control
                                         required
                                         type="text"
@@ -317,7 +346,7 @@ export default function CheckoutPage({footerArticle }) {
                                     </Form.Control.Feedback>
                                 </Form.Group>
                                 <Form.Group as={Col} md="4" controlId="billingState">
-                                    <Form.Label>State</Form.Label>
+                                    <Form.Label>State <span className="required">*</span></Form.Label>
                                     <Form.Control
                                         required
                                         type="text"
@@ -331,7 +360,7 @@ export default function CheckoutPage({footerArticle }) {
                                     </Form.Control.Feedback>
                                 </Form.Group>
                                 <Form.Group as={Col} md="4" controlId="billingZipCode">
-                                    <Form.Label>Zip Code</Form.Label>
+                                    <Form.Label>Zip Code <span className="required">*</span></Form.Label>
                                     <Form.Control
                                         required
                                         type="text"
@@ -361,7 +390,7 @@ export default function CheckoutPage({footerArticle }) {
                                     {/* Repeat shipping address fields, using handleShippingAddressChange */}
                                     <Row className="mb-3">
                                         <Form.Group as={Col} md="6" controlId="shippingFullName">
-                                            <Form.Label>Full Name</Form.Label>
+                                            <Form.Label>Full Name <span className="required">*</span></Form.Label>
                                             <Form.Control
                                                 required
                                                 type="text"
@@ -375,7 +404,7 @@ export default function CheckoutPage({footerArticle }) {
                                             </Form.Control.Feedback>
                                         </Form.Group>
                                         <Form.Group as={Col} md="6" controlId="shippingEmail">
-                                            <Form.Label>Email</Form.Label>
+                                            <Form.Label>Email <span className="required">*</span></Form.Label>
                                             <Form.Control
                                                 required
                                                 type="email"
@@ -391,7 +420,7 @@ export default function CheckoutPage({footerArticle }) {
                                     </Row>
                                     <Row className="mb-3">
                                         <Form.Group as={Col} md="6" controlId="shippingPhone">
-                                            <Form.Label>Phone</Form.Label>
+                                            <Form.Label>Phone <span className="required">*</span></Form.Label>
                                             <Form.Control
                                                 required
                                                 type="tel"
@@ -405,7 +434,7 @@ export default function CheckoutPage({footerArticle }) {
                                             </Form.Control.Feedback>
                                         </Form.Group>
                                         <Form.Group as={Col} md="6" controlId="shippingStreet">
-                                            <Form.Label>Street Address</Form.Label>
+                                            <Form.Label>Street Address <span className="required">*</span></Form.Label>
                                             <Form.Control
                                                 required
                                                 type="text"
@@ -422,7 +451,7 @@ export default function CheckoutPage({footerArticle }) {
 
                                     <Row className="mb-3">
                                         <Form.Group as={Col} md="4" controlId="shippingCity">
-                                            <Form.Label>City</Form.Label>
+                                            <Form.Label>City <span className="required">*</span></Form.Label>
                                             <Form.Control
                                                 required
                                                 type="text"
@@ -436,7 +465,7 @@ export default function CheckoutPage({footerArticle }) {
                                             </Form.Control.Feedback>
                                         </Form.Group>
                                         <Form.Group as={Col} md="4" controlId="shippingState">
-                                            <Form.Label>State</Form.Label>
+                                            <Form.Label>State <span className="required">*</span></Form.Label>
                                             <Form.Control
                                                 required
                                                 type="text"
@@ -450,7 +479,7 @@ export default function CheckoutPage({footerArticle }) {
                                             </Form.Control.Feedback>
                                         </Form.Group>
                                         <Form.Group as={Col} md="4" controlId="shippingZipCode">
-                                            <Form.Label>Zip Code</Form.Label>
+                                            <Form.Label>Zip Code <span className="required">*</span></Form.Label>
                                             <Form.Control
                                                 required
                                                 type="text"
@@ -466,6 +495,11 @@ export default function CheckoutPage({footerArticle }) {
                                     </Row>
                                 </>
                             )}
+                            <div className="row g-0 ">
+                                <div className="w-100">
+                                    Felder, die mit einem Stern (<span className={"required"}>*</span>) markiert sind, werden unbedingt benötigt.
+                                </div>
+                            </div>
                             <h2>Payment Method</h2>
                             <Row className="mb-3">
                                 <Col sm={12}>

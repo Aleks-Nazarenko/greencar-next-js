@@ -19,7 +19,7 @@ export async function getStaticProps() {
     }
 
     // Fetch data for the footer from Joomla API
-    const resFooter = await fetch(`${JOOMLA_API_BASE}&task=articleWithModules&id=244&format=json`);
+    const resFooter = await fetch(`${JOOMLA_API_BASE}&task=articleWithModules&id=2&format=json`);
     const footerData = await resFooter.json();
     // Extract the footer article from the response
     const footerArticle = footerData.article || null;
@@ -264,6 +264,7 @@ export default function FilterreinigungPage({ product, footerArticle }) {
         // Construct the cart item with selected options
         const cartItem = {
             productName: product.product_name,
+            productImage: product.product_image,
             basePrice: formatPrice(BASE_PRICE),
             options: {
                 // Aus- und Einbau
