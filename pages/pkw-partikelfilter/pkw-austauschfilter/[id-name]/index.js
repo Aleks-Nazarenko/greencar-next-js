@@ -40,7 +40,7 @@ export async function getStaticProps({ params }) {
     const name = nameParts.join('-');
     // Fetch data based on the extracted ID
     const subcategories = await axios.get(`${JOOMLA_API_BASE}&task=getSubcategories&category_id=${id}&format=json`)
-        .then((res) => res.data || [])
+        .then((res) => res.data || []) // actually incorrect, because res.data is always an array d.h. true
         .catch((error) => {
             console.log('Failed to fetch austauschfilter subcategories:', error.message);
             return []; // Return an empty array if the request fails
@@ -48,7 +48,7 @@ export async function getStaticProps({ params }) {
 
     // Fetch categories for the main dropdown (assuming you want to navigate between categories)
     const categories = await axios.get(`${JOOMLA_API_BASE}&task=getSubcategories&category_id=70&format=json`)
-        .then((res) => res.data || [])
+        .then((res) => res.data || []) // actually incorrect, because res.data is always an array d.h. true
         .catch((error) => {
             console.log('Failed to fetch austauschfilter categories:', error.message);
             return []; // Return an empty array if the request fails

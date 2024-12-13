@@ -57,7 +57,7 @@ export default function CheckoutStep2({footerArticle, termsArticle})   {
     };
 
     useEffect(() => {
-        const details = JSON.parse(localStorage.getItem("checkoutDetails"));
+        const details = JSON.parse(sessionStorage.getItem("checkoutDetails"));
         if (!details) {
             router.push("/checkout");
         } else {
@@ -79,7 +79,7 @@ export default function CheckoutStep2({footerArticle, termsArticle})   {
         }
 
         const orderNumber = generateOrderNumber();
-        const orderData = JSON.parse(localStorage.getItem("checkoutDetails"));
+        const orderData = JSON.parse(sessionStorage.getItem("checkoutDetails"));
         if (!orderData) {
             alert("Order data is missing. Please try again.");
             return;
@@ -105,11 +105,11 @@ export default function CheckoutStep2({footerArticle, termsArticle})   {
         const result = await response.json();
         console.log("Order confirmation successful:", result);
 
-        // Clear localStorage and navigate to Thank You page
+        // Clear sessionStorage and navigate to Thank You page
        // alert("Order placed successfully!");
-        localStorage.removeItem("checkoutDetails");
-        localStorage.removeItem("cart");
-        localStorage.removeItem("productOptions");
+        sessionStorage.removeItem("checkoutDetails");
+        sessionStorage.removeItem("cart");
+        sessionStorage.removeItem("productOptions");
         router.push( {pathname: '/thank-you', query: { paymentMethod: checkoutDetails.paymentMethod, orderNumber: orderNumber, }});
     };
     const formatPrice = (price) => {

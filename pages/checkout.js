@@ -61,8 +61,8 @@ export default function CheckoutPage({footerArticle }) {
 
 
     useEffect(() => {
-        const cartData = JSON.parse(localStorage.getItem('cart'));
-        const optionsData = JSON.parse(localStorage.getItem('productOptions'));
+        const cartData = JSON.parse(sessionStorage.getItem('cart'));
+        const optionsData = JSON.parse(sessionStorage.getItem('productOptions'));
         if (cartData && optionsData){
             setCartItem(cartData);
             setProductOptions(optionsData);
@@ -85,7 +85,7 @@ export default function CheckoutPage({footerArticle }) {
             cartData.vatShare = calculatedVatShare ? formatPrice(calculatedVatShare) : null;
         }
         //preserve the form field values
-        const savedDetails = JSON.parse(localStorage.getItem("checkoutDetails"));
+        const savedDetails = JSON.parse(sessionStorage.getItem("checkoutDetails"));
         if (savedDetails) {
             setBillingAddress(savedDetails.billingAddress || {});
             setShippingAddress(savedDetails.shippingAddress || {});
@@ -129,8 +129,8 @@ export default function CheckoutPage({footerArticle }) {
             setValidated(true);
             return;
         }
-        // Save data to localStorage for Step 2
-        localStorage.setItem(
+        // Save data to sessionStorage for Step 2
+        sessionStorage.setItem(
             "checkoutDetails",
             JSON.stringify({
                 cartItem,

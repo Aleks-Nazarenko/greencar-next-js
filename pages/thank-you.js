@@ -34,7 +34,7 @@ export default function thankYou({footerArticle}){
     const {orderNumber} = router.query;
     const { paymentMethod } = router.query; // Get paymentMethod from query parameters
     useEffect(() => {
-        const savedUrl = localStorage.getItem('lastVisitedProduct');
+        const savedUrl = sessionStorage.getItem('lastVisitedProduct');
         if (savedUrl) {
             setProductUrl(savedUrl);
         }
@@ -42,7 +42,7 @@ export default function thankYou({footerArticle}){
     const goToProductPage = (u) => {
         if (productUrl) {
             router.push(productUrl);
-            localStorage.removeItem('lastVisitedProduct');
+            sessionStorage.removeItem('lastVisitedProduct');
         }
     };
     return (

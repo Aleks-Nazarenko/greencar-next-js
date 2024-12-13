@@ -14,7 +14,7 @@ export async function getStaticProps() {
     // Fetch data from Joomla API
     const categories = await axios
         .get(`${JOOMLA_API_BASE}&task=getSubcategories&category_id=70&format=json`)
-        .then((res) => res.data || [])
+        .then((res) => res.data || [])  //ist immer true, weil res.data immer ein Array ist
         .catch((error) => {
             console.log('Failed to fetch categories:', error.message);
             return []; // Return an empty array if the request fails
@@ -26,7 +26,6 @@ export async function getStaticProps() {
     const footerData = await resFooter.json();
     // Extract the footer article from the response
     const footerArticle = footerData.article || null;
-
     if (footerArticle) {
         footerArticle.introtext = footerArticle.introtext ? convertRelativeUrls(footerArticle.introtext, joomlaBaseUrl) : '';
         if (!footerArticle.introtext) {
