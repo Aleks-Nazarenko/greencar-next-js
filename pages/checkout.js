@@ -57,7 +57,7 @@ export default function CheckoutPage({footerArticle }) {
         phone: '',
         street: '',
         city: '',
-        state: '',
+        firma: '',
         zipCode: '',
     });
     const [shippingAddress, setShippingAddress] = useState({
@@ -66,7 +66,7 @@ export default function CheckoutPage({footerArticle }) {
         phone: '',
         street: '',
         city: '',
-        state: '',
+        firma: '',
         zipCode: '',
     });
     const [sameAsBilling, setSameAsBilling] = useState(true);
@@ -345,19 +345,15 @@ export default function CheckoutPage({footerArticle }) {
                                         Please provide a valid city.
                                     </Form.Control.Feedback>
                                 </Form.Group>
-                                <Form.Group as={Col} md="4" controlId="billingState">
-                                    <Form.Label>State <span className="required">*</span></Form.Label>
+                                <Form.Group as={Col} md="4" controlId="billingFirma">
+                                    <Form.Label>Firma</Form.Label>
                                     <Form.Control
-                                        required
                                         type="text"
-                                        placeholder="Enter your state"
-                                        name="state"
-                                        value={billingAddress.state}
+                                        placeholder="Enter your firma"
+                                        name="firma"
+                                        value={billingAddress.firma}
                                         onChange={handleBillingAddressChange}
                                     />
-                                    <Form.Control.Feedback type="invalid">
-                                        Please provide a valid state.
-                                    </Form.Control.Feedback>
                                 </Form.Group>
                                 <Form.Group as={Col} md="4" controlId="billingZipCode">
                                     <Form.Label>Zip Code <span className="required">*</span></Form.Label>
@@ -464,19 +460,15 @@ export default function CheckoutPage({footerArticle }) {
                                                 Please provide a valid city.
                                             </Form.Control.Feedback>
                                         </Form.Group>
-                                        <Form.Group as={Col} md="4" controlId="shippingState">
-                                            <Form.Label>State <span className="required">*</span></Form.Label>
+                                        <Form.Group as={Col} md="4" controlId="shippingFirma">
+                                            <Form.Label>Firma</Form.Label>
                                             <Form.Control
-                                                required
                                                 type="text"
-                                                placeholder="Enter your state"
-                                                name="state"
-                                                value={shippingAddress.state}
+                                                placeholder="Enter your firma"
+                                                name="firma"
+                                                value={shippingAddress.firma}
                                                 onChange={handleShippingAddressChange}
                                             />
-                                            <Form.Control.Feedback type="invalid">
-                                                Please provide a valid state.
-                                            </Form.Control.Feedback>
                                         </Form.Group>
                                         <Form.Group as={Col} md="4" controlId="shippingZipCode">
                                             <Form.Label>Zip Code <span className="required">*</span></Form.Label>

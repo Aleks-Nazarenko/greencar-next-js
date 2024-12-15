@@ -1,6 +1,7 @@
 import {convertRelativeUrls} from "@/utils/convertRelativeUrls";
 import {JOOMLA_API_BASE} from "@/utils/config";
 import {JOOMLA_URL_BASE} from "@/utils/config";
+import MapComponent from "@/components/MapComponent";
 
 export async function getStaticProps() {
     // Base URL of your Joomla server (adjust this to your Joomla installation URL)
@@ -38,6 +39,11 @@ export default function KfzWerkstattFiltereinbauGreencar({article, footerArticle
     return (
         <>
             <main>
+                <div className="container-fluid container-greencar">
+                    <div className="row g-0 p-4">
+                        <MapComponent />
+                    </div>
+                </div>
                 <div className="container-fluid container-greencar">
                     <div className="row g-0 p-4">
                         {article?.introtext && (

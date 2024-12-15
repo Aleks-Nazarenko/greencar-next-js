@@ -230,7 +230,7 @@ export default function CheckoutStep2({footerArticle, termsArticle})   {
                                             <div>{checkoutDetails.billingAddress.fullName} {checkoutDetails.billingAddress.lastName}</div>
                                             <div>{checkoutDetails.billingAddress.street}</div>
                                             <div>{checkoutDetails.billingAddress.zipCode} {checkoutDetails.billingAddress.city}</div>
-                                            <div>{checkoutDetails.billingAddress.country}</div>
+                                            <div>{checkoutDetails.billingAddress.firma}</div>
                                             <div>{checkoutDetails.billingAddress.email}</div>
                                             <div>{checkoutDetails.billingAddress.phone}</div>
                                         </div>
@@ -241,7 +241,7 @@ export default function CheckoutStep2({footerArticle, termsArticle})   {
                                             <div>{checkoutDetails.shippingAddress.fullName} {checkoutDetails.shippingAddress.lastName}</div>
                                             <div>{checkoutDetails.shippingAddress.street}</div>
                                             <div>{checkoutDetails.shippingAddress.zipCode} {checkoutDetails.shippingAddress.city}</div>
-                                            <div>{checkoutDetails.shippingAddress.country}</div>
+                                            <div>{checkoutDetails.shippingAddress.firma}</div>
                                             <div>{checkoutDetails.shippingAddress.email}</div>
                                             <div>{checkoutDetails.shippingAddress.phone}</div>
                                         </div>
