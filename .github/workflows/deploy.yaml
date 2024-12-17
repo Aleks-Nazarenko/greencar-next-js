@@ -25,6 +25,8 @@ jobs:
         run: npm install
 
       - name: Build Next.js application
+        env:
+          NEXT_PUBLIC_GC_MAPS_API_KEY: ${{ secrets.NEXT_PUBLIC_GC_MAPS_API_KEY }}
         run: npm run build
 
       - name: Deploy to LAMP server
