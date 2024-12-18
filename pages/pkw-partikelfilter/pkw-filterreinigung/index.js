@@ -111,6 +111,7 @@ export default function FilterreinigungPage({ product, footerArticle }) {
     const [cities, setCities] = useState([]);
     const [deliveryDesired, setDeliveryDesired] = useState('yes'); // New state to track delivery selection
     const [totalPrice, setTotalPrice] = useState(BASE_PRICE + DELIVERY_COST  + INSTALLATION_COST);
+    const [standortId, setStandortId] = useState(null);
     const [selectedDate, setSelectedDate] = useState(() => {
         let tomorrow = new Date();
         tomorrow.setDate(tomorrow.getDate() + 1);
@@ -161,6 +162,40 @@ export default function FilterreinigungPage({ product, footerArticle }) {
             setCities([]); // Clear cities if no land is selected
         }
     }, [selectedLand]);
+    // Fetch lands and prefill based on standort_id
+    useEffect(() => {
+        const fetchInitialData = async () => {
+            try {
+
+                const storedStandortId = sessionStorage.getItem('standort_id');
+                if (storedStandortId) {
+                    setStandortId(storedStandortId);
+
+                    // Fetch the place details for the stored standort_id
+                    const placeResponse = await fetch(`${JOOMLA_API_BASE}&task=getLocation&location_id=${storedStandortId}&format=json`);
+                    const placeData = await placeResponse.json();
+
+                    if (placeData) {
+                        const { region_id, id: cityId } = placeData.data;
+
+                        // Set selectedLand and fetch cities for the region
+                        setSelectedLand(region_id);
+
+                        const citiesResponse = await fetch(`${JOOMLA_API_BASE}&task=getCities&land_id=${region_id}&format=json`);
+                        const citiesData = await citiesResponse.json();
+                        setCities(citiesData);
+
+                        // Set selectedCity
+                        setSelectedCity(cityId);
+                    }
+                }
+            } catch (error) {
+                console.error('Error fetching initial data:', error);
+            }
+        };
+
+        fetchInitialData();
+    }, []);
 
     // Handle changes in installation option
     const handleInstallationChange = (e) => {

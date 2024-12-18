@@ -6,6 +6,18 @@ import MapComponent from "@/components/MapComponent";
 export async function getStaticProps() {
     // Base URL of your Joomla server (adjust this to your Joomla installation URL)
     const joomlaBaseUrl = JOOMLA_URL_BASE;
+    // Fetch data from Joomla API
+    const res = await fetch(`${JOOMLA_API_BASE}&task=articleWithModules&id=3&format=json`);
+    const data= await res.json();
+    // Extract article from the response
+    const article = data.article || null;
+    // Convert relative URLs in the footer content to absolute URLs
+    if (article) {
+        article.introtext = article.introtext ? convertRelativeUrls(article.introtext, joomlaBaseUrl) : '';
+        if(!article.introtext) {
+            console.log('article.introtext not found');
+        }
+    }
     // Fetch data for the footer from Joomla API
     const resFooter = await fetch(`${JOOMLA_API_BASE}&task=articleWithModules&id=2&format=json`);
     const footerData = await resFooter.json();
@@ -21,15 +33,18 @@ export async function getStaticProps() {
         }
     }
     // Return the expected props structure
-    return { props: { footerArticle} };
+    return { props: { article, footerArticle} };
 }
-export default function KfzWerkstattFiltereinbauGreencar({footerArticle}) {
+
+export default function aboutGreencar({article, footerArticle}) {
     return (
         <>
             <main>
                 <div className="container-fluid container-greencar">
                     <div className="row g-0 p-4">
-                        <MapComponent />
+                        {article?.introtext && (
+                            <div dangerouslySetInnerHTML={{ __html: article.introtext}} />
+                        )}
                     </div>
                 </div>
             </main>
