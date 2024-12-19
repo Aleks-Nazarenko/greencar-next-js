@@ -1,6 +1,8 @@
 // components/Layout.js
 import Navbar from './Navbar';
 import Head from "next/head";
+import FloatingMenu from "@/components/FloatingMenu";
+import VehicleSwitcher from "@/components/VehicleSwitcher";
 import Container from 'react-bootstrap/Container';
 
 
@@ -14,6 +16,8 @@ export default function Layout({ children }) {
                 <link rel="icon" href="/favicon.ico" />
             </Head>
             <Navbar />
+            <FloatingMenu />
+            <VehicleSwitcher />
              {children}
 
         </>
