@@ -40,6 +40,18 @@ export default function NavbarNazarenko() {
                                 </Link>
                             </NavDropdown.Item>
                         </NavDropdown>
+                        <NavDropdown title="Händler">
+                            <NavDropdown.Item >
+                                <Link href="/haendler/login" passHref legacyBehavior>
+                                    <a className="nav-link">Login</a>
+                                </Link>
+                            </NavDropdown.Item>
+                            <NavDropdown.Item >
+                                <Link href="/haendler/registrierung" passHref legacyBehavior>
+                                    <a className="nav-link">Registrierung</a>
+                                </Link>
+                            </NavDropdown.Item>
+                        </NavDropdown>
                         <Link href="/kontakt-greencar" passHref legacyBehavior>
                             <a className="nav-link">Kontakt</a>
                         </Link>
