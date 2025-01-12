@@ -4,8 +4,29 @@ import { Form, Button, Row, Col, Alert } from 'react-bootstrap';
 import {JOOMLA_API_BASE} from "@/utils/config";
 import {JOOMLA_URL_BASE} from "@/utils/config";
 import {useEffect} from "react";
+import Link from "next/link";
+import {convertRelativeUrls} from "@/utils/convertRelativeUrls";
 
-const RegisterPage = () => {
+export async function getStaticProps() {
+    const joomlaBaseUrl = JOOMLA_URL_BASE;
+    // Fetch data for the footer from Joomla API
+    const resFooter = await fetch(`${JOOMLA_API_BASE}&task=articleWithModules&id=2&format=json`);
+    const footerData = await resFooter.json();
+    console.log("API Response:", footerData);
+    // Extract the footer article from the response
+    const footerArticle = footerData.article || null;
+
+    // Convert relative URLs in the footer content to absolute URLs
+    if (footerArticle) {
+        footerArticle.introtext = footerArticle.introtext ? convertRelativeUrls(footerArticle.introtext, joomlaBaseUrl) : '';
+        if (!footerArticle.introtext) {
+            console.log('footerArticle.introtext not found');
+        }
+    }
+    // Return the expected props structure
+    return { props: { footerArticle} };
+}
+const RegisterPage = ({footerArticle}) => {
     const router = useRouter();
     const [formData, setFormData] = useState({
         benutzername: "",
@@ -109,6 +130,18 @@ const RegisterPage = () => {
                 <div className="container-fluid container-greencar">
                     {errors.apiError && <Alert variant="danger">{errors.apiError}</Alert>}
                     {successMessage && <Alert variant="success">{successMessage}</Alert>}
+                    <Row className="mb-3 g-0">
+                        <Col md={"12"}>
+                            <h4>Händler - Registrierung</h4>
+                        </Col>
+                        <Col md={"12"}>
+                            Bitte registrieren Sie sich hier, wenn Sie bei GREENCAR als Händler zu besonderen Konditionen einkaufen möchten.
+                            Wenn Sie sich bereits bei uns registriert haben, können Sie sich über den Menüpunkt
+                            <Link href="/haendler/login" passHref legacyBehavior>
+                                <a className="nav-link">"Login"</a>
+                            </Link>als Händler einloggen
+                        </Col>
+                    </Row>
                     <Form noValidate validated={validated} onSubmit={handleSubmit}>
                         <Row className="mb-3 g-0">
                             <Col md={"12"}><h4>Login</h4></Col>
@@ -306,6 +339,13 @@ const RegisterPage = () => {
                             </Col>
                         </Row>
                     </Form>
+                    <Row className="mb-3 g-0">
+                        <Col md={"12"}>
+                            Bitte nehmen Sie Kontakt auf, wenn Sie Fragen haben:<br/>
+                            Fon +49 (0) 30 417 22 08 - 0<br/>
+                            info@greencar.eu
+                        </Col>
+                    </Row>
 
                 </div>
             </main>
