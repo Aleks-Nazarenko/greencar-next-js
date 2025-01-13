@@ -75,8 +75,8 @@ const RegisterPage = ({footerArticle}) => {
             const payload = {
                 username: formData.benutzername,
                 name: formData.name,
-                email1: formData.email,
-                password1: formData.passwort,
+                email: formData.email,
+                password: formData.passwort,
                 password2: formData.passwort2,
                 customFields: {
                     user_ort: formData.ort,
@@ -214,7 +214,7 @@ const RegisterPage = ({footerArticle}) => {
                         </Row>
                         <Row className="mb-3 g-0">
                             <Form.Group as={Col} sm="12" md={"6"} controlId="regName">
-                                <Form.Label>Benutzername <span className="required">*</span></Form.Label>
+                                <Form.Label>Name <span className="required">*</span></Form.Label>
                                 <Form.Control
                                     required
                                     type="text"
