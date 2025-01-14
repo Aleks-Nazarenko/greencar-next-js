@@ -79,11 +79,11 @@ const RegisterPage = ({footerArticle}) => {
                 password: formData.passwort,
                 password2: formData.passwort2,
                 customFields: {
-                    user_ort: formData.ort,
-                    user_anrede: formData.anrede,
-                    user_firma: formData.firma,
-                    user_strasse: formData.strasse,
-                    user_plz: formData.plz,
+                    ort: formData.ort,
+                    anrede: formData.anrede,
+                    firma: formData.firma,
+                    strasse: formData.strasse,
+                    plz: formData.plz,
                 },
             };
             const response = await fetch(`${JOOMLA_API_BASE}&task=register&format=json`, {

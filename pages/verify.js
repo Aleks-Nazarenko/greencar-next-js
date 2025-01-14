@@ -48,11 +48,14 @@ const VerifyPage = ({footerArticle}) => {
 
                     if (response.ok) {
                         setMessage(data.message || 'Die E-Mail-Adresse wurde verifiziert. Sobald der Administrator das Konto aktiviert hat, wird automatisch eine weitere E-Mail verschickt.');
+                        setError(null);
                     } else {
                         setError(data.message || 'Die Verifizierung ist fehlgeschlagen. Versuchen Sie es bitte erneut');
+                        setMessage(null);
                     }
                 } catch (err) {
                     setError('Beim Überprüfen Ihres Kontos ist ein Fehler aufgetreten. Bitte versuchen Sie es später noch einmal.');
+                    setMessage(null);
                 } finally {
                     setLoading(false);
                 }
