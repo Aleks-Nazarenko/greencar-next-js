@@ -70,7 +70,7 @@ const VerifyPage = ({footerArticle}) => {
         <main>
             <div className="container-fluid container-greencar">
                 <div className="row g-0 p-4 mb-6">
-                <h1>Account Verification</h1>
+                <h1>Kontobestätigung</h1>
                     <div className={'col-12'}>
                         {loading && <p>Verifizierung Ihres Kontos...</p>}
                         {message && <p style={{ color: 'green' }}>{message}</p>}

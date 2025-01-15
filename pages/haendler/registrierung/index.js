@@ -79,9 +79,9 @@ const RegisterPage = ({footerArticle}) => {
                 password: formData.passwort,
                 password2: formData.passwort2,
                 customFields: {
-                    ort: formData.ort,
-                    anrede: formData.anrede,
                     firma: formData.firma,
+                    anrede: formData.anrede,
+                    ort: formData.ort,
                     strasse: formData.strasse,
                     plz: formData.plz,
                 },
