@@ -44,6 +44,18 @@ const RegisterPage = ({footerArticle}) => {
     const [validated, setValidated] = useState(false);
     const [errors, setErrors] = useState({});
     const [successMessage, setSuccessMessage] = useState('');
+    const [isLoggedIn, setIsLoggedIn] = useState(false);
+    const [userInfo, setUserInfo] = useState(null);
+    // Check if the user is logged in
+    useEffect(() => {
+        const token = sessionStorage.getItem("authToken");
+        const user = sessionStorage.getItem("user");
+
+        if (token && user) {
+            setIsLoggedIn(true);
+            setUserInfo(JSON.parse(user)); // Parse the user details stored in sessionStorage
+        }
+    }, []);
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
@@ -62,6 +74,13 @@ const RegisterPage = ({footerArticle}) => {
 
         setErrors(customErrors);
         return Object.keys(customErrors).length === 0; // Returns true if no custom errors
+    };
+
+    const scrollToTop = () => {
+        window.scrollTo({
+            top: 0,
+            behavior: "smooth", // Optional: Adds smooth scrolling effect
+        });
     };
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -96,7 +115,7 @@ const RegisterPage = ({footerArticle}) => {
             if (!response.ok) {
                 console.log('Registration Error', data);
                 setErrors({ apiError: data?.message || 'Es ist ein Fehler aufgetreten. Bitte versuchen Sie es später erneut.'});
-
+                scrollToTop();
             } else {
                 if (data.status === 'success') {
                     setSuccessMessage(data.message);
@@ -115,15 +134,93 @@ const RegisterPage = ({footerArticle}) => {
                         ort: '',
                     });
                     setValidated(false);
+                    scrollToTop();
                 } else {
                     setErrors({ apiError: 'Ein Fehler ist aufgetreten. Versuchen Sie es später noch einmal.' });
+                    scrollToTop();
                 }
             }
         } catch (error) {
             setErrors({ apiError: 'Ein Fehler ist aufgetreten. Versuchen Sie es später noch einmal.' });
+            scrollToTop();
         }
     }
 
+    const handleLogout = () => {
+        // Clear sessionStorage
+        sessionStorage.removeItem("authToken");
+        sessionStorage.removeItem("user");
+
+        // Update state
+        setIsLoggedIn(false);
+        setUserInfo(null);
+        setSuccessMessage("Sie haben sich erfolgreich abgemeldet.");
+        scrollToTop();
+    };
+
+    if (isLoggedIn) {
+        // If the user is logged in, show user information
+        return (
+            <>
+                <main>
+                    <div className="container-fluid container-greencar">
+                        <Row className="g-0 pb-4">
+                            <Col md={"12"}><h4>Sie sind als Händler angemeldet</h4></Col>
+                        </Row>
+                        <Row className="g-0">
+                            <Col sm={"6"}>Name: </Col>
+                            <Col sm={"6"}>{userInfo?.name}</Col>
+                        </Row>
+                        <Row className="g-0">
+                            <Col sm={"6"}>Benutzername: </Col>
+                            <Col sm={"6"}>{userInfo?.username}</Col>
+                        </Row>
+                        <Row className="g-0">
+                            <Col sm={"6"}>E-Mail: </Col>
+                            <Col sm={"6"}>{userInfo?.email}</Col>
+                        </Row>
+                        <Row className="g-0">
+                            <Col sm={"6"}>Firma: </Col>
+                            <Col sm={"6"}>{userInfo?.firma}</Col>
+                        </Row>
+                        <Row className="g-0">
+                            <Col sm={"6"}>Ort: </Col>
+                            <Col sm={"6"}>{userInfo?.ort}</Col>
+                        </Row>
+                        <Row className="g-0">
+                            <Col sm={"6"}>Straße: </Col>
+                            <Col sm={"6"}>{userInfo?.strasse}</Col>
+                        </Row>
+                        <Row className="g-0">
+                            <Col sm={"6"}>PLZ: </Col>
+                            <Col sm={"6"}>{userInfo?.plz}</Col>
+                        </Row>
+                        <Row className="g-0">
+                            <Col sm={"6"}>
+                                <Button variant="danger" onClick={handleLogout}>Abmelden</Button>
+                            </Col>
+                        </Row>
+                        <Row className="mb-3 g-0">
+                            <Col md={"12"}>
+                                Bitte nehmen Sie Kontakt auf, wenn Sie Fragen haben:<br/>
+                                Fon +49 (0) 30 417 22 08 - 0<br/>
+                                info@greencar.eu
+                            </Col>
+                        </Row>
+                    </div>
+                </main>
+                <footer>
+                    <div className="container-fluid container-footer container-greencar">
+                        <div className="row g-0 p-4">
+                            {footerArticle?.introtext && (
+                                <div dangerouslySetInnerHTML={{ __html: footerArticle.introtext}} />
+                            )}
+                        </div>
+                    </div>
+                </footer>
+            </>
+        );
+    }
     return (
         <>
             <main>
@@ -349,6 +446,15 @@ const RegisterPage = ({footerArticle}) => {
 
                 </div>
             </main>
+            <footer>
+                <div className="container-fluid container-footer container-greencar">
+                    <div className="row g-0 p-4">
+                        {footerArticle?.introtext && (
+                            <div dangerouslySetInnerHTML={{ __html: footerArticle.introtext}} />
+                        )}
+                    </div>
+                </div>
+            </footer>
         </>
     );
 };
