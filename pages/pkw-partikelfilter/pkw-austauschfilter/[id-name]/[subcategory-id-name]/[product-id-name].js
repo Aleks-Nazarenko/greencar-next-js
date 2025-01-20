@@ -73,12 +73,32 @@ export async function getStaticProps({ params }) {
     // Extract product ID from `product-id-name`
     const [productId] = params["product-id-name"].split('-');
     // Fetch the product details from the Joomla API
-    const res = await fetch(`${JOOMLA_API_BASE}&task=getProduct&product_id=${productId}&format=json`);
-    const productData = await res.json();
+    const resProduct = await fetch(`${JOOMLA_API_BASE}&task=getProduct&product_id=${productId}&format=json`);
+    const productData = await resProduct.json();
     const product = productData.product_name ? productData : null;
     if (!productData.product_name) {
         console.error("Invalid product data received:", productData);
     }
+    const resInstall = await fetch(`${JOOMLA_API_BASE}&task=getProduct&product_id=3259&format=json`);
+    const installData = await resInstall.json();
+    const installation = installData.product_id ? installData : null;
+    if (!installData.product_id) {
+        console.error("Invalid product data received:", installData);
+    }
+    const resDelivery = await fetch(`${JOOMLA_API_BASE}&task=getProduct&product_id=3258&format=json`);
+    const deliveryData = await resDelivery.json();
+    const delivery = deliveryData.product_id ? deliveryData : null;
+    if (!deliveryData.product_id) {
+        console.error("Invalid product data received:", deliveryData);
+    }
+
+    const resDeposit = await fetch(`${JOOMLA_API_BASE}&task=getProduct&product_id=14794&format=json`);
+    const depositData = await resDeposit.json();
+    const deposit = depositData.product_id ? depositData : null;
+    if (!depositData.product_id) {
+        console.error("Invalid product data received:", depositData);
+    }
+
     // Fetch data for the footer from Joomla API
     const resFooter = await fetch(`${JOOMLA_API_BASE}&task=articleWithModules&id=2&format=json`);
     const footerData = await resFooter.json();
@@ -96,11 +116,14 @@ export async function getStaticProps({ params }) {
         props: {
             product,
             footerArticle,
+            installation,
+            delivery,
+            deposit,
         },
     };
 }
 
-export default function ProductPage({ product, footerArticle }) {
+export default function ProductPage({ product, footerArticle, installation, delivery, deposit }) {
     const router = useRouter();
     // Constants for pricing
     const formatPrice = (price) => {
@@ -119,11 +142,60 @@ export default function ProductPage({ product, footerArticle }) {
             return 'Preis';
         }
     };
-    const BASE_PRICE = 449.00; // Base product price
-    const DELIVERY_COST = 29.75; // Versand
-    const DEPOSIT_COST = 523.60; // Kaution
-    const INSTALLATION_COST = 226.10; // Einbau
+    const [selectedBasePrice, setSelectedBasePrice] = useState(null);
+    const [selectedDeliveryPrice, setSelectedDeliveryPrice] = useState(null);
+    const [selectedInstallPrice, setSelectedInstallPrice] = useState(null);
+    const [selectedDepositPrice, setSelectedDepositPrice] = useState(null);
+
+    const [totalPrice, setTotalPrice] = useState(selectedBasePrice + selectedDeliveryPrice + selectedInstallPrice + selectedDepositPrice);
+
+    const [mwStWording, setMwStWording] = useState('');
+    const [mwSt, setMwSt] = useState(null);
+
+    const sortedDeliveryPrices = [...delivery.product_prices].sort((a, b) => Number(a.price_value) - Number(b.price_value));
+    const sortedBasePrices = [...product.product_prices].sort((a, b) => Number(a.price_value) - Number(b.price_value));
+    const sortedInstallPrices = [...installation.product_prices].sort((a, b) => Number(a.price_value) - Number(b.price_value));
+    const sortedDepositPrices = [...deposit.product_prices].sort((a, b) => Number(a.price_value) - Number(b.price_value));
+
     const VAT_SHARE = 1.19; // MwSt.
+
+    useEffect(() => {
+        if (delivery && product && installation && deposit) {
+            // Adjust prices based on the presence of authToken
+            const authToken = typeof window !== "undefined" && sessionStorage.getItem("authToken");
+
+            if (authToken) {
+                // User authenticated: Use smallest prices
+                setSelectedDeliveryPrice(parseFloat(sortedDeliveryPrices[0].price_value));
+                setSelectedBasePrice(parseFloat(sortedBasePrices[0].price_value));
+                setSelectedInstallPrice(parseFloat(sortedInstallPrices[0].price_value));
+                setSelectedDepositPrice(parseFloat(sortedDepositPrices[0].price_value));
+                setTotalPrice((parseFloat(sortedBasePrices[0].price_value) + parseFloat(sortedDeliveryPrices[0].price_value) + parseFloat(sortedDepositPrices[0].price_value)));
+                setMwStWording('(ohne MwSt.)');
+                setMwSt(false);
+                setInstallationOption('without');
+            } else {
+                // User not authenticated: Use largest prices
+                setSelectedDeliveryPrice(parseFloat(sortedDeliveryPrices[sortedDeliveryPrices.length - 1].price_value) * VAT_SHARE);
+                setSelectedBasePrice(parseFloat(sortedBasePrices[sortedBasePrices.length - 1].price_value) * VAT_SHARE);
+                setSelectedInstallPrice(parseFloat(sortedInstallPrices[sortedInstallPrices.length - 1].price_value) * VAT_SHARE);
+                setSelectedDepositPrice(parseFloat(sortedDepositPrices[sortedDepositPrices.length - 1].price_value) * VAT_SHARE);
+                setTotalPrice((parseFloat(sortedBasePrices[sortedBasePrices.length - 1].price_value) * VAT_SHARE
+                    + parseFloat(sortedInstallPrices[sortedInstallPrices.length - 1].price_value) * VAT_SHARE
+                    + parseFloat(sortedDeliveryPrices[sortedDeliveryPrices.length - 1].price_value) * VAT_SHARE
+                    + parseFloat(sortedDepositPrices[sortedDepositPrices.length - 1].price_value) * VAT_SHARE
+                ) );
+                setMwStWording('(inkl. MwSt.)');
+                setMwSt(true);
+            }
+        }
+    }, [delivery, product, installation]);
+
+    const BASE_PRICE = selectedBasePrice // Base product price
+    const DELIVERY_COST = selectedDeliveryPrice; // Versand
+    const DEPOSIT_COST = selectedDepositPrice; // Kaution
+    const INSTALLATION_COST = selectedInstallPrice; // Einbau
+
     // Product options configuration
     const productOptions = {
         installation: { //Aus- und Einbau bzw. Mit Einbau
@@ -155,7 +227,6 @@ export default function ProductPage({ product, footerArticle }) {
     const [selectedCity, setSelectedCity] = useState('');
     const [lands, setLands] = useState([]);
     const [cities, setCities] = useState([]);
-    const [totalPrice, setTotalPrice] = useState(BASE_PRICE + DELIVERY_COST + DEPOSIT_COST + INSTALLATION_COST);
 
     // Fetch lands when the component loads
     useEffect(() => {
@@ -231,27 +302,27 @@ export default function ProductPage({ product, footerArticle }) {
         const cartItem = {
             productName: product.product_name,
             productImage: product.product_image,
-            basePrice: formatPrice(BASE_PRICE),
+            basePrice: formatPrice(BASE_PRICE  * (mwSt ? 1 : VAT_SHARE )),
             options: {
                 // Aus- und Einbau bzw. Mit Einbau
                 installation: productOptions.installation.isAvailable && installationOption === 'with'
                     ? {
                         label: productOptions.installation.label,
-                        cost: formatPrice(productOptions.installation.cost),
+                        cost: formatPrice(productOptions.installation.cost  * (mwSt ? 1 : VAT_SHARE )),
                     }
                     : null,
                 // Abholung bzw. Versand
                 delivery: productOptions.delivery.isAvailable && deliveryDesired === 'yes'
                     ? {
                         label: productOptions.delivery.label,
-                        cost: formatPrice(productOptions.delivery.cost),
+                        cost: formatPrice(productOptions.delivery.cost * (mwSt ? 1 : VAT_SHARE )),
                     }
                     : null,
                 // Kaution
                 deposit: productOptions.deposit.isAvailable
                     ? {
                         label: productOptions.deposit.label,
-                        cost: formatPrice(productOptions.deposit.cost),
+                        cost: formatPrice(productOptions.deposit.cost * (mwSt ? 1 : VAT_SHARE )),
                     }
                     : null,
                 // Vorauszahlung hier unnötig !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -264,8 +335,8 @@ export default function ProductPage({ product, footerArticle }) {
             },
             landName: selectedLand ? lands.find((land) => parseInt(land.id, 10) === parseInt(selectedLand, 10))?.title : null,
             cityName: selectedCity ? cities.find((city) => parseInt(city.id, 10) === parseInt(selectedCity, 10))?.title : null,
-            totalPrice: formatPrice(totalPrice),
-            totalPriceUnformatted: totalPrice,
+            totalPrice: formatPrice(totalPrice * (mwSt ? 1 : VAT_SHARE )),
+            totalPriceUnformatted: totalPrice * (mwSt ? 1 : VAT_SHARE ),
             vatShare: VAT_SHARE,
 
         };
@@ -299,26 +370,26 @@ export default function ProductPage({ product, footerArticle }) {
                                         />
                                     </p>
                                     <p>{product.product_description}</p>
-                                    <p>Price: {formatPrice(product.price_value)}</p>
                                     {/* Additional product details */}
                                 </div>
                                 <div className="row g-0 p-4">
                                     <div className="product-info">
-                                        <p>{formatPrice(BASE_PRICE)} pro Stück (inkl. MwSt.)</p>
-                                        <p>Versand +{formatPrice(DELIVERY_COST)} (inkl. MwSt.)</p>
-                                        <p>Kaution +{formatPrice(DEPOSIT_COST)} (inkl. MwSt.)</p>
+                                        <p>{formatPrice(BASE_PRICE)} pro Stück {mwStWording}</p>
+                                        <p>Versand +{formatPrice(DELIVERY_COST)} {mwStWording}</p>
+                                        <p>Kaution +{formatPrice(DEPOSIT_COST)} {mwStWording}</p>
                                         <p>Kaution wird nach Erhalt des schadlosen Rücknahmeteils storniert</p>
                                     </div>
 
-                                    <div className="installation-options">
-                                        <label>
-                                            Mit Einbau:
-                                            <select value={installationOption} onChange={handleInstallationChange}>
-                                                <option value="with">Ja + {formatPrice(INSTALLATION_COST)}</option>
-                                                <option value="without">Nein</option>
-                                            </select>
-                                        </label>
-                                    </div>
+                                    {mwSt && (<div className="installation-options">
+                                                <label>
+                                                    Mit Einbau:
+                                                    <select value={installationOption} onChange={handleInstallationChange}>
+                                                        <option value="with">Ja + {formatPrice(INSTALLATION_COST)}</option>
+                                                        <option value="without">Nein</option>
+                                                    </select>
+                                                </label>
+                                            </div>
+                                    )}
                                     {installationOption === 'with' && (
                                         <>
                                             <div className="land-selection">

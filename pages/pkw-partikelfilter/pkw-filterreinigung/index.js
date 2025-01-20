@@ -11,13 +11,24 @@ export async function getStaticProps() {
     // Extract product ID from `product-id-name`
 
     // Fetch the product details from the Joomla API
-    const res = await fetch(`${JOOMLA_API_BASE}&task=getProduct&product_id=14435&format=json`);
-    const productData = await res.json();
+    const resProduct = await fetch(`${JOOMLA_API_BASE}&task=getProduct&product_id=14435&format=json`);
+    const productData = await resProduct.json();
     const product = productData.product_id ? productData : null;
     if (!productData.product_id) {
         console.error("Invalid product data received:", productData);
     }
-
+    const resInstall = await fetch(`${JOOMLA_API_BASE}&task=getProduct&product_id=8442&format=json`);
+    const installData = await resInstall.json();
+    const installation = installData.product_id ? installData : null;
+    if (!installData.product_id) {
+        console.error("Invalid product data received:", installData);
+    }
+    const resDelivery = await fetch(`${JOOMLA_API_BASE}&task=getProduct&product_id=8444&format=json`);
+    const deliveryData = await resDelivery.json();
+    const delivery = deliveryData.product_id ? deliveryData : null;
+    if (!deliveryData.product_id) {
+        console.error("Invalid product data received:", deliveryData);
+    }
     // Fetch data for the footer from Joomla API
     const resFooter = await fetch(`${JOOMLA_API_BASE}&task=articleWithModules&id=2&format=json`);
     const footerData = await resFooter.json();
@@ -35,10 +46,12 @@ export async function getStaticProps() {
         props: {
             product,
             footerArticle,
+            installation,
+            delivery,
         },
     };
 }
-export default function FilterreinigungPage({ product, footerArticle }) {
+export default function FilterreinigungPage({ product, footerArticle,installation, delivery }) {
     const router = useRouter();
     // Constants for pricing
     const formatPrice = (price) => {
@@ -73,22 +86,64 @@ export default function FilterreinigungPage({ product, footerArticle }) {
         return date;
     };
 
-    const BASE_PRICE = 359.00; // Base product price
-    const DELIVERY_COST = 47.36; // Abholung
+    const [selectedDeliveryPrice, setSelectedDeliveryPrice] = useState(null);
+    const [selectedBasePrice, setSelectedBasePrice] = useState(null);
+    const [selectedInstallPrice, setSelectedInstallPrice] = useState(null);
+
+    const [totalPrice, setTotalPrice] = useState(selectedBasePrice + selectedDeliveryPrice + selectedInstallPrice);
+
+    const [mwStWording, setMwStWording] = useState('');
+    const [mwSt, setMwSt] = useState(null);
+
+    const sortedDeliveryPrices = [...delivery.product_prices].sort((a, b) => Number(a.price_value) - Number(b.price_value));
+    const sortedBasePrices = [...product.product_prices].sort((a, b) => Number(a.price_value) - Number(b.price_value));
+    const sortedInstallPrices = [...installation.product_prices].sort((a, b) => Number(a.price_value) - Number(b.price_value));
+
+    const VAT_SHARE = 1.19;
+
+    useEffect(() => {
+        if (delivery && product && installation) {
+            // Adjust prices based on the presence of authToken
+            const authToken = typeof window !== "undefined" && sessionStorage.getItem("authToken");
+
+            if (authToken) {
+                // User authenticated: Use smallest prices
+                setSelectedDeliveryPrice(parseFloat(sortedDeliveryPrices[0].price_value));
+                setSelectedBasePrice(parseFloat(sortedBasePrices[0].price_value));
+                setSelectedInstallPrice(parseFloat(sortedInstallPrices[0].price_value));
+                setTotalPrice((parseFloat(sortedBasePrices[0].price_value) + parseFloat(sortedDeliveryPrices[0].price_value)));
+                setMwStWording('(ohne MwSt.)');
+                setMwSt(false);
+                setInstallationOption('without');
+            } else {
+                // User not authenticated: Use largest prices
+                setSelectedDeliveryPrice(parseFloat(sortedDeliveryPrices[sortedDeliveryPrices.length - 1].price_value) * VAT_SHARE);
+                setSelectedBasePrice(parseFloat(sortedBasePrices[sortedBasePrices.length - 1].price_value) * VAT_SHARE);
+                setSelectedInstallPrice(parseFloat(sortedInstallPrices[sortedInstallPrices.length - 1].price_value) * VAT_SHARE);
+                setTotalPrice((parseFloat(sortedBasePrices[sortedBasePrices.length - 1].price_value) * VAT_SHARE   + parseFloat(sortedInstallPrices[sortedInstallPrices.length - 1].price_value) * VAT_SHARE + parseFloat(sortedDeliveryPrices[sortedDeliveryPrices.length - 1].price_value) * VAT_SHARE ) );
+                setMwStWording('(inkl. MwSt.)');
+                setMwSt(true);
+            }
+        }
+    }, [delivery, product, installation]);
+
+    console.log(mwSt + ' mwSt');
+
+    const BASE_PRICE = selectedBasePrice // Base product price
+    const DELIVERY_COST = selectedDeliveryPrice; // Abholung
     const DEPOSIT_COST = 0; // Kaution
-    const INSTALLATION_COST = 240.00; //  Aus- und Einbau
-    const VAT_SHARE = 1.19; // VAT share
+    const INSTALLATION_COST = selectedInstallPrice //  Aus- und Einbau
     // Product options configuration
     const productOptions = {
         installation: { //Aus- und Einbau bzw. Mit Einbau
             isAvailable: true,
-            cost: INSTALLATION_COST,
+            cost: selectedInstallPrice,
             label: "Aus- und Einbau",
             withoutLabel: "No Installation",
         },
         delivery: { //Abholung bzw. Versand
             isAvailable: true,
-            cost: DELIVERY_COST,
+            cost: selectedDeliveryPrice,
             label: "Abholung",
         },
         deposit: { //Kaution
@@ -103,6 +158,8 @@ export default function FilterreinigungPage({ product, footerArticle }) {
         },
     };
 
+
+
     // State to manage form selections
     const [installationOption, setInstallationOption] = useState('with'); // Default to 'with installation'
     const [selectedLand, setSelectedLand] = useState('');
@@ -110,7 +167,7 @@ export default function FilterreinigungPage({ product, footerArticle }) {
     const [lands, setLands] = useState([]);
     const [cities, setCities] = useState([]);
     const [deliveryDesired, setDeliveryDesired] = useState('yes'); // New state to track delivery selection
-    const [totalPrice, setTotalPrice] = useState(BASE_PRICE + DELIVERY_COST  + INSTALLATION_COST);
+
     const [standortId, setStandortId] = useState(null);
     const [selectedDate, setSelectedDate] = useState(() => {
         let tomorrow = new Date();
@@ -212,7 +269,7 @@ export default function FilterreinigungPage({ product, footerArticle }) {
             newTotalPrice += deliveryDesired === 'yes' ? DELIVERY_COST : 0;
         }
 
-        setTotalPrice(newTotalPrice);
+        setTotalPrice(newTotalPrice); console.log(newTotalPrice +' new total price');
     };
 
     // Handle changes in land selection
@@ -300,20 +357,20 @@ export default function FilterreinigungPage({ product, footerArticle }) {
         const cartItem = {
             productName: product.product_name,
             productImage: product.product_image,
-            basePrice: formatPrice(BASE_PRICE),
+            basePrice: formatPrice(BASE_PRICE * (mwSt ? 1 : VAT_SHARE )),
             options: {
                 // Aus- und Einbau
                 installation: productOptions.installation.isAvailable && installationOption === 'with'
                     ? {
                         label: productOptions.installation.label,
-                        cost: formatPrice(productOptions.installation.cost),
+                        cost: formatPrice(productOptions.installation.cost  * (mwSt ? 1 : VAT_SHARE )),
                     }
                     : null,
                 // Abholung
                 delivery: productOptions.delivery.isAvailable && deliveryDesired === 'yes'
                     ? {
                         label: productOptions.delivery.label,
-                        cost: formatPrice(productOptions.delivery.cost),
+                        cost: formatPrice(productOptions.delivery.cost  * (mwSt ? 1 : VAT_SHARE )),
                     }
                     : null,
                 // Kaution
@@ -333,8 +390,8 @@ export default function FilterreinigungPage({ product, footerArticle }) {
             },
             landName: selectedLand ? lands.find((land) => parseInt(land.id, 10) === parseInt(selectedLand, 10))?.title : null,
             cityName: selectedCity ? cities.find((city) => parseInt(city.id, 10) === parseInt(selectedCity, 10))?.title : null,
-            totalPrice: formatPrice(totalPrice),
-            totalPriceUnformatted: totalPrice,
+            totalPrice: formatPrice(totalPrice  * (mwSt ? 1 : VAT_SHARE )),
+            totalPriceUnformatted: totalPrice  * (mwSt ? 1 : VAT_SHARE ),
             vatShare: VAT_SHARE,
             selectedDate: formattedSelectedDate, // set null wenn nicht verfügbar
             nextDay: nextDay, // set null wenn nicht verfügbar
@@ -361,27 +418,27 @@ export default function FilterreinigungPage({ product, footerArticle }) {
                                 <div className="row g-0">
                                     <h1>{product.product_name}</h1>
                                     <p>48h Expressreinigung von der Abholung bis zur Zustellung</p>
-                                    <p>Price: {formatPrice(product.price_value)}</p>
                                     {/* Additional product details */}
                                 </div>
                                 <div className="row g-0 ">
                                     <div className="product-info">
-                                        <p>{formatPrice(BASE_PRICE)} pro Stück (inkl. MwSt.)</p>
-                                        {installationOption === 'with' && <p>Abholung: {formatPrice(DELIVERY_COST)}</p>}
+                                        <p>{formatPrice(BASE_PRICE)} pro Stück {mwStWording}</p>
+                                        {installationOption === 'with' && <p>Abholung: {formatPrice(DELIVERY_COST)} {mwStWording}</p>}
                                     </div>
 
-                                    <div className="installation-options">
+                                    {mwSt && (<div className="installation-options">
                                         <div>Aus und Einbau</div>
-                                        <select value={installationOption} onChange={handleInstallationChange}>
-                                            <option value="with">GREENCAR Werkstatt ( + {formatPrice(INSTALLATION_COST)} (inkl. MwSt.) )</option>
-                                            <option value="without">eigene Werkstatt</option>
-                                        </select>
-                                    </div>
+                                            <select value={installationOption} onChange={handleInstallationChange}>
+                                                <option value="with">GREENCAR Werkstatt ( + {formatPrice(INSTALLATION_COST)} {mwStWording} )</option>
+                                                <option value="without">eigene Werkstatt</option>
+                                            </select>
+                                        </div>
+                                    )}
                                     {installationOption === 'without' && (
                                         <div className="delivery-options">
                                             <div>Abholung gewünscht?</div>
                                             <select value={deliveryDesired} onChange={handleDeliveryChange}>
-                                                <option value="yes">Ja ( + {formatPrice(DELIVERY_COST)} (inkl. MwSt.) )</option>
+                                                <option value="yes">Ja ( + {formatPrice(DELIVERY_COST)} {mwStWording} )</option>
                                                 <option value="no">Nein</option>
                                             </select>
                                         </div>
