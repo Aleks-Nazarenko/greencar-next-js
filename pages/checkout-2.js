@@ -227,7 +227,7 @@ export default function CheckoutStep2({footerArticle, termsArticle})   {
                                     {checkoutDetails.billingAddress && (
                                         <div className={"col-sm-6"}>
                                             <h3>Rechnungsadresse</h3>
-                                            <div>{checkoutDetails.billingAddress.fullName} {checkoutDetails.billingAddress.lastName}</div>
+                                            <div>{checkoutDetails.billingAddress.anrede } {checkoutDetails.billingAddress.fullName} </div>
                                             <div>{checkoutDetails.billingAddress.street}</div>
                                             <div>{checkoutDetails.billingAddress.zipCode} {checkoutDetails.billingAddress.city}</div>
                                             <div>{checkoutDetails.billingAddress.firma}</div>
@@ -238,7 +238,7 @@ export default function CheckoutStep2({footerArticle, termsArticle})   {
                                     {checkoutDetails.shippingAddress && (
                                         <div className={"col-sm-6"}>
                                             <h3>Lieferadresse</h3>
-                                            <div>{checkoutDetails.shippingAddress.fullName} {checkoutDetails.shippingAddress.lastName}</div>
+                                            <div>{checkoutDetails.shippingAddress.anrede} {checkoutDetails.shippingAddress.fullName} </div>
                                             <div>{checkoutDetails.shippingAddress.street}</div>
                                             <div>{checkoutDetails.shippingAddress.zipCode} {checkoutDetails.shippingAddress.city}</div>
                                             <div>{checkoutDetails.shippingAddress.firma}</div>

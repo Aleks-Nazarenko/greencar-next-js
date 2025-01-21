@@ -35,7 +35,7 @@ const RegisterPage = ({footerArticle}) => {
         passwort: "",
         passwort2: "",
         name: "",
-        anrede: "",
+        anrede: "Herr",
         firma: "",
         strasse: "",
         plz: "",
@@ -166,6 +166,10 @@ const RegisterPage = ({footerArticle}) => {
                     <div className="container-fluid container-greencar">
                         <Row className="g-0 pb-4">
                             <Col md={"12"}><h4>Sie sind als Händler angemeldet</h4></Col>
+                        </Row>
+                        <Row className="g-0">
+                            <Col sm={"6"}>Anrede: </Col>
+                            <Col sm={"6"}>{userInfo?.anrede}</Col>
                         </Row>
                         <Row className="g-0">
                             <Col sm={"6"}>Name: </Col>

@@ -52,6 +52,7 @@ export default function CheckoutPage({footerArticle }) {
     const [displayTotalPrice, setDisplayTotalPrice] = useState(0); // Total price to display
     const [validated, setValidated] = useState(false);
     const [billingAddress, setBillingAddress] = useState({
+        salutation: 'Herr',
         fullName: '',
         email: '',
         phone: '',
@@ -61,6 +62,7 @@ export default function CheckoutPage({footerArticle }) {
         zipCode: '',
     });
     const [shippingAddress, setShippingAddress] = useState({
+        salutation: 'Herr',
         fullName: '',
         email: '',
         phone: '',
@@ -105,6 +107,22 @@ export default function CheckoutPage({footerArticle }) {
             setShippingAddress(savedDetails.shippingAddress || {});
             setSameAsBilling(JSON.stringify(savedDetails.billingAddress) === JSON.stringify(savedDetails.shippingAddress));
             setPaymentMethod(savedDetails.paymentMethod || "advance-payment");
+        }
+        const storedUser = typeof window !== "undefined" && sessionStorage.getItem("user");
+        const authToken = typeof window !== "undefined" && sessionStorage.getItem("authToken");
+        if(!savedDetails && (storedUser && authToken)){
+            const user = JSON.parse(storedUser);
+            // Update billingAddress with user data
+            setBillingAddress({
+                fullName: user.name || "",
+                email: user.email || "",
+                phone: "", // Add phone if it's part of the user object, otherwise leave it empty
+                street: user.strasse || "",
+                city: user.ort || "",
+                firma: user.firma || "",
+                zipCode: user.plz || "",
+                anrede: user.anrede || "Herr",
+            });
         }
     }, []);
 
@@ -268,6 +286,21 @@ export default function CheckoutPage({footerArticle }) {
                     <section>
                         <Form noValidate validated={validated} onSubmit={handleSubmit}>
                             <h2>Ihre Rechnungsadresse</h2>
+                            <Row className="mb-3 g-0">
+                                <Form.Group as={Col} md="6" controlId="billingSalutation">
+                                    <Form.Label>Anrede <span className="required">*</span></Form.Label>
+                                    <Form.Select
+                                        required
+                                        name="salutation"
+                                        value={billingAddress.salutation}
+                                        onChange={handleBillingAddressChange}
+                                    >
+                                        <option value="Herr">Herr</option>
+                                        <option value="Frau">Frau</option>
+                                        <option value="Firma">Firma</option>
+                                    </Form.Select>
+                                </Form.Group>
+                            </Row>
                             <Row className="mb-3">
                                 <Form.Group as={Col} md="6" controlId="billingFullName">
                                     <Form.Label>Full Name <span className="required">*</span></Form.Label>
@@ -384,6 +417,21 @@ export default function CheckoutPage({footerArticle }) {
                                 <>
                                     <h2>Abhol- und Zustelladresse</h2>
                                     {/* Repeat shipping address fields, using handleShippingAddressChange */}
+                                    <Row className="mb-3 g-0">
+                                        <Form.Group as={Col} md="6" controlId="shippingSalutation">
+                                            <Form.Label>Anrede <span className="required">*</span></Form.Label>
+                                            <Form.Select
+                                                required
+                                                name="salutation"
+                                                value={shippingAddress.salutation}
+                                                onChange={handleShippingAddressChange}
+                                            >
+                                                <option value="Herr">Herr</option>
+                                                <option value="Frau">Frau</option>
+                                                <option value="Firma">Firma</option>
+                                            </Form.Select>
+                                        </Form.Group>
+                                    </Row>
                                     <Row className="mb-3">
                                         <Form.Group as={Col} md="6" controlId="shippingFullName">
                                             <Form.Label>Full Name <span className="required">*</span></Form.Label>
