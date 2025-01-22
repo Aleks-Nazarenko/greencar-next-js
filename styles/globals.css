@@ -88,7 +88,7 @@ body {
 body {
   margin: 0;
   padding: 0;
-  background-image: url('../public/bg_clean.jpg'); /* Path to your image */
+  background-image: url('../public/background/bg_clean.jpg'); /* Path to your image */
   background-size: cover; /* Make sure the image covers the entire viewport */
   background-position-x: center; /* Center the image */
   background-position-y: bottom; /* Center the image */
@@ -96,7 +96,7 @@ body {
   background-attachment: fixed; /* Make it stay fixed during scrolling */
 }
 .container-background-pkw{
-  background-image: url('../public/greencar-pkw-final.png');
+  background-image: url('../public/background/greencar-pkw-final.png');
   background-size: cover;
   background-position-x: center;
   background-position-y: bottom;
@@ -108,7 +108,7 @@ body {
   top: 0;
 }
 .container-background-lkw{
-  background-image: url('../public/greencar-lkw-final.png');
+  background-image: url('../public/background/greencar-lkw-final.png');
   background-size: cover;
   background-position-x: center;
   background-position-y: bottom;
@@ -120,7 +120,7 @@ body {
   top: 0;
 }
 .container-background-bm{
-  background-image: url('../public/greencar-bm-final.png');
+  background-image: url('../public/background/greencar-bm-final.png');
   background-size: cover;
   background-position-x: center;
   background-position-y: bottom;
@@ -143,6 +143,7 @@ nav {z-index: 10}
 .paypal-logo-an {max-height: 22px;}
 .gc-green{color: #008000;}
 .required {color: red;}
+.picto-170{max-width: 170px;}
 
 @media (prefers-color-scheme: dark) {
   html {

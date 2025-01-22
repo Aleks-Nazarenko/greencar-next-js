@@ -70,7 +70,7 @@ const LoginPage = ({ footerArticle} ) => {
             // Update state
             setIsLoggedIn(true);
             setSuccessMessage("Sie haben sich als Händler angemeldet. Wählen Sie eine Option aus dem Menü.");
-           // router.push("/");
+           router.push("/pkw-partikelfilter");
         } catch (err) {
             setError(err.message);
         } finally {
