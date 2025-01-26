@@ -7,14 +7,12 @@ import { useRouter } from 'next/router';
 import {JOOMLA_API_BASE} from "@/utils/config";
 import {JOOMLA_URL_BASE} from "@/utils/config";
 
-const inter = Inter({ subsets: ["latin"] });
-
 export async function getStaticProps() {
     // Base URL of your Joomla server (adjust this to your Joomla installation URL)
     const joomlaBaseUrl = JOOMLA_URL_BASE;
     // Fetch data from Joomla API
     const categories = await axios
-        .get(`${JOOMLA_API_BASE}&task=getSubcategories&category_id=15&format=json`)
+        .get(`${JOOMLA_API_BASE}&task=getSubcategories&category_id=68&format=json`)
         .then((res) => res.data || []) // actually incorrect, because res.data is always an array d.h. true
         .catch((error) => {
             console.log('Failed to fetch categories:', error.message);
@@ -39,13 +37,13 @@ export async function getStaticProps() {
 }
 
 
-export default function NachruestfilterCategories({ categories, footerArticle }) {
+export default function dpfEuroVi({ categories, footerArticle }) {
     const router = useRouter();
 
     const handleCategoryChange = (event) => {
         const selectedCategory = event.target.value;
         if (selectedCategory) {
-            router.push(`/pkw-partikelfilter/pkw-nachruestfilter/${selectedCategory}`);
+            router.push(`/lkw-partikelfilter/dpf-euro-vi/${selectedCategory}`);
         }
     };
     return (
@@ -53,13 +51,13 @@ export default function NachruestfilterCategories({ categories, footerArticle })
             <main>
                 <div className="container-fluid container-greencar">
                     <div className="row g-0 p-4">
-                        <h1>PKW - Nachrüstfilter</h1>
+                        <h1>LKW - DPF EURO VI</h1>
                         {categories.length > 0 && (
                             <>
                                 <ul>
                                     {categories.map(category => (
                                         <li key={category.category_id}>
-                                            <Link href={`/pkw-partikelfilter/pkw-nachruestfilter/${category.category_id}-${category.category_name.toLowerCase().replace(/\s+/g, '-')}`}>{category.category_name}</Link>
+                                            <Link href={`/lkw-partikelfilter/dpf-euro-vi/${category.category_id}-${category.category_name.toLowerCase().replace(/\s+/g, '-')}`}>{category.category_name}</Link>
                                         </li>
                                     ))}
                                 </ul>

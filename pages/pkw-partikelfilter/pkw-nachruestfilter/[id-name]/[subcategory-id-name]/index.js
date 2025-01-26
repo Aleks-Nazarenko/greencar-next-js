@@ -202,7 +202,7 @@ export default function ProductListPage({ products, categoryName, categoryId, su
                                             <ProductImage
                                                 src={`${JOOMLA_URL_BASE}/media/com_hikashop/upload/thumbnail_100X100/${product.product_image}`}
                                                 alt={product.product_name}
-                                                fallback={`${JOOMLA_API_BASE}/media/com_hikashop/upload/thumbnail_100X100/beispielphoto.jpg`}
+                                                fallback={`${JOOMLA_URL_BASE}/media/com_hikashop/upload/thumbnail_100X100/beispielphoto.jpg`}
                                             />
                                         </td>
                                         <td>

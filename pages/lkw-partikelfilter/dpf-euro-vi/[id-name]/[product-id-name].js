@@ -2,11 +2,11 @@ import {convertRelativeUrls} from "@/utils/convertRelativeUrls";
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { JOOMLA_API_BASE } from '@/utils/config';
-import { JOOMLA_URL_BASE } from '@/utils/config';
+import { JOOMLA_API_BASE, JOOMLA_URL_BASE } from '@/utils/config';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation } from 'swiper/modules';
 import 'swiper/swiper-bundle.css';
+
 function ProductImage({ src, alt, fallback, className }) {
     const [imgSrc, setImgSrc] = useState(src);
 
@@ -25,36 +25,25 @@ export async function getStaticPaths() {
     const paths = [];
 
     try {
-        const categoryRes = await fetch(`${JOOMLA_API_BASE}&task=getSubcategories&category_id=15&format=json`);
+        const categoryRes = await fetch(`${JOOMLA_API_BASE}&task=getSubcategories&category_id=68&format=json`);
         //404 500 http errors
-      //  if (!categoryRes.ok) throw new Error(`Failed to fetch categories: ${categoryRes.status}`);
+        //  if (!categoryRes.ok) throw new Error(`Failed to fetch categories: ${categoryRes.status}`);
         const categories = await categoryRes.json();
         // Step 2: Fetch subcategories for each category
         for (const category of categories) {
             try {
-                const subcategoryRes = await fetch(`${JOOMLA_API_BASE}&task=getSubcategories&category_id=${category.category_id}&format=json`);
-           //     if (!subcategoryRes.ok) throw new Error(`Failed to fetch subcategories for category ID ${category.category_id}: ${subcategoryRes.status}`);
-                const subcategories = await subcategoryRes.json();
-                // Step 3: Fetch products for each subcategory
-                for (const subcategory of subcategories) {
-                    try {
-                        const productRes = await fetch(`${JOOMLA_API_BASE}&task=getProductsBySubcategory&subcategory_id=${subcategory.category_id}&format=json`);
+                const productRes = await fetch(`${JOOMLA_API_BASE}&task=getProductsBySubcategory&subcategory_id=${category.category_id}&format=json`);
                 //        if (!productRes.ok) throw new Error(`Failed to fetch products for subcategory ${subcategory.category_id}: ${productRes.status}`);
-                        const products = await productRes.json();
-                        // Generate paths for each product in the subcategory
-                        products.forEach((product) => {
-                            paths.push({
-                                params: {
-                                    "id-name": `${category.category_id}-${category.category_name.toLowerCase().replace(/\s+/g, '-')}`,
-                                    "subcategory-id-name": `${subcategory.category_id}-${subcategory.category_name.toLowerCase().replace(/\s+/g, '-')}`,
-                                    "product-id-name": `${product.product_id}-${product.product_name.toLowerCase().replace(/\s+/g, '-')}`,
-                                },
-                            });
-                        });
-                    } catch (error) {
-                        console.error(`Error fetching products for subcategory ${subcategory.category_id}: ${error.message}`);
-                    }
-                }
+                const products = await productRes.json();
+                // Generate paths for each product in the subcategory
+                products.forEach((product) => {
+                    paths.push({
+                        params: {
+                            "id-name": `${category.category_id}-${category.category_name.toLowerCase().replace(/\s+/g, '-')}`,
+                            "product-id-name": `${product.product_id}-${product.product_name.toLowerCase().replace(/\s+/g, '-')}`,
+                        },
+                    });
+                });
             } catch (error) {
                 console.error(`Failed to fetch subcategories for category ID ${category.category_id}:`, error.message);
             }
@@ -109,8 +98,9 @@ export default function ProductPage({ product, footerArticle }) {
             currency: 'EUR',
         }).format(price);
     };
-    const productImages = product.product_images;
     const router = useRouter();
+    const productImages = product.product_images;
+
     return (
         <>
             <main>
@@ -144,7 +134,6 @@ export default function ProductPage({ product, footerArticle }) {
                                     )}
 
                                 <p>{product.product_description}</p>
-
                                 {/* Additional product details */}
                             </>
                         )}

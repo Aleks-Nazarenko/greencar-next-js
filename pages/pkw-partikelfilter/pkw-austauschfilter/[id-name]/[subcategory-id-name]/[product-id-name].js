@@ -4,6 +4,9 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { JOOMLA_API_BASE } from '@/utils/config';
 import { JOOMLA_URL_BASE } from '@/utils/config';
+import { Swiper, SwiperSlide } from 'swiper/react';
+import { Navigation } from 'swiper/modules';
+import 'swiper/swiper-bundle.css';
 function ProductImage({ src, alt, fallback, className }) {
     const [imgSrc, setImgSrc] = useState(src);
 
@@ -352,6 +355,8 @@ export default function ProductPage({ product, footerArticle, installation, deli
         router.push('/checkout');
     };
 
+    const productImages = product.product_images;
+
     return (
         <>
             <main>
@@ -361,14 +366,28 @@ export default function ProductPage({ product, footerArticle, installation, deli
                             <div className={"col"}>
                                 <div className={"row g-0"}>
                                     <h1>{product.product_name}</h1>
-                                    <p>
-                                        <ProductImage
-                                            className={"img-fluid"}
-                                            src={`${JOOMLA_URL_BASE}/media/com_hikashop/upload/${product.product_image}`}
-                                            alt={product.product_name}
-                                            fallback={`${JOOMLA_URL_BASE}/media/com_hikashop/upload/beispielphoto.jpg`}
-                                        />
-                                    </p>
+                                        {productImages && productImages.length > 1 ? (
+                                            <Swiper spaceBetween={10} slidesPerView={1} navigation modules={[Navigation]}>
+                                                {productImages.map((image, index) => (
+                                                        <SwiperSlide key={index}>
+                                                            <ProductImage
+                                                                className={"img-fluid"}
+                                                                src={`${JOOMLA_URL_BASE}/media/com_hikashop/upload/${image}`}
+                                                                alt={product.product_name}
+                                                                fallback={`${JOOMLA_URL_BASE}/media/com_hikashop/upload/beispielphoto.jpg`}
+                                                            />
+                                                        </SwiperSlide>
+                                                ))}
+                                            </Swiper>
+                                            ):(
+                                            <ProductImage
+                                                className={"img-fluid"}
+                                                src={`${JOOMLA_URL_BASE}/media/com_hikashop/upload/${productImages[0]}`}
+                                                alt={product.product_name}
+                                                fallback={`${JOOMLA_URL_BASE}/media/com_hikashop/upload/beispielphoto.jpg`}
+                                            />
+                                            )}
+
                                     <p>{product.product_description}</p>
                                     {/* Additional product details */}
                                 </div>

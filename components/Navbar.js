@@ -4,8 +4,19 @@ import Nav from 'react-bootstrap/Nav';
 import Container from 'react-bootstrap/Container';
 import Navbar from 'react-bootstrap/Navbar';
 import NavDropdown from 'react-bootstrap/NavDropdown';
+import { useRouter } from 'next/router';
+import { useState } from 'react';
 
 export default function NavbarNazarenko() {
+    const [searchQuery, setSearchQuery] = useState("");
+    const router = useRouter();
+
+    const handleSearch = (e) => {
+        e.preventDefault();
+        if (searchQuery.trim()) {
+            router.push(`/suche?query=${encodeURIComponent(searchQuery)}`);
+        }
+    };
     return (
         <Navbar expand="sm" className="an-navbar">
             <Container fluid className="">
@@ -30,7 +41,9 @@ export default function NavbarNazarenko() {
                                 <Link href="/pkw-partikelfilter/pkw-filterreinigung" passHref legacyBehavior>
                                     <a className="nav-link">Preisliste PKW Filterreinigung</a>
                                 </Link>
-
+                                <Link href="/lkw-partikelfilter/dpf-euro-vi" passHref legacyBehavior>
+                                    <a className="nav-link">Preisliste LKW DPF EURO VI</a>
+                                </Link>
                             </NavDropdown.Item>
                         </NavDropdown>
                         <NavDropdown title="Informationen">
@@ -58,6 +71,18 @@ export default function NavbarNazarenko() {
                     </Nav>
                 </Navbar.Collapse>
             </Container>
+            <div className="search-container">
+                <form onSubmit={handleSearch}>
+                    <input
+                        type="text"
+                        placeholder="Search..."
+                        value={searchQuery}
+                        onChange={(e) => setSearchQuery(e.target.value)}
+                        className="search-input"
+                    />
+                    <button type="submit" className="search-button">suchen</button>
+                </form>
+            </div>
         </Navbar>
     );
 }
