@@ -156,7 +156,15 @@ nav {z-index: 10}
   object-fit: cover;
 }
 .swiper-button-next, .swiper-button-prev {
-  color: #20c436!important;
+  color: #20c436!important; /*#45CA25*/
+}
+.CookieConsent{background: #45CA25!important;}
+#rcc-decline-button{background: #45CA25!important; border: 1px solid white!important; border-radius: 6px!important;}
+#rcc-confirm-button{background: #FF8600!important; border: 1px solid white!important; border-radius: 6px!important; color: white!important;}
+.CookieConsent input[type="checkbox"]:checked {
+  background-color: #FF8600!important;
+  accent-color: #FF8600!important;
+  margin-right: 10px;
 }
 @media (prefers-color-scheme: dark) {
   html {

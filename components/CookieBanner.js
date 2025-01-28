@@ -2,26 +2,27 @@ import CookieConsent from "react-cookie-consent";
 import { useEffect, useState } from 'react';
 import TagManager from 'react-gtm-module';
 import Cookies from 'js-cookie';
+
 const GoogleAnalyticsID = 'UA-18553182-1'; // Replace with your Google Analytics ID
 const GoogleAdsID = 'AW-1039077179'; // Replace with your Google Ads Conversion ID
 
 const CookieBanner = () => {
-    const [analyticsEnabled, setAnalyticsEnabled] = useState(false);
-    const [adsEnabled, setAdsEnabled] = useState(false);
+    const [analyticsSelected, setAnalyticsSelected] = useState(true); // Pre-selected
+    const [adsSelected, setAdsSelected] = useState(true); // Pre-selected
+    const [cookiesAccepted, setCookiesAccepted] = useState(false);
 
-    // Initialize Google Tag Manager, Analytics, and Ads when consent is given
     useEffect(() => {
-        if (analyticsEnabled || adsEnabled) {
-            // Initialize GTM with custom dataLayer settings
+        if (cookiesAccepted) {
+            // Initialize GTM only after clicking "Accept Selected"
             TagManager.initialize({
                 gtmId: GoogleAdsID, // Replace with your GTM ID
                 dataLayer: {
-                    analyticsConsent: analyticsEnabled,
-                    adsConsent: adsEnabled,
+                    analyticsConsent: analyticsSelected,
+                    adsConsent: adsSelected,
                 },
             });
 
-            if (analyticsEnabled) {
+            if (analyticsSelected) {
                 // Dynamically add Google Analytics script
                 const gaScript = document.createElement('script');
                 gaScript.src = `https://www.googletagmanager.com/gtag/js?id=${GoogleAnalyticsID}`;
@@ -38,8 +39,8 @@ const CookieBanner = () => {
                 document.head.appendChild(gaInitScript);
             }
 
-            if (adsEnabled) {
-                // Dynamically add Google Ads Conversion Tracking
+            if (adsSelected) {
+                // Dynamically add Google Ads script
                 const adsInitScript = document.createElement('script');
                 adsInitScript.innerHTML = `
                     window.dataLayer = window.dataLayer || [];
@@ -49,62 +50,65 @@ const CookieBanner = () => {
                 document.head.appendChild(adsInitScript);
             }
         } else {
-            // Remove Google Analytics and Ads cookies
+            // Remove all cookies if consent is not given
             Cookies.remove('_ga');
             Cookies.remove('_gid');
             Cookies.remove('_gat');
             Cookies.remove('_gac'); // Google Ads cookies
+            Cookies.remove('_ga_MN7EPCDL0F');
+            Cookies.remove('_gcl_au');
+            Cookies.remove('_gat_gtag_UA_18553182_1');
         }
-    }, [analyticsEnabled, adsEnabled]);
+    }, [cookiesAccepted, analyticsSelected, adsSelected]);
+
+    const handleAccept = () => {
+        setCookiesAccepted(true);
+    };
 
     return (
         <CookieConsent
             location="bottom"
-            buttonText="Accept Selected"
-            declineButtonText="Decline All"
+            buttonText="ausgewählte erlauben"
+            declineButtonText="alle ablehnen"
             enableDeclineButton
-            onAccept={() => {
-                setAnalyticsEnabled(true);
-                setAdsEnabled(true);
-            }}
+            onAccept={handleAccept} // Trigger the useEffect to set cookies
             onDecline={() => {
-                setAnalyticsEnabled(false);
-                setAdsEnabled(false);
+                setCookiesAccepted(false);
+                setAnalyticsSelected(false);
+                setAdsSelected(false);
             }}
             cookieName="CookieConsent"
             expires={365}
         >
-            <div style={{ padding: '10px', fontSize: '14px' }}>
-                <h4>Cookie Preferences</h4>
-                <p>
-                    We use cookies to enhance your experience. Necessary cookies are required for
-                    the website to function. Analytics and marketing cookies help us understand user
-                    behavior and optimize advertisements.
+            <div style={{fontSize: '14px' }}>
+                <p className={""} style={{fontSize:"18px"}}>
+                    Diese Webseite benutzt Cookies, um Ihnen das bestmögliche Nutzererlebnis zu ermöglichen.
+                    <a className={"a-cookie-banner"} href={"/datenschutzerklaerung"} style={{color:"initial"}}> Cookie-Richtlinien und Datenschutzerklärung</a>
                 </p>
                 <div>
                     <label>
                         <input type="checkbox" defaultChecked disabled />
-                        Necessary Cookies (Always Enabled)
+                        notwendige
                     </label>
                 </div>
                 <div>
                     <label>
                         <input
                             type="checkbox"
-                            onChange={(e) => setAnalyticsEnabled(e.target.checked)}
-                            checked={analyticsEnabled}
+                            checked={analyticsSelected}
+                            onChange={(e) => setAnalyticsSelected(e.target.checked)}
                         />
-                        Analytics Cookies
+                        Analytics
                     </label>
                 </div>
                 <div>
                     <label>
                         <input
                             type="checkbox"
-                            onChange={(e) => setAdsEnabled(e.target.checked)}
-                            checked={adsEnabled}
+                            checked={adsSelected}
+                            onChange={(e) => setAdsSelected(e.target.checked)}
                         />
-                        Marketing & Google Ads Cookies
+                        Google Ads
                     </label>
                 </div>
             </div>
