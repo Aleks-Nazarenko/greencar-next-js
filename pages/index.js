@@ -50,7 +50,7 @@ export default function Home({article, footerArticle}) {
 
     return (
         <>
-            <main>
+
                 <div className="container-fluid container-greencar">
                     <div className="row g-0 p-4">
                         {article?.introtext && (
@@ -58,16 +58,7 @@ export default function Home({article, footerArticle}) {
                         )}
                     </div>
                 </div>
-            </main>
-            <footer>
-                <div className="container-fluid container-greencar container-footer">
-                    <div className="row g-0 p-4">
-                        {footerArticle?.introtext && (
-                            <div dangerouslySetInnerHTML={{ __html: footerArticle.introtext}} />
-                        )}
-                    </div>
-                </div>
-            </footer>
+
         </>
     );
 }

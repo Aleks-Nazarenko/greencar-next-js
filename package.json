@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "dev": "node scripts/fetch-footer.mjs && next dev",
     "build": "next build",
     "start": "next start",
     "lint": "next lint"
@@ -15,6 +15,7 @@
     "bootstrap": "^5.3.3",
     "js-cookie": "^3.0.5",
     "next": "14.2.7",
+    "node-fetch": "^3.3.2",
     "react": "^18",
     "react-bootstrap": "^2.10.4",
     "react-cookie-consent": "^9.0.0",
@@ -23,4 +24,5 @@
     "sass": "^1.79.4",
     "swiper": "^11.2.1"
   }
+
 }
