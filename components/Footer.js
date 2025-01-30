@@ -1,5 +1,5 @@
 import { convertRelativeUrls } from '@/utils/convertRelativeUrls';
-import footerData from '../public/footer-data.json';
+import footerData from '../data/footer-data.json';
 import { JOOMLA_URL_BASE } from '@/utils/config';
 
 export default function Footer() {
