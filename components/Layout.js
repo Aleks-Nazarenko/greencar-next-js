@@ -1,10 +1,10 @@
 // components/Layout.js
 import Navbar from './Navbar';
 import Head from "next/head";
-import FloatingMenu from "@/components/FloatingMenu";
 import VehicleSwitcher from "@/components/VehicleSwitcher";
 import Footer from "@/components/Footer";
 import SecondaryMenu from "@/components/SecondaryMenu";
+import SearchBar from "@/components/SearchBar";
 
 
 export default function Layout({ children }) {
@@ -19,13 +19,21 @@ export default function Layout({ children }) {
             </Head>
             <header>
                 <Navbar />
+                <div className={"w-100 pt-4"}/>
+                <SearchBar />
+                <div className={"w-100 pt-4"}/>
                 <SecondaryMenu />
             </header>
-            <FloatingMenu />
+            <div className={"w-100 pt-4"}/>
             <VehicleSwitcher />
             <main>
-                {children}
+                <div className={"container-fluid"}>
+                    <div className={"container-greencar container-fluid bg-gc-light-blue rounded"}>
+                        {children}
+                    </div>
+                </div>
             </main>
+            <div className={"w-100 pt-4"}/>
             <Footer />
 
         </>

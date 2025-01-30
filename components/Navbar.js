@@ -4,22 +4,14 @@ import Nav from 'react-bootstrap/Nav';
 import Container from 'react-bootstrap/Container';
 import Navbar from 'react-bootstrap/Navbar';
 import NavDropdown from 'react-bootstrap/NavDropdown';
-import { useRouter } from 'next/router';
-import { useState } from 'react';
+
 
 export default function NavbarNazarenko() {
-    const [searchQuery, setSearchQuery] = useState("");
-    const router = useRouter();
 
-    const handleSearch = (e) => {
-        e.preventDefault();
-        if (searchQuery.trim()) {
-            router.push(`/suche?query=${encodeURIComponent(searchQuery)}`);
-        }
-    };
     return (
-        <Navbar expand="sm" className="an-navbar">
+        <Navbar expand="sm" className="an-navbar bg-white bg-opacity-75">
             <Container fluid className="">
+                <Container fluid className="container-greencar">
                 <Navbar.Brand href="/"><img src="https://www.dieselpartikelfilter.net/templates/jsn_metro_pro/images/colors/image/logo.png"/></Navbar.Brand>
                 <Navbar.Toggle aria-controls="navbar" />
                 <Navbar.Collapse id="navbar" className="">
@@ -70,19 +62,11 @@ export default function NavbarNazarenko() {
                         </Link>
                     </Nav>
                 </Navbar.Collapse>
+
+
+
             </Container>
-            <div className="search-container">
-                <form onSubmit={handleSearch}>
-                    <input
-                        type="text"
-                        placeholder="Search..."
-                        value={searchQuery}
-                        onChange={(e) => setSearchQuery(e.target.value)}
-                        className="search-input"
-                    />
-                    <button type="submit" className="search-button">suchen</button>
-                </form>
-            </div>
+            </Container>
         </Navbar>
     );
 }

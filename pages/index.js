@@ -51,13 +51,13 @@ export default function Home({article, footerArticle}) {
     return (
         <>
 
-                <div className="container-fluid container-greencar">
+
                     <div className="row g-0 p-4">
                         {article?.introtext && (
                             <div dangerouslySetInnerHTML={{ __html: article.introtext}} />
                         )}
                     </div>
-                </div>
+
 
         </>
     );

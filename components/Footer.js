@@ -1,5 +1,5 @@
 import { convertRelativeUrls } from '@/utils/convertRelativeUrls';
-import footerData from '../data/footer-data.json';
+import footerData from '@/data/footer-data.json';
 import { JOOMLA_URL_BASE } from '@/utils/config';
 
 export default function Footer() {
@@ -12,7 +12,7 @@ export default function Footer() {
         }
     }
     return (
-        <footer className={"container-fluid container-greencar"}>
+        <footer className={"container-fluid container-greencar g-0 bg-gc-light-blue rounded"}>
             <div className="row g-0 p-4">
                 <div dangerouslySetInnerHTML={{ __html:  footerArticle.content}} />
             </div>

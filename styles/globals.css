@@ -138,16 +138,19 @@ a {
 }
  header, main, footer {position: relative}
 header {z-index: 10}
-.container-greencar{max-width: 1000px; background: #daeffb}
+.container-greencar{max-width: 1100px;}
 .container-greencar-no-bg{max-width: 1000px;}
 .paypal-button-label-container{padding:12px 0 12px 0;  background: #ffc439;text-align: center; border-radius: 4px;}
 .paypal-logo-an {max-height: 22px;}
 .gc-green{color: #008000;}
+.gc-green-light{color: #45CA25}
 .required {color: red;}
 .picto-170{max-width: 170px;}
-.picto-50{max-width: 50px;}
-.creencar-light-blue {background: #daeffb;}
+.picto-50{max-width: 50px!important; width:100%!important;}
+.bg-gc-light-blue {background: #daeffb;}
 .col-round {border-radius: 12px;}
+.gc-bold{font-weight: bold;}
+
 
 .swiper {
   width: 100%;
