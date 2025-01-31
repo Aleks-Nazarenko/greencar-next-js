@@ -1,3 +1,4 @@
+import "@fontsource/source-sans-pro";
 import '@/styles/custom.scss';
 import "@/styles/globals.css";
 //import 'bootstrap/dist/css/bootstrap.min.css';
@@ -10,6 +11,6 @@ export default function App({ Component, pageProps }) {
         <Layout>
             <Component {...pageProps} />
             <CookieBanner />
-      </Layout>
+        </Layout>
     );
 }

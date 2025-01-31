@@ -410,8 +410,7 @@ export default function FilterreinigungPage({ product, footerArticle,installatio
 
     return (
         <>
-            <main>
-                <div className="container-fluid container-greencar">
+
                     <div className="row g-0 p-4">
                         {product && (
                             <div className="col">
@@ -428,7 +427,7 @@ export default function FilterreinigungPage({ product, footerArticle,installatio
 
                                     {mwSt && (<div className="installation-options">
                                         <div>Aus und Einbau</div>
-                                            <select value={installationOption} onChange={handleInstallationChange}>
+                                            <select value={installationOption} onChange={handleInstallationChange} className={"form-select"} aria-label=".form-select">
                                                 <option value="with">GREENCAR Werkstatt ( + {formatPrice(INSTALLATION_COST)} {mwStWording} )</option>
                                                 <option value="without">eigene Werkstatt</option>
                                             </select>
@@ -437,7 +436,7 @@ export default function FilterreinigungPage({ product, footerArticle,installatio
                                     {installationOption === 'without' && (
                                         <div className="delivery-options">
                                             <div>Abholung gewünscht?</div>
-                                            <select value={deliveryDesired} onChange={handleDeliveryChange}>
+                                            <select value={deliveryDesired} onChange={handleDeliveryChange} className={"form-select"} aria-label=".form-select">
                                                 <option value="yes">Ja ( + {formatPrice(DELIVERY_COST)} {mwStWording} )</option>
                                                 <option value="no">Nein</option>
                                             </select>
@@ -448,7 +447,7 @@ export default function FilterreinigungPage({ product, footerArticle,installatio
                                         <>
                                             <div>Bitte wählen Sie Ihren gewünschten Einbauort.</div>
                                             <div className="land-selection">
-                                                <select value={selectedLand} onChange={handleLandChange}>
+                                                <select value={selectedLand} onChange={handleLandChange} className={"form-select"} aria-label=".form-select">
                                                     <option value="">- Bundesland -</option>
                                                     {lands.map((land) => (
                                                         <option key={land.id} value={land.id}>
@@ -460,7 +459,7 @@ export default function FilterreinigungPage({ product, footerArticle,installatio
 
                                             {selectedLand && (
                                                 <div className="city-selection">
-                                                    <select value={selectedCity} onChange={handleCityChange}>
+                                                    <select value={selectedCity} onChange={handleCityChange} className={"form-select"} aria-label=".form-select">
                                                         <option value="">- Ort -</option>
                                                         {cities.map((city) => (
                                                             <option key={city.id} value={city.id}>
@@ -483,13 +482,14 @@ export default function FilterreinigungPage({ product, footerArticle,installatio
                                                         value={selectedDate || ''}
                                                         onChange={handleDateChange}
                                                         min={new Date().toISOString().split('T')[0]}
+                                                        className={"form-control"} aria-label="form-date"
                                                     />
                                                 <div>bis 16:00 Uhr</div>
                                             </div>
 
                                             <div className="next-day">
                                                 <div>Zustellung des gereinigten Partikelfilters</div>
-                                                <input type="text" value={nextDay || ''} readOnly />
+                                                <input type="text" value={nextDay || ''} readOnly className={"form-control"} aria-label="form-input"/>
                                                 <div>bis 12:00 Uhr garantiert!</div>
 
                                             </div>
@@ -512,17 +512,7 @@ export default function FilterreinigungPage({ product, footerArticle,installatio
                             In den Warenkorb
                         </button>
                     </div>
-                </div>
-            </main>
-            <footer>
-                <div className="container-fluid container-footer container-greencar">
-                    <div className="row g-0 p-4">
-                        {footerArticle?.introtext && (
-                            <div dangerouslySetInnerHTML={{ __html: footerArticle.introtext}} />
-                        )}
-                    </div>
-                </div>
-            </footer>
+
         </>
     );
 }

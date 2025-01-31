@@ -8,19 +8,18 @@ export default function SecondaryMenu() {
         setIsOpen(!isOpen);
     };
     return (
-        <div className="container-fluid">
-            <div className="container-greencar container-fluid g-0">
 
-                <div className="row g-0 justify-content-sm-between justify-content-start rounded shadow-sm">
-                    <Dropdown className={"col-auto  pe-sm-0 pe-2 pb-sm-0 pb-2"}>
+
+                <div className="row g-0 justify-content-sm-between justify-content-start rounded">
+                    <Dropdown className={"col-auto  pe-sm-0 pe-2 pb-2"}>
                         {/* 🔹 Dropdown Toggle Button */}
-                        <Dropdown.Toggle variant="primary" id="dropdown-basic" className={"bg-gc-light-blue dropdown-gc gc-green-light gc-bold"}>
+                        <Dropdown.Toggle variant="primary" id="dropdown-basic" className={"bg-gc-light-blue dropdown-gc gc-green-light gc-bold shadow"}>
                             <Image src="/images/icons/pkw-partikelfilter.png" alt="PKW Partikelfilter" width={50} height={50} className="me-2 picto-50" />
                             <span>PKW</span>
                         </Dropdown.Toggle>
 
                         {/* 🔹 Dropdown Menu */}
-                        <Dropdown.Menu>
+                        <Dropdown.Menu className={"shadow"}>
                             <Dropdown.Item href="/pkw-partikelfilter/pkw-nachruestfilter" className="d-flex align-items-center">
                                 <Image src="/images/icons/pkw-nachruestfilter.png" alt="PKW Nachruestfilter" width={50} height={50} className="me-2  picto-50" />
                                 Nachrüstfilter
@@ -40,9 +39,9 @@ export default function SecondaryMenu() {
 
                         </Dropdown.Menu>
                     </Dropdown>
-                    <Dropdown className={"col-auto  pe-sm-0 pe-2 pb-sm-0 pb-2"}>
+                    <Dropdown className={"col-auto  pe-sm-0 pe-2 pb-2"}>
                         {/* 🔹 Dropdown Toggle Button */}
-                        <Dropdown.Toggle variant="primary" id="dropdown-basic" className={"bg-gc-light-blue dropdown-gc gc-green-light gc-bold"}>
+                        <Dropdown.Toggle variant="primary" id="dropdown-basic" className={"bg-gc-light-blue dropdown-gc gc-green-light gc-bold shadow"}>
                             <Image src="/images/icons/lkw-partikelfilter.png" alt="LKW Partikelfilter" width={50} height={50} className="me-2 picto-50" />
                             LKW
                         </Dropdown.Toggle>
@@ -64,9 +63,9 @@ export default function SecondaryMenu() {
 
                         </Dropdown.Menu>
                     </Dropdown>
-                    <Dropdown className={"col-auto  pe-sm-0 pe-2 pb-sm-0 pb-2"}>
+                    <Dropdown className={"col-auto  pe-sm-0 pe-2 pb-2"}>
                         {/* 🔹 Dropdown Toggle Button */}
-                        <Dropdown.Toggle variant="primary" id="dropdown-basic" className={"bg-gc-light-blue dropdown-gc gc-green-light gc-bold"}>
+                        <Dropdown.Toggle variant="primary" id="dropdown-basic" className={"bg-gc-light-blue dropdown-gc gc-green-light gc-bold shadow"}>
                             <Image src="/images/icons/bus-partikelfilter.png" alt="BUS Partikelfilter" width={50} height={50} className="me-2 picto-50" />
                             BUS
                         </Dropdown.Toggle>
@@ -83,9 +82,9 @@ export default function SecondaryMenu() {
                             </Dropdown.Item>
                         </Dropdown.Menu>
                     </Dropdown>
-                    <Dropdown className={"col-auto  pe-sm-0 pe-2 pb-sm-0 pb-2"}>
+                    <Dropdown className={"col-auto  pe-sm-0 pe-2 pb-2"}>
                         {/* 🔹 Dropdown Toggle Button */}
-                        <Dropdown.Toggle variant="primary" id="dropdown-basic" className={"bg-gc-light-blue dropdown-gc gc-green-light gc-bold"}>
+                        <Dropdown.Toggle variant="primary" id="dropdown-basic" className={"bg-gc-light-blue dropdown-gc gc-green-light gc-bold shadow"}>
                             <Image src="/images/icons/bau-partikelfilter.png" alt="BAU Partikelfilter" width={50} height={50} className="me-2 picto-50" />
                             BAU
                         </Dropdown.Toggle>
@@ -101,9 +100,9 @@ export default function SecondaryMenu() {
                             </Dropdown.Item>
                         </Dropdown.Menu>
                     </Dropdown>
-                    <Dropdown className={"col-auto  pe-sm-0 pe-2 pb-sm-0 pb-2"}>
+                    <Dropdown className={"col-auto  pe-sm-0 pe-2 pb-2"}>
                         {/* 🔹 Dropdown Toggle Button */}
-                        <Dropdown.Toggle variant="primary" id="dropdown-basic" className={"bg-gc-light-blue dropdown-gc gc-green-light gc-bold"}>
+                        <Dropdown.Toggle variant="primary" id="dropdown-basic" className={"bg-gc-light-blue dropdown-gc gc-green-light gc-bold shadow"}>
                             <Image src="/images/icons/filterreinigung-partikelfilter.png" alt="Reinigung" width={50} height={50} className="me-2 picto-50" />
                             Reinigung
                         </Dropdown.Toggle>
@@ -116,7 +115,6 @@ export default function SecondaryMenu() {
                         </Dropdown.Menu>
                     </Dropdown>
                 </div>
-            </div>
-        </div>
+
     );
 }

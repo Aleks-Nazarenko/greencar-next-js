@@ -86,6 +86,8 @@ body {
 }
 
 body {
+  font-family: "Source Sans Pro", sans-serif;
+  color: #666;
   margin: 0;
   padding: 0;
   background-image: url('../public/background/bg_clean.jpg'); /* Path to your image */
@@ -138,19 +140,45 @@ a {
 }
  header, main, footer {position: relative}
 header {z-index: 10}
+.nav-link{font-size: 1rem!important;}
 .container-greencar{max-width: 1100px;}
 .container-greencar-no-bg{max-width: 1000px;}
 .paypal-button-label-container{padding:12px 0 12px 0;  background: #ffc439;text-align: center; border-radius: 4px;}
 .paypal-logo-an {max-height: 22px;}
 .gc-green{color: #008000;}
+.gc-green a:hover{transition: color 0.3s; color: #45CA25;}
 .gc-green-light{color: #45CA25}
 .required {color: red;}
 .picto-170{max-width: 170px;}
 .picto-50{max-width: 50px!important; width:100%!important;}
-.bg-gc-light-blue {background: #daeffb;}
+.bg-gc-light-blue {background: rgb(218, 239, 251, 0.92); }
+.bg-gc-light-blue-nav {background: rgb(255,255,255, 0.75); }
 .col-round {border-radius: 12px;}
-.gc-bold{font-weight: bold;}
+.gc-bold{font-weight: bold; font-size:18px;}
+.search-button{background: #45CA25!important;color: white!important;}
 
+
+ul.list-arrow.arrow-green li:after {
+  border-left-color: #3AA655;
+}
+ul.list-arrow li:after {
+  content: '';
+  height: 0;
+  position: absolute;
+  width: 0;
+  border: 0.34em solid transparent;
+  left: 5px;
+  top: 7px;
+}
+ul.list-arrow li {
+  margin-left: 0;
+  padding-left: 16px;
+  position: relative;
+  display: block;
+}
+ul.list-arrow {
+  list-style: none;
+}
 
 .swiper {
   width: 100%;

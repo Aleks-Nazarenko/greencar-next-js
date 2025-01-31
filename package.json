@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@fontsource/source-sans-pro": "^5.1.0",
     "@paypal/react-paypal-js": "^8.7.0",
     "@react-google-maps/api": "^2.20.3",
     "axios": "^1.7.7",
@@ -24,5 +25,4 @@
     "sass": "^1.79.4",
     "swiper": "^11.2.1"
   }
-
 }

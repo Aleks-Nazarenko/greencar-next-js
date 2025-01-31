@@ -9,9 +9,9 @@ import NavDropdown from 'react-bootstrap/NavDropdown';
 export default function NavbarNazarenko() {
 
     return (
-        <Navbar expand="sm" className="an-navbar bg-white bg-opacity-75">
+        <Navbar expand="md" className="an-navbar bg-gc-light-blue-nav shadow">
             <Container fluid className="">
-                <Container fluid className="container-greencar">
+                <Container fluid className="container-greencar justify-content-between d-flex g-0">
                 <Navbar.Brand href="/"><img src="https://www.dieselpartikelfilter.net/templates/jsn_metro_pro/images/colors/image/logo.png"/></Navbar.Brand>
                 <Navbar.Toggle aria-controls="navbar" />
                 <Navbar.Collapse id="navbar" className="">

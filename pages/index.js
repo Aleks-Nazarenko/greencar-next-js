@@ -52,7 +52,7 @@ export default function Home({article, footerArticle}) {
         <>
 
 
-                    <div className="row g-0 p-4">
+                    <div className="row g-0">
                         {article?.introtext && (
                             <div dangerouslySetInnerHTML={{ __html: article.introtext}} />
                         )}

@@ -20,21 +20,34 @@ export default function Layout({ children }) {
             <header>
                 <Navbar />
                 <div className={"w-100 pt-4"}/>
-                <SearchBar />
+                <div className="container-fluid">
+                    <div className="container-greencar container-fluid g-0 bg-gc-light-blue rounded-4 shadow">
+                        <SearchBar />
+                    </div>
+                </div>
                 <div className={"w-100 pt-4"}/>
-                <SecondaryMenu />
+                <div className="container-fluid">
+                    <div className="container-greencar container-fluid g-0">
+                        <SecondaryMenu />
+                    </div>
+                </div>
             </header>
             <div className={"w-100 pt-4"}/>
             <VehicleSwitcher />
             <main>
                 <div className={"container-fluid"}>
-                    <div className={"container-greencar container-fluid bg-gc-light-blue rounded"}>
+                    <div className={"container-greencar container-fluid bg-gc-light-blue rounded-4 g-0 p-4 pt-5 shadow"}>
                         {children}
                     </div>
                 </div>
             </main>
             <div className={"w-100 pt-4"}/>
-            <Footer />
+            <div className={"container-fluid"}>
+                <footer className={"container-fluid container-greencar g-0 p-4 pt-2 pb-2 bg-gc-light-blue rounded-4 shadow"}>
+                    <Footer />
+                </footer>
+            </div>
+            <div className={"w-100 pt-4"}/>
 
         </>
     );
