@@ -7,7 +7,7 @@ async function fetchFooterData() {
         const res = await fetch(`${JOOMLA_API_BASE}&task=articleWithModules&id=2&format=json`);
         const footerData = await res.json();
 
-        // Save the data to a file in the public directory
+        // Save the data to a file in the data directory
         const filePath = path.join(process.cwd(), 'data', 'footer-data.json');
         fs.writeFileSync(filePath, JSON.stringify(footerData, null, 2));
         console.log('Footer data saved successfully!');

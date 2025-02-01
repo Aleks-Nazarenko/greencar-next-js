@@ -5,6 +5,7 @@ import VehicleSwitcher from "@/components/VehicleSwitcher";
 import Footer from "@/components/Footer";
 import SecondaryMenu from "@/components/SecondaryMenu";
 import SearchBar from "@/components/SearchBar";
+import HomeBigIcons from "@/components/HomeBigIcons";
 
 
 export default function Layout({ children }) {
@@ -23,6 +24,12 @@ export default function Layout({ children }) {
                 <div className="container-fluid">
                     <div className="container-greencar container-fluid g-0 bg-gc-light-blue rounded-4 shadow">
                         <SearchBar />
+                    </div>
+                </div>
+                <div className={"w-100 pt-4"}/>
+                <div className="container-fluid">
+                    <div className="container-greencar container-fluid g-0">
+                        <HomeBigIcons/>
                     </div>
                 </div>
                 <div className={"w-100 pt-4"}/>
