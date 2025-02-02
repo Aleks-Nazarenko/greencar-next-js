@@ -138,6 +138,9 @@ a {
   color: inherit;
   text-decoration: none;
 }
+h1,h2, h3, h4, h5, h6 {
+  font-family: "Source Sans Pro Semibold", sans-serif;
+}
  header, main, footer {position: relative}
 header {z-index: 10}
 .nav-link{font-size: 1rem!important;}
@@ -154,8 +157,9 @@ header {z-index: 10}
 .bg-gc-light-blue {background: rgb(218, 239, 251, 0.92); }
 .bg-gc-light-blue-nav {background: rgb(255,255,255, 0.75); }
 .col-round {border-radius: 12px;}
-.gc-bold{font-weight: bold; font-size:18px;}
+.gc-bold{font-family: "Source Sans Pro Semibold",sans-serif; font-size:20px;}
 .search-button{background: #45CA25!important;color: white!important;}
+.gc-max-width{max-width: 240px;}
 
 
 ul.list-arrow.arrow-green li:after {

@@ -6,6 +6,7 @@ import Footer from "@/components/Footer";
 import SecondaryMenu from "@/components/SecondaryMenu";
 import SearchBar from "@/components/SearchBar";
 import HomeBigIcons from "@/components/HomeBigIcons";
+import Banner from "@/components/Banner";
 
 
 export default function Layout({ children }) {
@@ -22,7 +23,7 @@ export default function Layout({ children }) {
                 <Navbar />
                 <div className={"w-100 pt-4"}/>
                 <div className="container-fluid">
-                    <div className="container-greencar container-fluid g-0 bg-gc-light-blue rounded-4 shadow">
+                    <div className="container-greencar container-fluid g-0 p-2 ps-3 pe-3 bg-gc-light-blue rounded-4 shadow">
                         <SearchBar />
                     </div>
                 </div>
@@ -31,6 +32,9 @@ export default function Layout({ children }) {
                     <div className="container-greencar container-fluid g-0">
                         <HomeBigIcons/>
                     </div>
+                </div>
+                <div className="container-fluid">
+                        <Banner />
                 </div>
                 <div className={"w-100 pt-4"}/>
                 <div className="container-fluid">
@@ -43,14 +47,14 @@ export default function Layout({ children }) {
             <VehicleSwitcher />
             <main>
                 <div className={"container-fluid"}>
-                    <div className={"container-greencar container-fluid bg-gc-light-blue rounded-4 g-0 p-4 pt-5 shadow"}>
+                    <div className={"container-greencar container-fluid bg-gc-light-blue rounded-4 g-0 p-3 p-sm-4 pt-sm-5 pt-4 shadow"}>
                         {children}
                     </div>
                 </div>
             </main>
             <div className={"w-100 pt-4"}/>
             <div className={"container-fluid"}>
-                <footer className={"container-fluid container-greencar g-0 p-4 pt-2 pb-2 bg-gc-light-blue rounded-4 shadow"}>
+                <footer className={"container-fluid container-greencar g-0 p-3 p-sm-4 pt-2 pb-2 pb-sm-2 pt-sm-2 bg-gc-light-blue rounded-4 shadow"}>
                     <Footer />
                 </footer>
             </div>

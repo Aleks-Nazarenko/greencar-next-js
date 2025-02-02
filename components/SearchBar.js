@@ -17,7 +17,7 @@ export default function SearchBar() {
     };
     return (
 
-                <div className={"row g-0 justify-content-sm-between justify-content-start p-2 align-items-center"}>
+                <div className={"row g-0 justify-content-sm-between justify-content-start align-items-center"}>
                     <div className={"col-auto d-flex justify-content-start flex-column flex-md-row"}>
                         <div className={"col-auto pe-4 pb-2 pb-md-0"}>
                             <Image src={"/images/icons/greencar-filter-tel.png"} alt={"telefon"} width={197} height={32} />
