@@ -160,7 +160,13 @@ header {z-index: 10}
 .gc-bold{font-family: "Source Sans Pro Semibold",sans-serif; font-size:20px;}
 .search-button{background: #45CA25!important;color: white!important;}
 .gc-max-width{max-width: 240px;}
-
+.footer-icons{width:100%; max-width: 100px; height: auto;}
+.picto-product{display: inline-block; max-width: 260px!important; width: 100%;height: auto;}
+.product-detail-view{border: 1px solid #008000; background: #F0F7FC;}
+.btn-yellow{background: #FF8600!important; color: white!important; border: none!important;}
+.btn-yellow:hover{transition: background 0.3s; background: #FFa200!important;}
+.btn-green{background: #008000!important; color: white!important; border: none!important;}
+.btn-green:hover{transition: background 0.3s; background: #45CA25!important;}
 
 ul.list-arrow.arrow-green li:after {
   border-left-color: #3AA655;

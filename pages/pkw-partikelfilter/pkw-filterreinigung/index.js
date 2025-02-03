@@ -4,6 +4,7 @@ import { useRouter } from 'next/router';
 import {convertRelativeUrls} from "@/utils/convertRelativeUrls";
 import { JOOMLA_API_BASE } from '@/utils/config';
 import { JOOMLA_URL_BASE } from '@/utils/config';
+import Image from "next/image";
 
 export async function getStaticProps() {
     // Base URL of your Joomla server (adjust this to your Joomla installation URL)
@@ -410,8 +411,9 @@ export default function FilterreinigungPage({ product, footerArticle,installatio
 
     return (
         <>
-
-                    <div className="row g-0 p-4">
+            <div className="row g-0">
+                <div className="col-sm-8">
+                    <div className="row g-0 p-4 product-detail-view rounded-4">
                         {product && (
                             <div className="col">
                                 <div className="row g-0">
@@ -502,16 +504,34 @@ export default function FilterreinigungPage({ product, footerArticle,installatio
                             </div>
                         )}
                     </div>
-                    <div className="row g-0 p-4">
-                        <Link href={`/anfrage`}>
-                            <button className="btn btn-primary">Unverbindliches Angebot anfordern</button>
-                        </Link>
+                    <div className="row g-0 p-4 pb-3">
+                        <div className={"col-3"}>
+                            <Link href={`/anfrage`}>
+                                <button className="btn btn-primary btn-yellow">Unverbindliches Angebot anfordern</button>
+                            </Link>
+                        </div>
                     </div>
-                    <div className="row g-0 p-4">
-                        <button className="btn btn-primary" type="button" onClick={handleAddToCart}>
-                            In den Warenkorb
-                        </button>
+                    <div className="row g-0 p-4 pt-3">
+                        <div className={"col-3"}>
+                            <button className="btn btn-primary btn-green" onClick={handleAddToCart}>
+                                In den Warenkorb
+                            </button>
+                        </div>
                     </div>
+                </div>
+                <div className={"col-sm-4  text-center text-sm-end"}>
+                    <Image src={"/images/pictos/rein_pikt_direct.png"} alt={"direkter Draht"} width={331} height={120} className={"img-fluid picto-product ps-0 ps-sm-2"} />
+                    <Image src={"/images/pictos/rein_pikt_los_gehts.png"} alt={"Bestellformular"} width={331} height={120} className={"img-fluid picto-product ps-0 ps-sm-2 "} />
+                    <Image src={"/images/pictos/rein_pikt_ablauf.png"} alt={"Ablauf Filterreinigung"} width={331} height={120} className={"img-fluid ps-0 ps-sm-2 picto-product "} />
+                    <Image src={"/images/pictos/rein_pikt_de_weit.png"} alt={"Einbau deutschlandweit"} width={331} height={120} className={"img-fluid ps-0 ps-sm-2 picto-product "} />
+                    <Image src={"/images/pictos/rein_pikt_sofortabholung.png"} alt={"Sofortabholung"} width={331} height={120} className={"img-fluid ps-0 ps-sm-2 picto-product "} />
+                    <Image src={"/images/pictos/rein_pikt_industrie.png"} alt={"Industriereinigung"} width={331} height={120} className={"img-fluid ps-0 ps-sm-2 picto-product "} />
+                    <Image src={"/images/pictos/rein_pikt_express.png"} alt={"Express-Service"} width={331} height={120} className={"img-fluid ps-0 ps-sm-2 picto-product "} />
+                    <Image src={"/images/pictos/rein_pikt_flyer.png"} alt={"Greencar-Flyer"} width={331} height={120} className={"img-fluid ps-0 ps-sm-2 picto-product "} />
+                    <Image src={"/images/pictos/rein_pikt_fragen.png"} alt={"Fragenkatalog"} width={331} height={120} className={"img-fluid ps-0 ps-sm-2 picto-product "} />
+                    <Image src={"/images/pictos/rein_pikt_haendler.png"} alt={"Händlerpreis"} width={331} height={120} className={"img-fluid ps-0 ps-sm-2 picto-product "} />
+                </div>
+            </div>
 
         </>
     );

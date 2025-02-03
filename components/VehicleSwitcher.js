@@ -6,10 +6,12 @@ export default function VehicleSwitcher () {
     // Determine the background image based on the current route
     const containerBackground = (() => {
         if (router.pathname.startsWith('/pkw-partikelfilter')) {
-            return "container-background-bm";
+            return "container-background-pkw";
         } else if (router.pathname.startsWith('/lkw-partikelfilter')) {
             return "container-background-lkw";
-        } else if (router.pathname.startsWith('/baumaschinen-partikelfilter')) {
+        } else if (router.pathname.startsWith('/bus-partikelfilter')) {
+        return "container-background-lkw";
+        }  else if (router.pathname.startsWith('/baumaschinen-partikelfilter')) {
             return "container-background-bm";
         } else {
             return "container-background-pkw";
