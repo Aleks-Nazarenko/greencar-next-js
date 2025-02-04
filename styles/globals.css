@@ -166,6 +166,7 @@ header {z-index: 10}
 .btn-yellow{background: #FF8600!important; color: white!important; border: none!important;}
 .btn-yellow:hover{transition: background 0.3s; background: #FFa200!important;}
 .btn-green{background: #008000!important; color: white!important; border: none!important;}
+.btn-100{width:100%;}
 .btn-green:hover{transition: background 0.3s; background: #45CA25!important;}
 
 ul.list-arrow.arrow-green li:after {

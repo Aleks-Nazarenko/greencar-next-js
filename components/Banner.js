@@ -1,10 +1,10 @@
 import { useRouter } from 'next/router';
 import Image from 'next/image';
 
-export default function Banner () {
+export default function GreencarBanner () {
     const router = useRouter();
     // Ensure the router is ready before accessing `router.pathname`
-    if (!router.isReady) return null;
+  //  if (!router.isReady) return null;
     return (
         <>
             { router.pathname === "/pkw-partikelfilter/pkw-filterreinigung"  && (

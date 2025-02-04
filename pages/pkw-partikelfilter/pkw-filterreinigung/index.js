@@ -46,13 +46,12 @@ export async function getStaticProps() {
     return {
         props: {
             product,
-            footerArticle,
             installation,
             delivery,
         },
     };
 }
-export default function FilterreinigungPage({ product, footerArticle,installation, delivery }) {
+export default function FilterreinigungPage({ product,installation, delivery }) {
     const router = useRouter();
     // Constants for pricing
     const formatPrice = (price) => {
@@ -416,104 +415,117 @@ export default function FilterreinigungPage({ product, footerArticle,installatio
                     <div className="row g-0 p-4 product-detail-view rounded-4">
                         {product && (
                             <div className="col">
-                                <div className="row g-0">
-                                    <h1>{product.product_name}</h1>
-                                    <p>48h Expressreinigung von der Abholung bis zur Zustellung</p>
+                                <div className="row g-0 pb-3">
+                                    <h1 className={"mb-1"}>{product.product_name}</h1>
+                                    <h4>48h Expressreinigung von der Abholung bis zur Zustellung</h4>
                                     {/* Additional product details */}
                                 </div>
                                 <div className="row g-0 ">
-                                    <div className="product-info">
-                                        <p>{formatPrice(BASE_PRICE)} pro Stück {mwStWording}</p>
-                                        {installationOption === 'with' && <p>Abholung: {formatPrice(DELIVERY_COST)} {mwStWording}</p>}
+                                    <div className="col-12 product-info">
+                                        <span className={"gc-green display-1"}>{formatPrice(BASE_PRICE)}</span><span className={"ps-2"}>pro Stück {mwStWording}</span>
+                                        {mwSt && (
+                                            <div className="col-12 col-sm-6 btn-haendlerpreis pt-2">
+                                                <Link href={`/pkw-partikelfilter/pkw-filterreinigung/anfrage-haendlerpreis`}>
+                                                    <button className="btn btn-primary btn-yellow w-100">Anfrage Händlerpreis</button>
+                                                </Link>
+                                            </div>
+                                        )}
                                     </div>
 
-                                    {mwSt && (<div className="installation-options">
-                                        <div>Aus und Einbau</div>
-                                            <select value={installationOption} onChange={handleInstallationChange} className={"form-select"} aria-label=".form-select">
-                                                <option value="with">GREENCAR Werkstatt ( + {formatPrice(INSTALLATION_COST)} {mwStWording} )</option>
-                                                <option value="without">eigene Werkstatt</option>
-                                            </select>
-                                        </div>
-                                    )}
-                                    {installationOption === 'without' && (
-                                        <div className="delivery-options">
-                                            <div>Abholung gewünscht?</div>
-                                            <select value={deliveryDesired} onChange={handleDeliveryChange} className={"form-select"} aria-label=".form-select">
-                                                <option value="yes">Ja ( + {formatPrice(DELIVERY_COST)} {mwStWording} )</option>
-                                                <option value="no">Nein</option>
-                                            </select>
-                                        </div>
-                                    )}
+                                    {installationOption === 'with' && <div className={"col-12 pt-2"}>Abholung: {formatPrice(DELIVERY_COST)} {mwStWording}</div>}
+                                </div>
+                                {mwSt && (
+                                    <div className="row g-0 installation-options pt-2">
+                                                <div className={"w-100"}>Aus und Einbau</div>
+                                                <select value={installationOption} onChange={handleInstallationChange} className={"form-select"} aria-label=".form-select">
+                                                    <option value="with">GREENCAR Werkstatt ( + {formatPrice(INSTALLATION_COST)} {mwStWording} )</option>
+                                                    <option value="without">eigene Werkstatt</option>
+                                                </select>
+                                    </div>
+                                )}
 
-                                    {installationOption === 'with' && (
-                                        <>
-                                            <div>Bitte wählen Sie Ihren gewünschten Einbauort.</div>
-                                            <div className="land-selection">
-                                                <select value={selectedLand} onChange={handleLandChange} className={"form-select"} aria-label=".form-select">
-                                                    <option value="">- Bundesland -</option>
-                                                    {lands.map((land) => (
-                                                        <option key={land.id} value={land.id}>
-                                                            {land.title}
-                                                        </option>
-                                                    ))}
+                                {installationOption === 'without' && (
+                                    <div className="row g-0 delivery-options pt-2">
+                                                <div className={"w-100"}>Abholung gewünscht?</div>
+                                                <select value={deliveryDesired} onChange={handleDeliveryChange} className={"form-select"} aria-label=".form-select">
+                                                    <option value="yes">Ja ( + {formatPrice(DELIVERY_COST)} {mwStWording} )</option>
+                                                    <option value="no">Nein</option>
                                                 </select>
                                             </div>
+                                )}
 
-                                            {selectedLand && (
-                                                <div className="city-selection">
-                                                    <select value={selectedCity} onChange={handleCityChange} className={"form-select"} aria-label=".form-select">
-                                                        <option value="">- Ort -</option>
-                                                        {cities.map((city) => (
-                                                            <option key={city.id} value={city.id}>
-                                                                {city.title}
-                                                            </option>
-                                                        ))}
-                                                    </select>
-                                                </div>
-                                            )}
-                                        </>
-                                    )}
-                                    {deliveryDesired === 'yes' && (
-                                        <>
-                                            <div className="date-selection">
-                                                <div>48h Express-Service Rechner!</div>
+                                {installationOption === 'with' && (
+                                    <>
+                                        <div className={"row g-0 pt-2"}>
+                                                    <div>Bitte wählen Sie Ihren gewünschten Einbauort.</div>
+                                                    <div className="land-selection">
+                                                        <select value={selectedLand} onChange={handleLandChange} className={"form-select"} aria-label=".form-select">
+                                                            <option value="">- Bundesland -</option>
+                                                            {lands.map((land) => (
+                                                                <option key={land.id} value={land.id}>
+                                                                    {land.title}
+                                                                </option>
+                                                            ))}
+                                                        </select>
+                                                    </div>
+                                        </div>
 
-                                                <div>Abholdatum des ausgebauten Partikelfilters:</div>
-                                                    <input
-                                                        type="date"
-                                                        value={selectedDate || ''}
-                                                        onChange={handleDateChange}
-                                                        min={new Date().toISOString().split('T')[0]}
-                                                        className={"form-control"} aria-label="form-date"
-                                                    />
-                                                <div>bis 16:00 Uhr</div>
+                                        {selectedLand && (
+                                            <div className="row g-0 pt-2 city-selection">
+                                                        <select value={selectedCity} onChange={handleCityChange} className={"form-select"} aria-label=".form-select">
+                                                            <option value="">- Ort -</option>
+                                                            {cities.map((city) => (
+                                                                <option key={city.id} value={city.id}>
+                                                                    {city.title}
+                                                                </option>
+                                                            ))}
+                                                        </select>
                                             </div>
+                                        )}
+                                    </>
+                                )}
+                                {deliveryDesired === 'yes' && (
+                                    <div className=" row g-0 bg-white rounded-4 p-3 mt-4 date-selection">
+                                                    <div className={"display-4 pb-2"}>48h Express-Service Rechner!</div>
 
-                                            <div className="next-day">
-                                                <div>Zustellung des gereinigten Partikelfilters</div>
-                                                <input type="text" value={nextDay || ''} readOnly className={"form-control"} aria-label="form-input"/>
-                                                <div>bis 12:00 Uhr garantiert!</div>
+                                                    <div className={"col-12"}>Abholdatum des ausgebauten Partikelfilters:</div>
+                                                    <div className={"col-sm-6 col-12"}>
+                                                        <input
+                                                            type="date"
+                                                            value={selectedDate || ''}
+                                                            onChange={handleDateChange}
+                                                            min={new Date().toISOString().split('T')[0]}
+                                                            className={"form-control"} aria-label="form-date"
+                                                        />
+                                                    </div>
+                                                    <div>bis 16:00 Uhr</div>
+                                                    <div className={"w-100 pb-2"}> </div>
 
-                                            </div>
-                                        </>
-                                    )}
-                                    <div className="total-price">
-                                        <h2>{getTotalPriceLabel()}: {formatPrice(totalPrice)}</h2>
+                                                    <div className="col-sm-6 col-12 next-day">
+                                                        <div>Zustellung des gereinigten Partikelfilters</div>
+                                                        <input type="text" value={nextDay || ''} readOnly className={"form-control"} aria-label="form-input"/>
+                                                        <div>bis 12:00 Uhr garantiert!</div>
+
+                                                    </div>
                                     </div>
+                                )}
+                                <div className="row g-0 total-price mt-4">
+                                    <div className={"display-3 gc-green"}>{getTotalPriceLabel()}: {formatPrice(totalPrice)}</div>
                                 </div>
+
                             </div>
                         )}
                     </div>
                     <div className="row g-0 p-4 pb-3">
-                        <div className={"col-3"}>
+                        <div className={"col col-sm-6"}>
                             <Link href={`/anfrage`}>
-                                <button className="btn btn-primary btn-yellow">Unverbindliches Angebot anfordern</button>
+                                <button className="btn btn-primary btn-yellow btn-100">Unverbindliches Angebot anfordern</button>
                             </Link>
                         </div>
                     </div>
                     <div className="row g-0 p-4 pt-3">
-                        <div className={"col-3"}>
-                            <button className="btn btn-primary btn-green" onClick={handleAddToCart}>
+                        <div className={"col col-sm-6"}>
+                            <button className="btn btn-primary btn-green btn-100" onClick={handleAddToCart}>
                                 In den Warenkorb
                             </button>
                         </div>
