@@ -6,7 +6,7 @@ import Footer from "@/components/Footer";
 import SecondaryMenu from "@/components/SecondaryMenu";
 import SearchBar from "@/components/SearchBar";
 import HomeBigIcons from "@/components/HomeBigIcons";
-import GreencarBanner from "@/components/Banner";
+import Banner from "@/components/Banner";
 
 
 export default function Layout({ children }) {
@@ -34,9 +34,8 @@ export default function Layout({ children }) {
                     </div>
                 </div>
                 <div className="container-fluid">
-                        <GreencarBanner />
+                        <Banner />
                 </div>
-                <div className={"w-100 pt-4"}/>
                 <div className="container-fluid">
                     <div className="container-greencar container-fluid g-0">
                         <SecondaryMenu />

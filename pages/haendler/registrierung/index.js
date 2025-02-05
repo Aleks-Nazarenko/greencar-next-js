@@ -2,31 +2,10 @@ import {useRouter} from "next/router";
 import {useState} from "react";
 import { Form, Button, Row, Col, Alert } from 'react-bootstrap';
 import {JOOMLA_API_BASE} from "@/utils/config";
-import {JOOMLA_URL_BASE} from "@/utils/config";
 import {useEffect} from "react";
 import Link from "next/link";
-import {convertRelativeUrls} from "@/utils/convertRelativeUrls";
 
-export async function getStaticProps() {
-    const joomlaBaseUrl = JOOMLA_URL_BASE;
-    // Fetch data for the footer from Joomla API
-    const resFooter = await fetch(`${JOOMLA_API_BASE}&task=articleWithModules&id=2&format=json`);
-    const footerData = await resFooter.json();
-    console.log("API Response:", footerData);
-    // Extract the footer article from the response
-    const footerArticle = footerData.article || null;
-
-    // Convert relative URLs in the footer content to absolute URLs
-    if (footerArticle) {
-        footerArticle.introtext = footerArticle.introtext ? convertRelativeUrls(footerArticle.introtext, joomlaBaseUrl) : '';
-        if (!footerArticle.introtext) {
-            console.log('footerArticle.introtext not found');
-        }
-    }
-    // Return the expected props structure
-    return { props: { footerArticle} };
-}
-const RegisterPage = ({footerArticle}) => {
+const RegisterPage = () => {
     const router = useRouter();
     const [formData, setFormData] = useState({
         benutzername: "",
@@ -162,8 +141,7 @@ const RegisterPage = ({footerArticle}) => {
         // If the user is logged in, show user information
         return (
             <>
-                <main>
-                    <div className="container-fluid container-greencar">
+
                         <Row className="g-0 pb-4">
                             <Col md={"12"}><h4>Sie sind als Händler angemeldet</h4></Col>
                         </Row>
@@ -211,26 +189,18 @@ const RegisterPage = ({footerArticle}) => {
                                 info@greencar.eu
                             </Col>
                         </Row>
-                    </div>
-                </main>
-                <footer>
-                    <div className="container-fluid container-footer container-greencar">
-                        <div className="row g-0 p-4">
-                            {footerArticle?.introtext && (
-                                <div dangerouslySetInnerHTML={{ __html: footerArticle.introtext}} />
-                            )}
-                        </div>
-                    </div>
-                </footer>
+
             </>
         );
     }
     return (
         <>
-            <main>
-                <div className="container-fluid container-greencar">
-                    {errors.apiError && <Alert variant="danger">{errors.apiError}</Alert>}
-                    {successMessage && <Alert variant="success">{successMessage}</Alert>}
+                    <Row className="mb-3 g-0">
+                        <Col md={"12"}>
+                            {errors.apiError && <Alert variant="danger">{errors.apiError}</Alert>}
+                            {successMessage && <Alert variant="success">{successMessage}</Alert>}
+                        </Col>
+                    </Row>
                     <Row className="mb-3 g-0">
                         <Col md={"12"}>
                             <h4>Händler - Registrierung</h4>
@@ -448,17 +418,7 @@ const RegisterPage = ({footerArticle}) => {
                         </Col>
                     </Row>
 
-                </div>
-            </main>
-            <footer>
-                <div className="container-fluid container-footer container-greencar">
-                    <div className="row g-0 p-4">
-                        {footerArticle?.introtext && (
-                            <div dangerouslySetInnerHTML={{ __html: footerArticle.introtext}} />
-                        )}
-                    </div>
-                </div>
-            </footer>
+
         </>
     );
 };

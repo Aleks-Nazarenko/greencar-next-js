@@ -80,20 +80,16 @@ export default function Pkw({ footerArticle, portalArticle }) {
                                 ? (
                                     <>
                                         <div className={"col-sm-4"} >
-                                            <Link href="/pkw-partikelfilter/pkw-filterreinigung" passHref legacyBehavior>
-                                                <a className={""}  onMouseEnter={() => setIsHoveredRein(true)} onMouseLeave={() => setIsHoveredRein(false)}>
-                                                    <h6>PKW Filterreinigung</h6>
-                                                    <Image className={"picto-170"} src={isHoveredRein ? "/images/icons/pkw-filterreinigung.png" : "/images/icons/pkw-rein-portal-mi.png"} alt={"PKW Filterreinigung"} width={170} height={170} layout="responsive"
+                                            <Link className={"d-block"} href="/pkw-partikelfilter/pkw-filterreinigung" onMouseEnter={() => setIsHoveredRein(true)} onMouseLeave={() => setIsHoveredRein(false)}>
+                                                <h6>PKW Filterreinigung</h6>
+                                                <Image className={"picto-170"} src={isHoveredRein ? "/images/icons/pkw-filterreinigung.png" : "/images/icons/pkw-rein-portal-mi.png"} alt={"PKW Filterreinigung"} width={170} height={170} layout="responsive"
                                                     />
-                                                </a>
                                             </Link>
                                         </div>
                                         <div className={"col-sm-4"} >
-                                            <Link href="/pkw-partikelfilter/pkw-austauschfilter" passHref legacyBehavior>
-                                                <a className={""} onMouseEnter={() => setIsHoveredAus(true)} onMouseLeave={() => setIsHoveredAus(false)}>
-                                                    <h6>PKW Austauschfilter</h6>
-                                                    <Image className={"picto-170"} src={isHoveredAus ? "/images/icons/pkw-austauschfilter.png" : "/images/icons/pkw-austausch-portal-mi.png"} alt={"PKW Austauschfilter"} width={170} height={170} layout="responsive"/>
-                                                </a>
+                                            <Link className={"d-block"} href="/pkw-partikelfilter/pkw-austauschfilter" onMouseEnter={() => setIsHoveredAus(true)} onMouseLeave={() => setIsHoveredAus(false)}>
+                                                <h6>PKW Austauschfilter</h6>
+                                                <Image className={"picto-170"} src={isHoveredAus ? "/images/icons/pkw-austauschfilter.png" : "/images/icons/pkw-austausch-portal-mi.png"} alt={"PKW Austauschfilter"} width={170} height={170} layout="responsive"/>
                                             </Link>
                                         </div>
                                     </>
@@ -101,28 +97,22 @@ export default function Pkw({ footerArticle, portalArticle }) {
                                 (
                                 <>
                                     <div className={"col-sm-4"} >
-                                        <Link href="/pkw-partikelfilter/pkw-filterreinigung" passHref legacyBehavior>
-                                            <a className={""}  onMouseEnter={() => setIsHoveredRein(true)} onMouseLeave={() => setIsHoveredRein(false)}>
-                                                <h6>PKW Filterreinigung</h6>
-                                                <Image className={"picto-170"} src={isHoveredRein ? "/images/icons/pkw-filterreinigung.png" : "/images/icons/pkw-rein-portal-mi.png"} alt={"PKW Filterreinigung"} width={170} height={170} layout="responsive"
-                                                />
-                                            </a>
+                                        <Link className={"d-block"} href="/pkw-partikelfilter/pkw-filterreinigung" onMouseEnter={() => setIsHoveredRein(true)} onMouseLeave={() => setIsHoveredRein(false)}>
+                                            <h6>PKW Filterreinigung</h6>
+                                            <Image className={"picto-170"} src={isHoveredRein ? "/images/icons/pkw-filterreinigung.png" : "/images/icons/pkw-rein-portal-mi.png"} alt={"PKW Filterreinigung"} width={170} height={170} layout="responsive"
+                                            />
                                         </Link>
                                     </div>
                                     <div className={"col-sm-4"} >
-                                        <Link href="/pkw-partikelfilter/pkw-austauschfilter" passHref legacyBehavior>
-                                            <a className={""} onMouseEnter={() => setIsHoveredAus(true)} onMouseLeave={() => setIsHoveredAus(false)}>
-                                                <h6>PKW Austauschfilter</h6>
-                                                <Image className={"picto-170"} src={isHoveredAus ? "/images/icons/pkw-austauschfilter.png" : "/images/icons/pkw-austausch-portal-mi.png"} alt={"PKW Austauschfilter"} width={170} height={170} layout="responsive"/>
-                                            </a>
+                                        <Link className={"d-block"} href="/pkw-partikelfilter/pkw-austauschfilter" onMouseEnter={() => setIsHoveredAus(true)} onMouseLeave={() => setIsHoveredAus(false)}>
+                                            <h6>PKW Austauschfilter</h6>
+                                            <Image className={"picto-170"} src={isHoveredAus ? "/images/icons/pkw-austauschfilter.png" : "/images/icons/pkw-austausch-portal-mi.png"} alt={"PKW Austauschfilter"} width={170} height={170} layout="responsive"/>
                                         </Link>
                                     </div>
                                     <div className={"col-sm-4"} >
-                                        <Link href="/pkw-partikelfilter/pkw-nachruestfilter" passHref legacyBehavior>
-                                            <a className={""} onMouseEnter={() => setIsHoveredNach(true)} onMouseLeave={() => setIsHoveredNach(false)}>
-                                                <h6>PKW Nachruestfilter</h6>
-                                                <Image className={"picto-170"} src={isHoveredNach ? "/images/icons/pkw-nachruestfilter.png" : "/images/icons/pkw-nachruest-portal-mi.png"} alt={"PKW Austauschfilter"} width={170} height={170} layout="responsive"/>
-                                            </a>
+                                        <Link className={"d-block"} href="/pkw-partikelfilter/pkw-nachruestfilter" onMouseEnter={() => setIsHoveredNach(true)} onMouseLeave={() => setIsHoveredNach(false)}>
+                                            <h6>PKW Nachruestfilter</h6>
+                                            <Image className={"picto-170"} src={isHoveredNach ? "/images/icons/pkw-nachruestfilter.png" : "/images/icons/pkw-nachruest-portal-mi.png"} alt={"PKW Austauschfilter"} width={170} height={170} layout="responsive"/>
                                         </Link>
                                     </div>
                                 </>
