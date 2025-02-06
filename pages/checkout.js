@@ -51,6 +51,7 @@ export default function CheckoutPage({footerArticle }) {
     const [vatShare, setVatShare] = useState(0); // State to store the VAT share
     const [displayTotalPrice, setDisplayTotalPrice] = useState(0); // Total price to display
     const [validated, setValidated] = useState(false);
+    const [errorEmail, setErrorEmail] = useState('');
     const [billingAddress, setBillingAddress] = useState({
         salutation: 'Herr',
         fullName: '',
@@ -126,6 +127,16 @@ export default function CheckoutPage({footerArticle }) {
         }
     }, []);
 
+    const validateEmail = (value) => {
+        const strictEmailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,63}$/;
+        if (!strictEmailRegex.test(value)) {
+            setErrorEmail("Ihre E-Mail-Adresse ist ungültig");
+            return false;  // Invalid email
+        } else {
+            setErrorEmail("");
+            return true;  // Valid email
+        }
+    };
     // Handle changes for shipping address fields
     const handleShippingAddressChange = (e) => {
         const { name, value } = e.target;
@@ -142,6 +153,9 @@ export default function CheckoutPage({footerArticle }) {
             ...prev,
             [name]: value,
         }));
+        if (name === "email") {
+            validateEmail(value); // Check validation on every keystroke
+        }
     };
 
     const handlePaymentChange = (e) => {
@@ -156,7 +170,7 @@ export default function CheckoutPage({footerArticle }) {
             return;
         }
         const form = event.currentTarget;
-        if (form.checkValidity() === false) {
+        if (form.checkValidity() === false || !validateEmail(billingAddress.email)) {
             event.stopPropagation();
             setValidated(true);
             return;
@@ -325,9 +339,10 @@ export default function CheckoutPage({footerArticle }) {
                                         name="email"
                                         value={billingAddress.email}
                                         onChange={handleBillingAddressChange}
+                                        isInvalid={!!errorEmail}
                                     />
                                     <Form.Control.Feedback type="invalid">
-                                        Please provide a valid email address.
+                                        { errorEmail || 'Bitte geben Sie Ihre E-Mail-Adresse ein' }
                                     </Form.Control.Feedback>
                                 </Form.Group>
                             </Row>

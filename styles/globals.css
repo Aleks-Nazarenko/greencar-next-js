@@ -169,6 +169,8 @@ header {z-index: 10}
 .btn-green{background: #008000!important; color: white!important; border: none!important;}
 .btn-100{width:100%;}
 .btn-green:hover{transition: background 0.3s; background: #45CA25!important;}
+.form-danger{color: red;}
+
 
 #maschinen {background: white; border-radius: 1rem; padding: 20px;}
 #maschinen img {border-radius: 1rem;}S
@@ -221,4 +223,6 @@ ul.list-arrow {
     color-scheme: dark;
   }
 }
-
+@media (max-width: 596px) {
+  .search-container{margin-top: 10px;}
+}

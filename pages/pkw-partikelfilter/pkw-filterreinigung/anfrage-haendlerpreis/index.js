@@ -3,6 +3,7 @@ import {convertRelativeUrls} from "@/utils/convertRelativeUrls";
 import {useState} from "react";
 import { Form, Button, Row, Col, Alert } from 'react-bootstrap';
 import Pictos from "@/components/Pictos";
+import Image from "next/image";
 
 
 
@@ -57,10 +58,24 @@ export async function getStaticProps() {
      const [validated, setValidated] = useState(false);
      const [errors, setErrors] = useState({});
      const [successMessage, setSuccessMessage] = useState('');
+     const [errorEmail, setErrorEmail] = useState('');
 
+     const validateEmail = (value) => {
+         const strictEmailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,63}$/;
+         if (!strictEmailRegex.test(value)) {
+             setErrorEmail("Ihre E-Mail-Adresse ist ungültig");
+             return false;  // Invalid email
+         } else {
+             setErrorEmail("");
+             return true;  // Valid email
+         }
+     };
      const handleInputChange = (e) => {
          const { name, value } = e.target;
          setFormData((prevData) => ({ ...prevData, [name]: value }));
+         if (name === "email") {
+             validateEmail(value); // Check validation on every keystroke
+         }
      };
 
      const scrollToTop = () => {
@@ -72,11 +87,12 @@ export async function getStaticProps() {
      const handleSubmit = async (e) => {
          e.preventDefault();
          const form = e.currentTarget;
-         if (form.checkValidity() === false ) {
+         if (form.checkValidity() === false || !validateEmail(formData.email) ) {
              e.stopPropagation();
              setValidated(true);
              return;
          }
+    //     setErrorEmail("");
          try {
              const payload = {
                  name: formData.name,
@@ -96,7 +112,7 @@ export async function getStaticProps() {
              const data = await response.json();
 
              if (!response.ok) {
-                 console.log('Registration Error', data);
+                 console.log('Anfrage Error', data);
                  setErrors({ apiError: data?.message || 'Es ist ein Fehler aufgetreten. Bitte versuchen Sie es später erneut.'});
                  scrollToTop();
              } else {
@@ -121,6 +137,7 @@ export async function getStaticProps() {
              }
          } catch (error) {
              setErrors({ apiError: 'Ein Fehler ist aufgetreten. Versuchen Sie es später noch einmal.' });
+             console.log('Anfrage Error', error);
              scrollToTop();
          }
      }
@@ -130,8 +147,8 @@ export async function getStaticProps() {
 
                 <Row className="mb-3 g-0">
                     <Col md={"12"}>
-                        {errors.apiError && <Alert variant="danger">{errors.apiError}</Alert>}
-                        {successMessage && <Alert variant="success">{successMessage}</Alert>}
+                        {errors.apiError && <h3 variant="danger" className={"form-danger"}>{errors.apiError}</h3>}
+                        {successMessage && <h3 variant="success" className={"gc-green"}>{successMessage}</h3>}
                     </Col>
                 </Row>
                 <Row className="g-0">
@@ -143,7 +160,7 @@ export async function getStaticProps() {
                                     <h4>Bitte das Formular ausfüllen und absenden</h4>
                                 </Row>
                                 <Row className={"g-0"}>
-                                    <Col sm={"col"}>
+                                    <Col sm={"12"}>
                                         {article?.content && (
                                             <div dangerouslySetInnerHTML={{ __html: article.content}} />
                                         )}
@@ -178,9 +195,10 @@ export async function getStaticProps() {
                                                 name="email"
                                                 value={formData.email}
                                                 onChange={handleInputChange}
+                                                isInvalid={!!errorEmail}
                                             />
                                             <Form.Control.Feedback type="invalid">
-                                                Bitte geben Sie Ihre E-Mail-Adresse ein
+                                                { errorEmail || 'Bitte geben Sie Ihre E-Mail-Adresse ein' }
                                             </Form.Control.Feedback>
                                         </Form.Group>
                                     </Row>

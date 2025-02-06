@@ -32,7 +32,7 @@ export default function Pictos() {
             <Link href={"/pkw-partikelfilter/pkw-filterreinigung/ablauf-filterreinigung"} onMouseOver={() => setTogglePictoAblauf(true)} onMouseOut={() => setTogglePictoAblauf(false)}>
                 <Image src={togglePictoAblauf ? "/images/pictos/rein_pikt_ablauf_over.png" : "/images/pictos/rein_pikt_ablauf.png"} alt={"Ablauf Filterreinigung"} width={331} height={120} className={"img-fluid ps-0 ps-sm-2 picto-product "} />
             </Link>
-            <Link href={"/pkw-partikelfilter/pkw-filterreinigung/einbau-deutschlandweit"} onMouseOver={() => setTogglePictoDeWeit(true)} onMouseOut={() => setTogglePictoDeWeit(false)}>
+            <Link href={"/pkw-partikelfilter/pkw-filterreinigung/aus-und-einbau-deutschlandweit"} onMouseOver={() => setTogglePictoDeWeit(true)} onMouseOut={() => setTogglePictoDeWeit(false)}>
                 <Image src={togglePictoDeWeit ? "/images/pictos/rein_pikt_de_weit_over.png" : "/images/pictos/rein_pikt_de_weit.png"} alt={"Einbau deutschlandweit"} width={331} height={120} className={"img-fluid ps-0 ps-sm-2 picto-product "} />
             </Link>
             <Link href={"/pkw-partikelfilter/pkw-filterreinigung/sofortabholung"} onMouseOver={() => setTogglePictoSofort(true)} onMouseOut={() => setTogglePictoSofort(false)}>
