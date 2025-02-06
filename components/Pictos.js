@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import {useState} from "react";
+import {JOOMLA_URL_BASE} from "@/utils/config";
 
 export default function Pictos() {
 
@@ -44,7 +45,7 @@ export default function Pictos() {
             <Link href={"/pkw-partikelfilter/pkw-filterreinigung/express-service"} onMouseOver={() => setTogglePictoExpress(true)} onMouseOut={() => setTogglePictoExpress(false)}>
                 <Image src={togglePictoExpress ? "/images/pictos/rein_pikt_express_over.png" : "/images/pictos/rein_pikt_express.png"} alt={"Express-Service"} width={331} height={120} className={"img-fluid ps-0 ps-sm-2 picto-product "} />
             </Link>
-            <Link href={"/pkw-partikelfilter/pkw-filterreinigung/greencar-flyer"} onMouseOver={() => setTogglePictoFlyer(true)} onMouseOut={() => setTogglePictoFlyer(false)}>
+            <Link href={`${JOOMLA_URL_BASE}/images/kundenflyer_neu.pdf`} onMouseOver={() => setTogglePictoFlyer(true)} onMouseOut={() => setTogglePictoFlyer(false)} target={'_blank'} rel={'noopener'}>
                 <Image src={togglePictoFlyer ? "/images/pictos/rein_pikt_flyer_over.png" : "/images/pictos/rein_pikt_flyer.png"} alt={"Greencar-Flyer"} width={331} height={120} className={"img-fluid ps-0 ps-sm-2 picto-product "} />
             </Link>
             <Link href={"/pkw-partikelfilter/pkw-filterreinigung/fragenkatalog"} onMouseOver={() => setTogglePictoFragen(true)} onMouseOut={() => setTogglePictoFragen(false)}>
