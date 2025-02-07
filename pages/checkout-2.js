@@ -9,6 +9,7 @@ import PayPalPlaceholder from "@/pages/PayPalPlaceholder";
 import { Modal, Button } from "react-bootstrap";
 import {JOOMLA_API_BASE} from "@/utils/config";
 import {JOOMLA_URL_BASE} from "@/utils/config";
+import Pictos from "@/components/Pictos";
 
 function ProductImage({ src, alt, fallback }) {
     const [imgSrc, setImgSrc] = useState(src);
@@ -141,234 +142,253 @@ export default function CheckoutStep2({footerArticle, termsArticle})   {
                 currency: "EUR",
             }}
         >
-            <main>
-                <div className="container-fluid container-greencar">
-                    <div className="row g-0 p-4">
-                        {checkoutDetails && (
-                            <div className={"col"}>
-                                <div className={"row g-0"}>
-                                    <h2>Bestellzusammenfassung</h2>
-                                </div>
-                                <div className={"row g-0 "}>
-                                    {checkoutDetails.cartItem.productName.toLowerCase().includes('filterreinigung')? (
-                                        <ProductImage
-                                            src={`${JOOMLA_URL_BASE}/media/com_hikashop/upload/thumbnails/200x200/Filterreinigung-PKW-LKW-BUS-2.jpg`}
-                                            alt={checkoutDetails.cartItem.productName}
-                                            fallback={`${JOOMLA_URL_BASE}/media/com_hikashop/upload/thumbnails/200x200/Filterreinigung-PKW-LKW-BUS-2.jpg`}
-                                        />
-                                    ) : (
-                                        <ProductImage
-                                            src={`${JOOMLA_URL_BASE}/media/com_hikashop/upload/${checkoutDetails.cartItem.productImage}`}
-                                            alt={checkoutDetails.cartItem.productName}
-                                            fallback={`${JOOMLA_URL_BASE}/media/com_hikashop/upload/beispielphoto.jpg`}
-                                        />
-                                    )}
 
-                                </div>
-                                <div className={"row g-0 bg-white"}>
-                                    <div className={"col-sm-4"}>
-                                        <div>{ checkoutDetails.cartItem.productName} {checkoutDetails.cartItem.basePrice} (inkl. MwSt.)</div>
-                                        {checkoutDetails.cartItem.options.deposit && (
-                                            <div>{checkoutDetails.cartItem.options.deposit.label}: {checkoutDetails.cartItem.options.deposit.cost} (inkl. MwSt.)</div>
-                                        )}
-                                        {checkoutDetails.cartItem.options.installation &&(
-                                            <div>{checkoutDetails.cartItem.options.installation.label}:{checkoutDetails.cartItem.options.installation.cost} (inkl. MwSt.)</div>
-                                        )}
-                                        {checkoutDetails.cartItem.options.delivery && (
-                                            <div>{checkoutDetails.cartItem.options.delivery.label}:{checkoutDetails.cartItem.options.delivery.cost} (inkl. MwSt.)</div>
-                                        )}
-                                        {checkoutDetails.cartItem.selectedDate && (
-                                            <>
-                                                <div>Abholdatum des ausgebauten Partikelfilters: {checkoutDetails.cartItem.selectedDate}</div>
-                                                <div>Zustellung des gereinigten Partikelfilters: {checkoutDetails.cartItem.nextDay}</div>
-                                            </>
-                                        )}
-                                    </div>
-                                    <div className={"col-sm-4"}>
-                                        {checkoutDetails.cartItem.options.installation ? (
-                                            <>
-                                                <div className={"w-100"}>Einzelpreis</div>
-                                                <div className={"w-100"}>{checkoutDetails.cartItem.totalPrice} (inkl. MwSt.)</div>
-                                            </>
-                                        ) : (
-                                            <>
-                                                <div className={"w-100"}>Einzelpreis</div>
-                                                <div className={"w-100"}>{formatPrice(checkoutDetails.cartItem.totalPriceUnformatted)} (inkl. MwSt.)</div>
-                                            </>
-                                        )}
-                                    </div>
-                                    <div className={"col-sm-4"}>
-                                        {checkoutDetails.cartItem.options.installation ? (
-                                            <>
-                                                <div className={"w-100"}>Gesamtpreis</div>
-                                                <div className={"w-100"}>{checkoutDetails.cartItem.totalPrice} (inkl. MwSt.)</div>
-                                            </>
-                                        ) : (
-                                            <>
-                                                <div className={"w-100"}>Gesamtpreis</div>
-                                                <div className={"w-100"}>{formatPrice(checkoutDetails.cartItem.totalPriceUnformatted)} (inkl. MwSt.)</div>
-                                            </>
-                                        )}
-                                    </div>
-                                </div>
-                                <div className={"row g-0 bg-white"}>
-                                        {checkoutDetails.cartItem.options.installation ? (
-                                            <>
-                                                <div className={"text-end"}>Summe {checkoutDetails.cartItem.totalPrice} (inkl. MwSt.)</div>
-                                                <div className={"text-end"}>Anteil <b>Vorauszahlung*</b> für Produkte mit Einbau {formatPrice(checkoutDetails.cartItem.advancePayment)} (inkl. MwSt.)</div>
-                                            </>
-                                        ) : (
-                                            <div className={"text-end"}>Summe {formatPrice(checkoutDetails.cartItem.totalPriceUnformatted)} (inkl. MwSt.)</div>
-                                        )}
-                                        <div className={"text-end"}><strong>MwSt.</strong> {checkoutDetails.cartItem.vatShare}</div>
-                                        <div className={"text-end"}><strong>Gesamtsumme</strong> {checkoutDetails.cartItem.advancePayment ? formatPrice(checkoutDetails.cartItem.advancePayment) : formatPrice(checkoutDetails.cartItem.totalPriceUnformatted)}</div>
-                                </div>
-                                <div className={"row g-0 bg-white"}>
-                                    {checkoutDetails.billingAddress && (
-                                        <div className={"col-sm-6"}>
-                                            <h3>Rechnungsadresse</h3>
-                                            <div>{checkoutDetails.billingAddress.anrede } {checkoutDetails.billingAddress.fullName} </div>
-                                            <div>{checkoutDetails.billingAddress.street}</div>
-                                            <div>{checkoutDetails.billingAddress.zipCode} {checkoutDetails.billingAddress.city}</div>
-                                            <div>{checkoutDetails.billingAddress.firma}</div>
-                                            <div>{checkoutDetails.billingAddress.email}</div>
-                                            <div>{checkoutDetails.billingAddress.phone}</div>
+                    <div className="row g-0">
+                        <div className="col-sm-8">
+                            <div className="row g-0">
+                                {checkoutDetails && (
+                                    <div className={"col"}>
+                                        <div className={"row g-0 p-4 product-detail-view rounded-4"}>
+                                            <div className={"col"}>
+                                                <div className={"row g-0 mb-3"}>
+                                                    <h2>Bestellzusammenfassung</h2>
                                         </div>
-                                    )}
-                                    {checkoutDetails.shippingAddress && (
-                                        <div className={"col-sm-6"}>
-                                            <h3>Lieferadresse</h3>
-                                            <div>{checkoutDetails.shippingAddress.anrede} {checkoutDetails.shippingAddress.fullName} </div>
-                                            <div>{checkoutDetails.shippingAddress.street}</div>
-                                            <div>{checkoutDetails.shippingAddress.zipCode} {checkoutDetails.shippingAddress.city}</div>
-                                            <div>{checkoutDetails.shippingAddress.firma}</div>
-                                            <div>{checkoutDetails.shippingAddress.email}</div>
-                                            <div>{checkoutDetails.shippingAddress.phone}</div>
-                                        </div>
-                                    )}
-                                </div>
-                                <div className={"row g-0 mt-4 bg-white"}>
-                                    <div className={"w-100"}>
-                                        Datenschutzhinweise. Widerrufs- und Rückgaberecht
-                                    </div>
-                                    <div className={"w-100"}>
-                                        <Form.Check
-                                            type="checkbox"
-                                            label={
-                                                <>
-                                                    Ich habe die Allgemeinen{" "}
-                                                    <a className={"gc-green"}
-                                                        href="#"
-                                                        onClick={(e) => {
-                                                            e.preventDefault();
-                                                            handleModalOpen();
-                                                        }}
-                                                    >
-                                                        allgemeinen Geschäftsbedingungen (AGB)
-                                                    </a>
-                                                    {" "}gelesen und bin mit deren Geltung einverstanden.
-                                                </>
-                                            }
-                                            checked={termsAccepted}
-                                            onChange={(e) => setTermsAccepted(e.target.checked)}
-                                            className="my-3"
-                                        />
-                                    </div>
-                                </div>
-                                {/* Bootstrap Modal */}
-                                <Modal show={showModal} onHide={handleModalClose} size="lg" centered>
-                                    <Modal.Header closeButton>
-                                    </Modal.Header>
-                                    <Modal.Body>
-                                        {/* Render Joomla Article Content if available*/}
-                                        {termsArticle?.introtext && (
-                                            <div dangerouslySetInnerHTML={{ __html: termsArticle.introtext}} />
-                                        )}
-                                    </Modal.Body>
-                                    <Modal.Footer>
-                                        <Button variant="secondary" onClick={handleModalClose}>
-                                            Schließen
-                                        </Button>
-                                    </Modal.Footer>
-                                </Modal>
+                                                <div className={"row g-0 "}>
+                                            {checkoutDetails.cartItem.productName.toLowerCase().includes('filterreinigung')? (
+                                                <ProductImage
+                                                    src={`${JOOMLA_URL_BASE}/images/Filterreinigung-PKW-LKW-BUS-2.jpg`}
+                                                    alt={checkoutDetails.cartItem.productName}
+                                                    fallback={`${JOOMLA_URL_BASE}/images/Filterreinigung-PKW-LKW-BUS-2.jpg`}
+                                                />
+                                            ) : (
+                                                <ProductImage
+                                                    src={`${JOOMLA_URL_BASE}/media/com_hikashop/upload/${checkoutDetails.cartItem.productImage}`}
+                                                    alt={checkoutDetails.cartItem.productName}
+                                                    fallback={`${JOOMLA_URL_BASE}/media/com_hikashop/upload/beispielphoto.jpg`}
+                                                />
+                                            )}
 
-                                {checkoutDetails.paymentMethod === "paypal" ? (termsAccepted ? (
-                                <div className={"row g-0"}>
-                                        <div>Bitte klicken Sie auf den Button unten, um Ihre Bestellung zu bestätigen und mit PayPal zu bezahlen.</div>
-                                         <div className={"col-sm-6"}>
-                                             <PayPalButtons
-                                                 fundingSource="paypal"
-                                                 createOrder={(data, actions) => {
-                                                     // Define the order details
-                                                     return actions.order.create({
-                                                         purchase_units: [
-                                                             {
-                                                                 amount: {
-                                                                     value: checkoutDetails.cartItem.advancePayment
-                                                                         ? checkoutDetails.cartItem.advancePayment.toFixed(2)
-                                                                         : checkoutDetails.cartItem.totalPriceUnformatted.toFixed(2),
-                                                                     currency_code: "EUR",
-                                                                 },
-                                                                 description: `Order for ${checkoutDetails.cartItem.productName}`,
-                                                             },
-                                                         ],
-                                                     });
-                                                 }}
-                                                 onApprove={(data, actions) => {
-                                                     return actions.order.capture().then((details) => {
-                                                         console.log("Transaction details:", details);
-                                                         handleConfirmOrder()
-                                                             .then(() => {
-                                                                 console.log("Order confirmed successfully.");
-                                                             })
-                                                             .catch((err) => {
-                                                                 console.error("Error confirming order:", err);
-                                                             });
-                                                     });
-                                                 }}
-                                                 onError={(err) => {
-                                                     alert("Zahlung fehlgeschlagen! Bitte versuchen Sie es erneut.");
-                                                     console.error(err);
-                                                 }}
-                                             />
-                                         </div>
-                                </div>
-                                ) : (
-                                        <div className={"row g-0"}>
-                                            <div style={{ visibility: !termsAccepted ? "hidden" : "visible" }}>Bitte akzeptieren Sie die allgemeinen Geschäftsbedingungen, um fortzufahren.</div>
-                                            <div className={"paypal-button-label-container col-sm-6 d-flex flex-column align-items-center"}>
-                                                <PayPalPlaceholder />
+                                        </div>
+                                                <div className={"row g-0"}>
+                                            <div className={"col-sm-4"}>
+                                                <div>{ checkoutDetails.cartItem.productName} {checkoutDetails.cartItem.basePrice} (inkl. MwSt.)</div>
+                                                {checkoutDetails.cartItem.options.deposit && (
+                                                    <div>{checkoutDetails.cartItem.options.deposit.label}: {checkoutDetails.cartItem.options.deposit.cost} (inkl. MwSt.)</div>
+                                                )}
+                                                {checkoutDetails.cartItem.options.installation &&(
+                                                    <div>{checkoutDetails.cartItem.options.installation.label}:{checkoutDetails.cartItem.options.installation.cost} (inkl. MwSt.)</div>
+                                                )}
+                                                {checkoutDetails.cartItem.options.delivery && (
+                                                    <div>{checkoutDetails.cartItem.options.delivery.label}:{checkoutDetails.cartItem.options.delivery.cost} (inkl. MwSt.)</div>
+                                                )}
+                                                {checkoutDetails.cartItem.selectedDate && (
+                                                    <>
+                                                        <div>Abholdatum des ausgebauten Partikelfilters: {checkoutDetails.cartItem.selectedDate}</div>
+                                                        <div>Zustellung des gereinigten Partikelfilters: {checkoutDetails.cartItem.nextDay}</div>
+                                                    </>
+                                                )}
                                             </div>
-
+                                            <div className={"col-sm-4"}>
+                                                {checkoutDetails.cartItem.options.installation ? (
+                                                    <>
+                                                        <div className={"w-100"}>Einzelpreis</div>
+                                                        <div className={"w-100"}>{checkoutDetails.cartItem.totalPrice} (inkl. MwSt.)</div>
+                                                    </>
+                                                ) : (
+                                                    <>
+                                                        <div className={"w-100"}>Einzelpreis</div>
+                                                        <div className={"w-100"}>{formatPrice(checkoutDetails.cartItem.totalPriceUnformatted)} (inkl. MwSt.)</div>
+                                                    </>
+                                                )}
+                                            </div>
+                                            <div className={"col-sm-4"}>
+                                                {checkoutDetails.cartItem.options.installation ? (
+                                                    <>
+                                                        <div className={"w-100"}>Gesamtpreis</div>
+                                                        <div className={"w-100"}>{checkoutDetails.cartItem.totalPrice} (inkl. MwSt.)</div>
+                                                    </>
+                                                ) : (
+                                                    <>
+                                                        <div className={"w-100"}>Gesamtpreis</div>
+                                                        <div className={"w-100"}>{formatPrice(checkoutDetails.cartItem.totalPriceUnformatted)} (inkl. MwSt.)</div>
+                                                    </>
+                                                )}
+                                            </div>
                                         </div>
-                                    )
-                                ) : (
-                                    < div className={"row g-0"}>
-                                        <div>Zahlungsmethode Vorauskasse / Banküberweisung </div>
-                                        <div>Durch Anklicken des Buttons 'Kaufen' geben Sie eine verbindliche Bestellung der oben aufgelisteten Waren ab.
-                                            Die Auftragsbestätigung erhalten Sie per E-Mail unmittelbar nach dem Absenden der Bestellung. Damit ist der Kaufvertrag geschlossen.</div>
-                                        <button className="btn btn-primary" onClick={handleConfirmOrder}  disabled={!termsAccepted}>Kaufen</button>
+                                                <div className={"row g-0"}>
+                                                {checkoutDetails.cartItem.options.installation ? (
+                                                    <>
+                                                        <div className={"text-end"}>Summe {checkoutDetails.cartItem.totalPrice} (inkl. MwSt.)</div>
+                                                        <div className={"text-end"}>Anteil <b>Vorauszahlung*</b> für Produkte mit Einbau {formatPrice(checkoutDetails.cartItem.advancePayment)} (inkl. MwSt.)</div>
+                                                    </>
+                                                ) : (
+                                                    <div className={"text-end"}>Summe {formatPrice(checkoutDetails.cartItem.totalPriceUnformatted)} (inkl. MwSt.)</div>
+                                                )}
+                                                <div className={"text-end"}><strong>MwSt.</strong> {checkoutDetails.cartItem.vatShare}</div>
+                                                <div className={"text-end"}><strong>Gesamtsumme</strong> {checkoutDetails.cartItem.advancePayment ? formatPrice(checkoutDetails.cartItem.advancePayment) : formatPrice(checkoutDetails.cartItem.totalPriceUnformatted)}</div>
+                                        </div>
+                                            </div>
+                                        </div>
+                                        <div className={"w-100 pb-4"}></div>
+                                        <div className={"row g-0 p-4 product-detail-view rounded-4"}>
+                                            {checkoutDetails.billingAddress && (
+                                                <div className={"col-sm-6"}>
+                                                    <h3>Rechnungsadresse</h3>
+                                                    <div>{checkoutDetails.billingAddress.anrede } {checkoutDetails.billingAddress.fullName} </div>
+                                                    <div>{checkoutDetails.billingAddress.street}</div>
+                                                    <div>{checkoutDetails.billingAddress.zipCode} {checkoutDetails.billingAddress.city}</div>
+                                                    <div>{checkoutDetails.billingAddress.firma}</div>
+                                                    <div>{checkoutDetails.billingAddress.email}</div>
+                                                    <div>{checkoutDetails.billingAddress.phone}</div>
+                                                </div>
+                                            )}
+                                            {checkoutDetails.shippingAddress && (
+                                                <div className={"col-sm-6"}>
+                                                    <h3>Lieferadresse</h3>
+                                                    <div>{checkoutDetails.shippingAddress.anrede} {checkoutDetails.shippingAddress.fullName} </div>
+                                                    <div>{checkoutDetails.shippingAddress.street}</div>
+                                                    <div>{checkoutDetails.shippingAddress.zipCode} {checkoutDetails.shippingAddress.city}</div>
+                                                    <div>{checkoutDetails.shippingAddress.firma}</div>
+                                                    <div>{checkoutDetails.shippingAddress.email}</div>
+                                                    <div>{checkoutDetails.shippingAddress.phone}</div>
+                                                </div>
+                                            )}
+                                        </div>
+                                        <div className={"w-100 pb-4"}></div>
+                                        <div className={"row g-0 p-4 product-detail-view rounded-4"}>
+                                            <div className={"w-100"}>
+                                               <h3>Datenschutzhinweise. Widerrufs- und Rückgaberecht</h3>
+                                            </div>
+                                            <div className={"w-100"}>
+                                                <Form.Check
+                                                    type="checkbox"
+                                                    label={
+                                                        <>
+                                                            Ich habe die Allgemeinen{" "}
+                                                            <a className={"gc-green"}
+                                                                href="#"
+                                                                onClick={(e) => {
+                                                                    e.preventDefault();
+                                                                    handleModalOpen();
+                                                                }}
+                                                            >
+                                                                allgemeinen Geschäftsbedingungen (AGB)
+                                                            </a>
+                                                            {" "}gelesen und bin mit deren Geltung einverstanden.
+                                                        </>
+                                                    }
+                                                    checked={termsAccepted}
+                                                    onChange={(e) => setTermsAccepted(e.target.checked)}
+                                                />
+                                            </div>
+                                        </div>
+                                        {/* Bootstrap Modal */}
+                                        <Modal show={showModal} onHide={handleModalClose} size="lg" centered>
+                                            <Modal.Header closeButton>
+                                            </Modal.Header>
+                                            <Modal.Body>
+                                                {/* Render Joomla Article Content if available*/}
+                                                {termsArticle?.introtext && (
+                                                    <div dangerouslySetInnerHTML={{ __html: termsArticle.introtext}} />
+                                                )}
+                                            </Modal.Body>
+                                            <Modal.Footer>
+                                                <Button variant="secondary" onClick={handleModalClose}>
+                                                    Schließen
+                                                </Button>
+                                            </Modal.Footer>
+                                        </Modal>
+
+                                        {checkoutDetails.paymentMethod === "paypal" ? (termsAccepted ? (
+                                            <>
+                                            <div className={"w-100 pt-4"}></div>
+                                            <div className={"row g-0 p-4 product-detail-view rounded-4"}>
+                                                <div>Bitte klicken Sie auf den Button unten, um Ihre Bestellung zu bestätigen und mit PayPal zu bezahlen.</div>
+                                                <div className={"w-100 pt-3"}></div>
+                                                 <div className={"col"}>
+                                                     <PayPalButtons
+                                                         fundingSource="paypal"
+                                                         createOrder={(data, actions) => {
+                                                             // Define the order details
+                                                             return actions.order.create({
+                                                                 purchase_units: [
+                                                                     {
+                                                                         amount: {
+                                                                             value: checkoutDetails.cartItem.advancePayment
+                                                                                 ? checkoutDetails.cartItem.advancePayment.toFixed(2)
+                                                                                 : checkoutDetails.cartItem.totalPriceUnformatted.toFixed(2),
+                                                                             currency_code: "EUR",
+                                                                         },
+                                                                         description: `Order for ${checkoutDetails.cartItem.productName}`,
+                                                                     },
+                                                                 ],
+                                                             });
+                                                         }}
+                                                         onApprove={(data, actions) => {
+                                                             return actions.order.capture().then((details) => {
+                                                                 console.log("Transaction details:", details);
+                                                                 handleConfirmOrder()
+                                                                     .then(() => {
+                                                                         console.log("Order confirmed successfully.");
+                                                                     })
+                                                                     .catch((err) => {
+                                                                         console.error("Error confirming order:", err);
+                                                                     });
+                                                             });
+                                                         }}
+                                                         onError={(err) => {
+                                                             alert("Zahlung fehlgeschlagen! Bitte versuchen Sie es erneut.");
+                                                             console.error(err);
+                                                         }}
+                                                     />
+                                                 </div>
+                                            </div>
+                                                <div className={"w-100 pb-3"}></div>
+                                            </>
+                                        ) : (
+
+                                                <div className={"row g-0 p-4 pb-3"}>
+                                                    <div style={{ display: !termsAccepted ? "none" : "block" }}>Bitte akzeptieren Sie die allgemeinen Geschäftsbedingungen, um fortzufahren.</div>
+                                                    <div className={"paypal-button-label-container col-sm-6 d-flex flex-column align-items-center"}>
+                                                        <PayPalPlaceholder />
+                                                    </div>
+
+                                                </div>
+                                            )
+                                        ) : (
+                                            <>
+                                                <div className={"w-100 pt-4"}></div>
+                                                <div className={"row g-0 p-4 product-detail-view rounded-4"}>
+                                                    <div className={"col"}>
+                                                        <h3>Zahlungsmethode Vorauskasse / Banküberweisung</h3>
+                                                        <div>Durch Anklicken des Buttons 'Kaufen' geben Sie eine verbindliche Bestellung der oben aufgelisteten Waren ab.
+                                                        Die Auftragsbestätigung erhalten Sie per E-Mail unmittelbar nach dem Absenden der Bestellung. Damit ist der Kaufvertrag geschlossen.</div>
+                                                        <div className={"row g-0 pt-4"}>
+                                                            <div className={"col-sm-6"}>
+                                                                <button className="btn btn-primary btn-green btn-100" onClick={handleConfirmOrder}  disabled={!termsAccepted}>Kaufen</button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div className={"w-100 pt-3"}></div>
+                                            </>
+                                        )}
                                     </div>
                                 )}
                             </div>
-                        )}
-                    </div>
-                    <div className="row g-0 p-4">
-                        <div className={"col col-sm-4"}>
-                            <button onClick={() => router.back()} className="btn btn-primary">zurück</button>
+                            <div className="row g-0 p-4 pt-3">
+                                <div className={"col col-sm-6"}>
+                                    <button onClick={() => router.back()} className="btn btn-primary btn-green btn-100" >
+                                        zurück
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <div className={"col-sm-4  text-center text-sm-end"}>
+                            <Pictos />
                         </div>
                     </div>
-                </div>
-            </main>
-            <footer>
-                <div className="container-fluid container-footer container-greencar">
-                    <div className="row g-0 p-4">
-                        {footerArticle?.introtext && (
-                            <div dangerouslySetInnerHTML={{ __html: footerArticle.introtext}} />
-                        )}
-                    </div>
-                </div>
-            </footer>
+
         </PayPalScriptProvider>
     );
 }

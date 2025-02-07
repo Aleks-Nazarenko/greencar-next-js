@@ -7,6 +7,7 @@ import Col from 'react-bootstrap/Col';
 import Row from 'react-bootstrap/Row';
 import {JOOMLA_URL_BASE} from "@/utils/config";
 import {JOOMLA_API_BASE} from "@/utils/config";
+import Pictos from "@/components/Pictos";
 
 function ProductImage({ src, alt, fallback }) {
     const [imgSrc, setImgSrc] = useState(src);
@@ -213,391 +214,408 @@ export default function CheckoutPage({footerArticle }) {
 
     return (
         <>
-            <main>
-                <div className="container-fluid container-greencar">
-                    {/* Cart Section */}
-                    <section>
-                        <h2>Warenkorb</h2>
+            <div className="row g-0">
+                <div className="col-sm-8">
                         {cartItem ? (
                             <>
-                                <div className={"row g-0 p-4"}>
-                                    {cartItem.productName.toLowerCase().includes('filterreinigung')? (
-                                        <ProductImage
-                                            src={`${JOOMLA_URL_BASE}/media/com_hikashop/upload/thumbnails/200x200/Filterreinigung-PKW-LKW-BUS-2.jpg`}
-                                            alt={cartItem.productName}
-                                            fallback={`${JOOMLA_URL_BASE}/media/com_hikashop/upload/thumbnails/200x200/Filterreinigung-PKW-LKW-BUS-2.jpg`}
-                                        />
-                                    ) : (
-                                        <ProductImage
-                                            src={`${JOOMLA_URL_BASE}/media/com_hikashop/upload/${cartItem.productImage}`}
-                                            alt={cartItem.productName}
-                                            fallback={`${JOOMLA_URL_BASE}/media/com_hikashop/upload/beispielphoto.jpg`}
-                                        />
-                                    )}
-                                </div>
-                                <div className="cart-item">
-                                    <p><strong>Product:</strong> {cartItem.productName}</p>
-                                    <p><strong>Price:</strong> {cartItem.basePrice} (inkl. MwSt.)</p>
-                                    {/* Conditionally render available options. ProductOptions sind hier absolut unnnötig !!!!!!!!!!!!!!!!!!!!!!!!! */}
-                                    {productOptions?.deposit?.isAvailable && (
-                                        <div><strong>{cartItem.options.deposit.label}:</strong> {cartItem.options.deposit.cost} (inkl. MwSt.)</div>
-                                    )}
-                                    {productOptions?.installation?.isAvailable && cartItem.options.installation &&(
-                                        <div><strong>{cartItem.options.installation.label}:</strong> {cartItem.options.installation.cost} (inkl. MwSt.)</div>
-                                    )}
-                                    {productOptions?.delivery?.isAvailable && cartItem.options.delivery && (
-                                        <p><strong>{cartItem.options.delivery.label}:</strong> {cartItem.options.delivery.cost} (inkl. MwSt.)</p>
 
-                                    )}
-                                    {cartItem.selectedDate && (
-                                        <>
-                                            <p><strong>Abholdatum des ausgebauten Partikelfilters:</strong> {cartItem.selectedDate}</p>
-                                            <p><strong>Zustellung des gereinigten Partikelfilters:</strong> {cartItem.nextDay}</p>
-                                        </>
-                                    )}
+                                {/* Cart Section */}
+                                <section>
 
-                                    {productOptions?.installation?.isAvailable && cartItem.options.installation ? (
-                                        <>
-                                            <div>Summe {cartItem.totalPrice} (inkl. MwSt.)</div>
-                                            <div>Anteil <b>Vorauszahlung*</b> für Produkte mit Einbau {formatPrice(calculateAdvancePayment(cartItem.totalPriceUnformatted, productOptions.advancePayment.cost))} (inkl. MwSt.)</div>
-                                        </>
-                                    ) : (
-                                        <div>Summe {formatPrice(displayTotalPrice)} (inkl. MwSt.)</div>
-                                    )}
-                                    <p><strong>MwSt.</strong> {formatPrice(vatShare)}</p>
-                                    <p><strong>Gesamtsumme</strong> {formatPrice(displayTotalPrice)}</p>
+                                    <div className="row g-0 p-4 product-detail-view rounded-4">
+                                        <div className={"col"}>
+                                            <div className={"row g-0"}>
+                                                <h2 className={"mb-3"}>Warenkorb</h2>
+                                            </div>
 
-                                </div>
-                                {/* Restbetrag wenn Vorauszahlung */}
-                                {productOptions?.installation?.isAvailable && cartItem.options.installation && (
-                                    <div className="cart-item restbetrag">
-                                        <div>
-                                            * Vorauszahlung:
 
-                                            Die Vorauszahlung bei Produkten mit Einbau: 10% des Produktpreises bei Pkw und 20% bei LKW.
-                                            Den Restbetrag entrichten Sie bitte nach Einbau direkt an die von Ihnen gewählte Einbau-Werkstatt.
-                                        </div>
-                                        <div>
-                                            Restbetrag: {formatPrice(calculateRemainingAmount(cartItem.totalPriceUnformatted, calculateAdvancePayment(cartItem.totalPriceUnformatted, productOptions.advancePayment.cost)))}
+                                            <div className={"row g-0"}>
+                                                {cartItem.productName.toLowerCase().includes('filterreinigung')? (
+                                                    <ProductImage
+                                                        src={`${JOOMLA_URL_BASE}/images/Filterreinigung-PKW-LKW-BUS-2.jpg`}
+                                                        alt={cartItem.productName}
+                                                        fallback={`${JOOMLA_URL_BASE}/images/Filterreinigung-PKW-LKW-BUS-2.jpg`}
+                                                    />
+                                                ) : (
+                                                    <ProductImage
+                                                        src={`${JOOMLA_URL_BASE}/media/com_hikashop/upload/${cartItem.productImage}`}
+                                                        alt={cartItem.productName}
+                                                        fallback={`${JOOMLA_URL_BASE}/media/com_hikashop/upload/beispielphoto.jpg`}
+                                                    />
+                                                )}
+                                            </div>
+                                            <div className={"w-100 pb-3"}></div>
+                                            <div className="cart-item">
+                                                <p><strong>Product:</strong> {cartItem.productName}</p>
+                                                <p><strong>Price:</strong> {cartItem.basePrice} (inkl. MwSt.)</p>
+                                                {/* Conditionally render available options. ProductOptions sind hier absolut unnnötig !!!!!!!!!!!!!!!!!!!!!!!!! */}
+                                                {productOptions?.deposit?.isAvailable && (
+                                                    <p><strong>{cartItem.options.deposit.label}:</strong> {cartItem.options.deposit.cost} (inkl. MwSt.)</p>
+                                                )}
+                                                {productOptions?.installation?.isAvailable && cartItem.options.installation &&(
+                                                    <p><strong>{cartItem.options.installation.label}:</strong> {cartItem.options.installation.cost} (inkl. MwSt.)</p>
+                                                )}
+                                                {productOptions?.delivery?.isAvailable && cartItem.options.delivery && (
+                                                    <p><strong>{cartItem.options.delivery.label}:</strong> {cartItem.options.delivery.cost} (inkl. MwSt.)</p>
+
+                                                )}
+                                                {cartItem.selectedDate && (
+                                                    <>
+                                                        <p><strong>Abholdatum des ausgebauten Partikelfilters:</strong> {cartItem.selectedDate}</p>
+                                                        <p><strong>Zustellung des gereinigten Partikelfilters:</strong> {cartItem.nextDay}</p>
+                                                    </>
+                                                )}
+
+                                                {productOptions?.installation?.isAvailable && cartItem.options.installation ? (
+                                                    <>
+                                                        <p><strong>Summe:</strong> {cartItem.totalPrice} (inkl. MwSt.)</p>
+                                                        <p>Anteil <strong>Vorauszahlung*</strong> für Produkte mit Einbau: {formatPrice(calculateAdvancePayment(cartItem.totalPriceUnformatted, productOptions.advancePayment.cost))} (inkl. MwSt.)</p>
+                                                    </>
+                                                ) : (
+                                                    <p><strong>Summe:</strong> {formatPrice(displayTotalPrice)} (inkl. MwSt.)</p>
+                                                )}
+                                                <p><strong>MwSt.</strong> {formatPrice(vatShare)}</p>
+                                                <h3 className={"gc-green"}>Gesamtsumme: {formatPrice(displayTotalPrice)}</h3>
+
+                                            </div>
+                                            {/* Restbetrag wenn Vorauszahlung */}
+                                            {productOptions?.installation?.isAvailable && cartItem.options.installation && (
+                                                <div className="cart-item restbetrag">
+                                                    <div>
+                                                        <strong><span className={""}>* Vorauszahlung:</span></strong><br/>
+
+                                                        Die Vorauszahlung bei Produkten mit Einbau: 10% des Produktpreises bei Pkw und 20% bei LKW.
+                                                        Den Restbetrag entrichten Sie bitte nach Einbau direkt an die von Ihnen gewählte Einbau-Werkstatt.
+                                                    </div>
+                                                    <div className={"w-100 pb-3"}></div>
+                                                    <div>
+                                                        <p><strong>Restbetrag: </strong><span className={""}> {formatPrice(calculateRemainingAmount(cartItem.totalPriceUnformatted, calculateAdvancePayment(cartItem.totalPriceUnformatted, productOptions.advancePayment.cost)))}</span></p>
+                                                    </div>
+                                                </div>
+                                            )}
+                                            {/* Land and City if available */}
+                                            {productOptions?.installation?.isAvailable && cartItem.options.installation && (
+                                                <div className="cart-item cart-werkstatt">
+                                                    Ihre Werkstatt: {cartItem.cityName} <br/>
+                                                    (Genaue Angabe folgt, wir setzen uns nach Abschluss der Bestellung mit Ihnen in Verbindung.)
+
+                                                </div>
+                                            )}
+
                                         </div>
                                     </div>
-                                )}
-                                {/* Land and City if available */}
-                                {productOptions?.installation?.isAvailable && cartItem.options.installation && (
-                                    <div className="cart-item cart-werkstatt">
-                                        Ihre Werkstatt: {cartItem.cityName} <br/>
-                                        (Genaue Angabe folgt, wir setzen uns nach Abschluss der Bestellung mit Ihnen in Verbindung.)
 
-                                    </div>
-                                )}
+                                </section>
+                                <div className={"w-100 pb-4"}></div>
+                                {/* Billing Address Section */}
+                                <section>
+
+                                    <Form noValidate validated={validated} onSubmit={handleSubmit}>
+                                        <div className="row g-0 p-4 product-detail-view rounded-4">
+                                            <div className={"col"}>
+                                                    <h2 className={"mb-3"}>Ihre Rechnungsadresse</h2>
+                                                    <Row className="mb-3 g-0">
+                                                        <Form.Group as={Col} md="6" controlId="billingSalutation">
+                                                            <Form.Label>Anrede <span className="required">*</span></Form.Label>
+                                                            <Form.Select
+                                                                required
+                                                                name="salutation"
+                                                                value={billingAddress.salutation}
+                                                                onChange={handleBillingAddressChange}
+                                                            >
+                                                                <option value="Herr">Herr</option>
+                                                                <option value="Frau">Frau</option>
+                                                                <option value="Firma">Firma</option>
+                                                            </Form.Select>
+                                                        </Form.Group>
+                                                    </Row>
+                                                    <Row className="mb-3">
+                                                        <Form.Group as={Col} md="6" controlId="billingFullName">
+                                                            <Form.Label>Name <span className="required">*</span></Form.Label>
+                                                            <Form.Control
+                                                                required
+                                                                type="text"
+                                                                name="fullName"
+                                                                value={billingAddress.fullName}
+                                                                onChange={handleBillingAddressChange}
+                                                            />
+                                                            <Form.Control.Feedback type="invalid">
+                                                                Bitte geben Sie Ihren vollständigen Namen ein
+                                                            </Form.Control.Feedback>
+                                                        </Form.Group>
+                                                        <Form.Group as={Col} md="6" controlId="billingEmail">
+                                                            <Form.Label>Email <span className="required">*</span></Form.Label>
+                                                            <Form.Control
+                                                                required
+                                                                type="email"
+                                                                name="email"
+                                                                value={billingAddress.email}
+                                                                onChange={handleBillingAddressChange}
+                                                                isInvalid={!!errorEmail}
+                                                            />
+                                                            <Form.Control.Feedback type="invalid">
+                                                                { errorEmail || 'Bitte geben Sie Ihre E-Mail-Adresse ein' }
+                                                            </Form.Control.Feedback>
+                                                        </Form.Group>
+                                                    </Row>
+
+                                                    <Row className="mb-3">
+                                                        <Form.Group as={Col} md="6" controlId="billingPhone">
+                                                            <Form.Label>Telefon <span className="required">*</span></Form.Label>
+                                                            <Form.Control
+                                                                required
+                                                                type="tel"
+                                                                name="phone"
+                                                                value={billingAddress.phone}
+                                                                onChange={handleBillingAddressChange}
+                                                            />
+                                                            <Form.Control.Feedback type="invalid">
+                                                                Bitte geben Sie Ihre Telefonnummer ein
+                                                            </Form.Control.Feedback>
+                                                        </Form.Group>
+                                                        <Form.Group as={Col} md="6" controlId="billingStreet">
+                                                            <Form.Label>Straße <span className="required">*</span></Form.Label>
+                                                            <Form.Control
+                                                                required
+                                                                type="text"
+                                                                name="street"
+                                                                value={billingAddress.street}
+                                                                onChange={handleBillingAddressChange}
+                                                            />
+                                                            <Form.Control.Feedback type="invalid">
+                                                               Bitte geben Sie die Straße ein
+                                                            </Form.Control.Feedback>
+                                                        </Form.Group>
+                                                    </Row>
+
+                                                    <Row className="mb-3">
+                                                        <Form.Group as={Col} md="4" controlId="billingCity">
+                                                            <Form.Label>Ort <span className="required">*</span></Form.Label>
+                                                            <Form.Control
+                                                                required
+                                                                type="text"
+                                                                name="city"
+                                                                value={billingAddress.city}
+                                                                onChange={handleBillingAddressChange}
+                                                            />
+                                                            <Form.Control.Feedback type="invalid">
+                                                                Bitte geben Sie den Ort ein
+                                                            </Form.Control.Feedback>
+                                                        </Form.Group>
+                                                        <Form.Group as={Col} md="4" controlId="billingFirma">
+                                                            <Form.Label>Firma</Form.Label>
+                                                            <Form.Control
+                                                                type="text"
+                                                                name="firma"
+                                                                value={billingAddress.firma}
+                                                                onChange={handleBillingAddressChange}
+                                                            />
+                                                        </Form.Group>
+                                                        <Form.Group as={Col} md="4" controlId="billingZipCode">
+                                                            <Form.Label>PLZ <span className="required">*</span></Form.Label>
+                                                            <Form.Control
+                                                                required
+                                                                type="text"
+                                                                name="zipCode"
+                                                                value={billingAddress.zipCode}
+                                                                onChange={handleBillingAddressChange}
+                                                            />
+                                                            <Form.Control.Feedback type="invalid">
+                                                               Bitte geben Sie die Postleitzahl ein
+                                                            </Form.Control.Feedback>
+                                                        </Form.Group>
+                                                    </Row>
+
+                                                    <Form.Group className="mb-3 mt-4">
+                                                        <Form.Check
+                                                            type="checkbox"
+                                                            label="Rechnungsadresse entspricht der Abhol- und Zustelladresse"
+                                                            checked={sameAsBilling}
+                                                            onChange={() => setSameAsBilling((prev) => !prev)}
+                                                        />
+                                                    </Form.Group>
+
+                                                    {!sameAsBilling &&(
+                                                        <>
+                                                            <h2 className={"pb-3 pt-2"}>Abhol- und Zustelladresse</h2>
+                                                            {/* Repeat shipping address fields, using handleShippingAddressChange */}
+                                                            <Row className="mb-3 g-0">
+                                                                <Form.Group as={Col} md="6" controlId="shippingSalutation">
+                                                                    <Form.Label>Anrede <span className="required">*</span></Form.Label>
+                                                                    <Form.Select
+                                                                        required
+                                                                        name="salutation"
+                                                                        value={shippingAddress.salutation}
+                                                                        onChange={handleShippingAddressChange}
+                                                                    >
+                                                                        <option value="Herr">Herr</option>
+                                                                        <option value="Frau">Frau</option>
+                                                                        <option value="Firma">Firma</option>
+                                                                    </Form.Select>
+                                                                </Form.Group>
+                                                            </Row>
+                                                            <Row className="mb-3">
+                                                                <Form.Group as={Col} md="6" controlId="shippingFullName">
+                                                                    <Form.Label>Name <span className="required">*</span></Form.Label>
+                                                                    <Form.Control
+                                                                        required
+                                                                        type="text"
+                                                                        name="fullName"
+                                                                        value={shippingAddress.fullName}
+                                                                        onChange={handleShippingAddressChange}
+                                                                    />
+                                                                    <Form.Control.Feedback type="invalid">
+                                                                        Bitte geben Sie den vollständigen Namen ein
+                                                                    </Form.Control.Feedback>
+                                                                </Form.Group>
+                                                                <Form.Group as={Col} md="6" controlId="shippingEmail">
+                                                                    <Form.Label>Email <span className="required">*</span></Form.Label>
+                                                                    <Form.Control
+                                                                        required
+                                                                        type="email"
+                                                                        name="email"
+                                                                        value={shippingAddress.email}
+                                                                        onChange={handleShippingAddressChange}
+                                                                    />
+                                                                    <Form.Control.Feedback type="invalid">
+                                                                        Bitte geben Sie die E-Mail-Adresse ein
+                                                                    </Form.Control.Feedback>
+                                                                </Form.Group>
+                                                            </Row>
+                                                            <Row className="mb-3">
+                                                                <Form.Group as={Col} md="6" controlId="shippingPhone">
+                                                                    <Form.Label>Telefon <span className="required">*</span></Form.Label>
+                                                                    <Form.Control
+                                                                        required
+                                                                        type="tel"
+                                                                        name="phone"
+                                                                        value={shippingAddress.phone}
+                                                                        onChange={handleShippingAddressChange}
+                                                                    />
+                                                                    <Form.Control.Feedback type="invalid">
+                                                                        Bitte geben Sie die Telefonnummer ein
+                                                                    </Form.Control.Feedback>
+                                                                </Form.Group>
+                                                                <Form.Group as={Col} md="6" controlId="shippingStreet">
+                                                                    <Form.Label>Straße <span className="required">*</span></Form.Label>
+                                                                    <Form.Control
+                                                                        required
+                                                                        type="text"
+                                                                        name="street"
+                                                                        value={shippingAddress.street}
+                                                                        onChange={handleShippingAddressChange}
+                                                                    />
+                                                                    <Form.Control.Feedback type="invalid">
+                                                                        Bitte geben Sie die Straße ein
+                                                                    </Form.Control.Feedback>
+                                                                </Form.Group>
+                                                            </Row>
+
+                                                            <Row className="mb-3">
+                                                                <Form.Group as={Col} md="4" controlId="shippingCity">
+                                                                    <Form.Label>Ort <span className="required">*</span></Form.Label>
+                                                                    <Form.Control
+                                                                        required
+                                                                        type="text"
+                                                                        name="city"
+                                                                        value={shippingAddress.city}
+                                                                        onChange={handleShippingAddressChange}
+                                                                    />
+                                                                    <Form.Control.Feedback type="invalid">
+                                                                        Bitte geben Sie den Ort ein
+                                                                    </Form.Control.Feedback>
+                                                                </Form.Group>
+                                                                <Form.Group as={Col} md="4" controlId="shippingFirma">
+                                                                    <Form.Label>Firma</Form.Label>
+                                                                    <Form.Control
+                                                                        type="text"
+                                                                        name="firma"
+                                                                        value={shippingAddress.firma}
+                                                                        onChange={handleShippingAddressChange}
+                                                                    />
+                                                                </Form.Group>
+                                                                <Form.Group as={Col} md="4" controlId="shippingZipCode">
+                                                                    <Form.Label>ZIP <span className="required">*</span></Form.Label>
+                                                                    <Form.Control
+                                                                        required
+                                                                        type="text"
+                                                                        name="zipCode"
+                                                                        value={shippingAddress.zipCode}
+                                                                        onChange={handleShippingAddressChange}
+                                                                    />
+                                                                    <Form.Control.Feedback type="invalid">
+                                                                        Bitte geben Sie die Postleitzahl ein
+                                                                    </Form.Control.Feedback>
+                                                                </Form.Group>
+                                                            </Row>
+                                                        </>
+                                                    )}
+                                                    <div className="row g-0 pt-2">
+                                                        <div className="w-100">
+                                                            Felder, die mit einem Stern (<span className={"required"}>*</span>) markiert sind, werden unbedingt benötigt.
+                                                        </div>
+                                                    </div>
+                                            </div>
+                                        </div>
+                                        <div className={"w-100 pb-4"}></div>
+                                        <div className="row g-0 p-4 product-detail-view rounded-4">
+                                            <div className={"col"}>
+                                                    <h2>Payment Method</h2>
+                                                    <Row className="mb-3">
+                                                        <Col sm={12}>
+                                                            {/* Advance Payment Option */}
+                                                            <Form.Check
+                                                                type="radio"
+                                                                label="Advance Payment"
+                                                                name="paymentMethod"
+                                                                value="advance-payment"
+                                                                checked={paymentMethod === "advance-payment"}
+                                                                onChange={handlePaymentChange}
+                                                                id="advancePaymentOption"
+                                                            />
+                                                            <div className={"w-100 pb-2"}></div>
+                                                            {/* PayPal Option */}
+                                                            <Form.Check
+                                                                type="radio"
+                                                                label="PayPal"
+                                                                name="paymentMethod"
+                                                                value="paypal"
+                                                                checked={paymentMethod === "paypal"}
+                                                                onChange={handlePaymentChange}
+                                                                id="paypalOption"
+                                                            />
+                                                        </Col>
+                                                    </Row>
+                                                </div>
+                                        </div>
+                                        <div className="row g-0 p-4 pb-3">
+                                            <div className={"col col-sm-6"}>
+                                                <Button type="submit" className="btn btn-primary btn-green btn-100">weiter</Button>
+                                            </div>
+                                        </div>
+                                    </Form>
+
+                                </section>
+
                             </>
                         ) : (
-                            <p>Ihr Warenkorb is leer</p>
-                        )}
-                    </section>
-
-                    {/* Billing Address Section */}
-                    <section>
-                        <Form noValidate validated={validated} onSubmit={handleSubmit}>
-                            <h2>Ihre Rechnungsadresse</h2>
-                            <Row className="mb-3 g-0">
-                                <Form.Group as={Col} md="6" controlId="billingSalutation">
-                                    <Form.Label>Anrede <span className="required">*</span></Form.Label>
-                                    <Form.Select
-                                        required
-                                        name="salutation"
-                                        value={billingAddress.salutation}
-                                        onChange={handleBillingAddressChange}
-                                    >
-                                        <option value="Herr">Herr</option>
-                                        <option value="Frau">Frau</option>
-                                        <option value="Firma">Firma</option>
-                                    </Form.Select>
-                                </Form.Group>
-                            </Row>
-                            <Row className="mb-3">
-                                <Form.Group as={Col} md="6" controlId="billingFullName">
-                                    <Form.Label>Full Name <span className="required">*</span></Form.Label>
-                                    <Form.Control
-                                        required
-                                        type="text"
-                                        placeholder="Enter your full name"
-                                        name="fullName"
-                                        value={billingAddress.fullName}
-                                        onChange={handleBillingAddressChange}
-                                    />
-                                    <Form.Control.Feedback type="invalid">
-                                        Please provide your full name.
-                                    </Form.Control.Feedback>
-                                </Form.Group>
-                                <Form.Group as={Col} md="6" controlId="billingEmail">
-                                    <Form.Label>Email <span className="required">*</span></Form.Label>
-                                    <Form.Control
-                                        required
-                                        type="email"
-                                        placeholder="Enter your email"
-                                        name="email"
-                                        value={billingAddress.email}
-                                        onChange={handleBillingAddressChange}
-                                        isInvalid={!!errorEmail}
-                                    />
-                                    <Form.Control.Feedback type="invalid">
-                                        { errorEmail || 'Bitte geben Sie Ihre E-Mail-Adresse ein' }
-                                    </Form.Control.Feedback>
-                                </Form.Group>
-                            </Row>
-
-                            <Row className="mb-3">
-                                <Form.Group as={Col} md="6" controlId="billingPhone">
-                                    <Form.Label>Phone <span className="required">*</span></Form.Label>
-                                    <Form.Control
-                                        required
-                                        type="tel"
-                                        placeholder="Enter your phone number"
-                                        name="phone"
-                                        value={billingAddress.phone}
-                                        onChange={handleBillingAddressChange}
-                                    />
-                                    <Form.Control.Feedback type="invalid">
-                                        Please provide a valid phone number.
-                                    </Form.Control.Feedback>
-                                </Form.Group>
-                                <Form.Group as={Col} md="6" controlId="billingStreet">
-                                    <Form.Label>Street Address <span className="required">*</span></Form.Label>
-                                    <Form.Control
-                                        required
-                                        type="text"
-                                        placeholder="Enter your street address"
-                                        name="street"
-                                        value={billingAddress.street}
-                                        onChange={handleBillingAddressChange}
-                                    />
-                                    <Form.Control.Feedback type="invalid">
-                                        Please provide a valid street address.
-                                    </Form.Control.Feedback>
-                                </Form.Group>
-                            </Row>
-
-                            <Row className="mb-3">
-                                <Form.Group as={Col} md="4" controlId="billingCity">
-                                    <Form.Label>City <span className="required">*</span></Form.Label>
-                                    <Form.Control
-                                        required
-                                        type="text"
-                                        placeholder="Enter your city"
-                                        name="city"
-                                        value={billingAddress.city}
-                                        onChange={handleBillingAddressChange}
-                                    />
-                                    <Form.Control.Feedback type="invalid">
-                                        Please provide a valid city.
-                                    </Form.Control.Feedback>
-                                </Form.Group>
-                                <Form.Group as={Col} md="4" controlId="billingFirma">
-                                    <Form.Label>Firma</Form.Label>
-                                    <Form.Control
-                                        type="text"
-                                        placeholder="Enter your firma"
-                                        name="firma"
-                                        value={billingAddress.firma}
-                                        onChange={handleBillingAddressChange}
-                                    />
-                                </Form.Group>
-                                <Form.Group as={Col} md="4" controlId="billingZipCode">
-                                    <Form.Label>Zip Code <span className="required">*</span></Form.Label>
-                                    <Form.Control
-                                        required
-                                        type="text"
-                                        placeholder="Enter your zip code"
-                                        name="zipCode"
-                                        value={billingAddress.zipCode}
-                                        onChange={handleBillingAddressChange}
-                                    />
-                                    <Form.Control.Feedback type="invalid">
-                                        Please provide a valid zip code.
-                                    </Form.Control.Feedback>
-                                </Form.Group>
-                            </Row>
-
-                            <Form.Group className="mb-3">
-                                <Form.Check
-                                    type="checkbox"
-                                    label="Rechnungsadresse entspricht der Abhol- und Zustelladresse"
-                                    checked={sameAsBilling}
-                                    onChange={() => setSameAsBilling((prev) => !prev)}
-                                />
-                            </Form.Group>
-
-                            {!sameAsBilling &&(
-                                <>
-                                    <h2>Abhol- und Zustelladresse</h2>
-                                    {/* Repeat shipping address fields, using handleShippingAddressChange */}
-                                    <Row className="mb-3 g-0">
-                                        <Form.Group as={Col} md="6" controlId="shippingSalutation">
-                                            <Form.Label>Anrede <span className="required">*</span></Form.Label>
-                                            <Form.Select
-                                                required
-                                                name="salutation"
-                                                value={shippingAddress.salutation}
-                                                onChange={handleShippingAddressChange}
-                                            >
-                                                <option value="Herr">Herr</option>
-                                                <option value="Frau">Frau</option>
-                                                <option value="Firma">Firma</option>
-                                            </Form.Select>
-                                        </Form.Group>
-                                    </Row>
-                                    <Row className="mb-3">
-                                        <Form.Group as={Col} md="6" controlId="shippingFullName">
-                                            <Form.Label>Full Name <span className="required">*</span></Form.Label>
-                                            <Form.Control
-                                                required
-                                                type="text"
-                                                placeholder="Enter your full name"
-                                                name="fullName"
-                                                value={shippingAddress.fullName}
-                                                onChange={handleShippingAddressChange}
-                                            />
-                                            <Form.Control.Feedback type="invalid">
-                                                Please provide your full name.
-                                            </Form.Control.Feedback>
-                                        </Form.Group>
-                                        <Form.Group as={Col} md="6" controlId="shippingEmail">
-                                            <Form.Label>Email <span className="required">*</span></Form.Label>
-                                            <Form.Control
-                                                required
-                                                type="email"
-                                                placeholder="Enter your email"
-                                                name="email"
-                                                value={shippingAddress.email}
-                                                onChange={handleShippingAddressChange}
-                                            />
-                                            <Form.Control.Feedback type="invalid">
-                                                Please provide a valid email address.
-                                            </Form.Control.Feedback>
-                                        </Form.Group>
-                                    </Row>
-                                    <Row className="mb-3">
-                                        <Form.Group as={Col} md="6" controlId="shippingPhone">
-                                            <Form.Label>Phone <span className="required">*</span></Form.Label>
-                                            <Form.Control
-                                                required
-                                                type="tel"
-                                                placeholder="Enter your phone number"
-                                                name="phone"
-                                                value={shippingAddress.phone}
-                                                onChange={handleShippingAddressChange}
-                                            />
-                                            <Form.Control.Feedback type="invalid">
-                                                Please provide a valid phone number.
-                                            </Form.Control.Feedback>
-                                        </Form.Group>
-                                        <Form.Group as={Col} md="6" controlId="shippingStreet">
-                                            <Form.Label>Street Address <span className="required">*</span></Form.Label>
-                                            <Form.Control
-                                                required
-                                                type="text"
-                                                placeholder="Enter your street address"
-                                                name="street"
-                                                value={shippingAddress.street}
-                                                onChange={handleShippingAddressChange}
-                                            />
-                                            <Form.Control.Feedback type="invalid">
-                                                Please provide a valid street address.
-                                            </Form.Control.Feedback>
-                                        </Form.Group>
-                                    </Row>
-
-                                    <Row className="mb-3">
-                                        <Form.Group as={Col} md="4" controlId="shippingCity">
-                                            <Form.Label>City <span className="required">*</span></Form.Label>
-                                            <Form.Control
-                                                required
-                                                type="text"
-                                                placeholder="Enter your city"
-                                                name="city"
-                                                value={shippingAddress.city}
-                                                onChange={handleShippingAddressChange}
-                                            />
-                                            <Form.Control.Feedback type="invalid">
-                                                Please provide a valid city.
-                                            </Form.Control.Feedback>
-                                        </Form.Group>
-                                        <Form.Group as={Col} md="4" controlId="shippingFirma">
-                                            <Form.Label>Firma</Form.Label>
-                                            <Form.Control
-                                                type="text"
-                                                placeholder="Enter your firma"
-                                                name="firma"
-                                                value={shippingAddress.firma}
-                                                onChange={handleShippingAddressChange}
-                                            />
-                                        </Form.Group>
-                                        <Form.Group as={Col} md="4" controlId="shippingZipCode">
-                                            <Form.Label>Zip Code <span className="required">*</span></Form.Label>
-                                            <Form.Control
-                                                required
-                                                type="text"
-                                                placeholder="Enter your zip code"
-                                                name="zipCode"
-                                                value={shippingAddress.zipCode}
-                                                onChange={handleShippingAddressChange}
-                                            />
-                                            <Form.Control.Feedback type="invalid">
-                                                Please provide a valid zip code.
-                                            </Form.Control.Feedback>
-                                        </Form.Group>
-                                    </Row>
-                                </>
-                            )}
-                            <div className="row g-0 ">
-                                <div className="w-100">
-                                    Felder, die mit einem Stern (<span className={"required"}>*</span>) markiert sind, werden unbedingt benötigt.
-                                </div>
+                            <div className={"row g-0 p-4 product-detail-view rounded-4"}>
+                                <h1>Ihr Warenkorb is leer</h1>
                             </div>
-                            <h2>Payment Method</h2>
-                            <Row className="mb-3">
-                                <Col sm={12}>
-                                    {/* Advance Payment Option */}
-                                    <Form.Check
-                                        type="radio"
-                                        label="Advance Payment"
-                                        name="paymentMethod"
-                                        value="advance-payment"
-                                        checked={paymentMethod === "advance-payment"}
-                                        onChange={handlePaymentChange}
-                                        id="advancePaymentOption"
-                                    />
-                                    {/* PayPal Option */}
-                                    <Form.Check
-                                        type="radio"
-                                        label="PayPal"
-                                        name="paymentMethod"
-                                        value="paypal"
-                                        checked={paymentMethod === "paypal"}
-                                        onChange={handlePaymentChange}
-                                        id="paypalOption"
-                                    />
-                                </Col>
-                            </Row>
-
-                            <Button type="submit">weiter</Button>
-                        </Form>
-                    </section>
-                    <div className="row g-0 p-4">
-                        <button onClick={() => router.back()} className="btn btn-primary">zurück</button>
-                    </div>
-                </div>
-            </main>
-            <footer>
-                <div className="container-fluid container-footer container-greencar">
-                    <div className="row g-0 p-4">
-                        {footerArticle?.introtext && (
-                            <div dangerouslySetInnerHTML={{ __html: footerArticle.introtext}} />
                         )}
+
+                        <div className="row g-0 p-4 pt-3">
+                            <div className={"col col-sm-6"}>
+                                <button onClick={() => router.back()} className="btn btn-primary btn-green btn-100" >
+                                    zurück
+                                </button>
+                            </div>
+                        </div>
                     </div>
+                <div className={"col-sm-4  text-center text-sm-end"}>
+                    <Pictos />
                 </div>
-            </footer>
+            </div>
         </>
     );
 }
