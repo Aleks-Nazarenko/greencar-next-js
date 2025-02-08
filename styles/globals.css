@@ -197,6 +197,34 @@ ul.list-arrow {
   list-style: none;
 }
 
+.custom-list {
+  list-style: none; /* Remove default bullets */
+  padding-left: 0;
+}
+
+.custom-list li {
+  position: relative;
+  padding-left: 30px; /* Space for the SVG icon */
+}
+
+.custom-list li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 4px;
+  width: 20px;
+  height: 20px;
+  background-image: url("../public/images/icons/arrow.svg"); /* ✅ Set SVG as bullet */
+  background-size: contain;
+  background-repeat: no-repeat;
+}
+ul.arrow-list{
+  list-style: none;
+  padding-left: 0;
+}
+ul.arrow-list li svg {
+  margin-right: 10px;
+}
 .swiper {
   width: 100%;
   height: auto;

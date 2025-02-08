@@ -1,11 +1,11 @@
-import Head from "next/head";
-import Image from "next/image";
+import Form from 'react-bootstrap/Form';
 import axios from 'axios';
 import Link from "next/link";
 import {convertRelativeUrls} from "@/utils/convertRelativeUrls";
 import { useRouter } from 'next/router';
 import {JOOMLA_API_BASE} from "@/utils/config";
 import {JOOMLA_URL_BASE} from "@/utils/config";
+import Image from "next/image";
 
 
 export async function getStaticProps() {
@@ -21,23 +21,22 @@ export async function getStaticProps() {
         });
     //  console.log(products);
 
-    // Fetch data for the footer from Joomla API
-    const resFooter = await fetch(`${JOOMLA_API_BASE}&task=articleWithModules&id=2&format=json`);
-    const footerData = await resFooter.json();
+    const resArticle = await fetch(`${JOOMLA_API_BASE}&task=articleWithModules&id=18&format=json`);
+    const articleData = await resArticle.json();
     // Extract the footer article from the response
-    const footerArticle = footerData.article || null;
-    if (footerArticle) {
-        footerArticle.introtext = footerArticle.introtext ? convertRelativeUrls(footerArticle.introtext, joomlaBaseUrl) : '';
-        if (!footerArticle.introtext) {
-            console.log('footerArticle.introtext not found');
+    const article = articleData.article || null;
+    if (article) {
+        article.content = article.content ? convertRelativeUrls(article.content, joomlaBaseUrl) : '';
+        if (!article.content) {
+            console.log('footerArticle.content not found');
         }
     }
     // Pass data to the page via props
-    return { props: { categories, footerArticle } };
+    return { props: { categories, article } };
 }
 
 
-export default function NachruestfilterCategories({ categories, footerArticle }) {
+export default function NachruestfilterCategories({ categories, article }) {
     const router = useRouter();
 
     const handleCategoryChange = (event) => {
@@ -48,20 +47,15 @@ export default function NachruestfilterCategories({ categories, footerArticle })
     };
     return (
         <>
-            <main>
-                <div className="container-fluid container-greencar">
-                    <div className="row g-0 p-4">
-                        <h1>PKW - Austauschfilter</h1>
+            <div className={"row g-0 pb-3"}>
+                <h1 className={"pb-1"}>PKW - Austauschfilter</h1>
+                <h4>Bitte wählen Sie zunächst den Hersteller Ihres Pkw und danach ggf. das Modell. Anschließend stellen wir Ihnen unsere Produktauswahl an passenden Austaustauschfiltern vor.</h4>
+            </div>
+            <div className="w-100 pb-4"></div>
+            <div className="row g-0 p-3 p-sm-4 product-detail-view rounded-4">
+                <div className="col d-flex align-items-center">
                         {categories.length > 0 && (
-                            <>
-                                <ul>
-                                    {categories.map(category => (
-                                        <li key={category.category_id}>
-                                            <Link href={`/pkw-partikelfilter/pkw-austauschfilter/${category.category_id}-${category.category_name.toLowerCase().replace(/\s+/g, '-')}`}>{category.category_name}</Link>
-                                        </li>
-                                    ))}
-                                </ul>
-                                <select
+                                <Form.Select
                                     id="categorySelect"
                                     onChange={handleCategoryChange}
                                     defaultValue="" // Add a default option
@@ -75,21 +69,43 @@ export default function NachruestfilterCategories({ categories, footerArticle })
                                             {category.category_name}
                                         </option>
                                     ))}
-                                </select>
-                            </>
+                                </Form.Select>
+
                         )}
-                    </div>
                 </div>
-            </main>
-            <footer>
-                <div className="container-fluid container-footer container-greencar">
-                    <div className="row g-0 p-4">
-                        {footerArticle?.introtext && (
-                            <div dangerouslySetInnerHTML={{ __html: footerArticle.introtext}} />
+                <div className="col text-end d-none d-sm-block">
+                    <Image src={"/images/icons/pkw-austauschfilter.png"} alt={"austauchfilter"} width={190} height={190} className={"img-fluid"}/>
+                </div>
+            </div>
+            <div className="w-100 pb-4"></div>
+            <div className="w-100 pb-3"></div>
+
+            <div className="row g-0">
+                        {article?.content && (
+                            <div dangerouslySetInnerHTML={{ __html: article.content}} />
                         )}
-                    </div>
+            </div>
+            <div className="w-100 pb-4"></div>
+            <div className="row g-0">
+                <div className="col">
+                    {categories.length > 0 && (
+
+                        <ul className={"arrow-list"}>
+                            {categories.map(category => (
+                                <li key={category.category_id}>
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="#45CA25"
+                                         className="bi bi-caret-right-fill" viewBox="0 0 16 16">
+                                        <path
+                                            d="m12.14 8.753-5.482 4.796c-.646.566-1.658.106-1.658-.753V3.204a1 1 0 0 1 1.659-.753l5.48 4.796a1 1 0 0 1 0 1.506z"/>
+                                    </svg>
+                                    <Link href={`/pkw-partikelfilter/pkw-austauschfilter/${category.category_id}-${category.category_name.toLowerCase().replace(/\s+/g, '-')}`}>{category.category_name}</Link>
+                                </li>
+                            ))}
+                        </ul>
+                    )}
                 </div>
-            </footer>
+            </div>
+
         </>
     );
 }

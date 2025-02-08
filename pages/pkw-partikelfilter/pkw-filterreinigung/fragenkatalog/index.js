@@ -55,7 +55,7 @@ export default function AnfrageHaendlerpreis({article, article2, article3}) {
 
             <Row className="g-0">
                 <Col sm={"8"}>
-                    <Row className="g-0 p-4 product-detail-view rounded-4">
+                    <Row className="g-0 p-3 p-sm-4 product-detail-view rounded-4">
                         <Col sm={"12"} className={"mb-3"}>
                             <Row className={"g-0"}>
                                 <Col sm={"12"}>

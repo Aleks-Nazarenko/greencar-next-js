@@ -148,89 +148,172 @@ export default function CheckoutStep2({footerArticle, termsArticle})   {
                             <div className="row g-0">
                                 {checkoutDetails && (
                                     <div className={"col"}>
-                                        <div className={"row g-0 p-4 product-detail-view rounded-4"}>
+                                        <div className={"row g-0 p-3 p-sm-4 product-detail-view rounded-4"}>
                                             <div className={"col"}>
-                                                <div className={"row g-0 mb-3"}>
-                                                    <h2>Bestellzusammenfassung</h2>
-                                        </div>
+                                                <div className={"row g-0"}>
+                                                    <h2 className={" mb-3"}>Bestellzusammenfassung</h2>
+                                                </div>
                                                 <div className={"row g-0 "}>
-                                            {checkoutDetails.cartItem.productName.toLowerCase().includes('filterreinigung')? (
-                                                <ProductImage
-                                                    src={`${JOOMLA_URL_BASE}/images/Filterreinigung-PKW-LKW-BUS-2.jpg`}
-                                                    alt={checkoutDetails.cartItem.productName}
-                                                    fallback={`${JOOMLA_URL_BASE}/images/Filterreinigung-PKW-LKW-BUS-2.jpg`}
-                                                />
-                                            ) : (
-                                                <ProductImage
-                                                    src={`${JOOMLA_URL_BASE}/media/com_hikashop/upload/${checkoutDetails.cartItem.productImage}`}
-                                                    alt={checkoutDetails.cartItem.productName}
-                                                    fallback={`${JOOMLA_URL_BASE}/media/com_hikashop/upload/beispielphoto.jpg`}
-                                                />
-                                            )}
+                                                    {checkoutDetails.cartItem.productName.toLowerCase().includes('filterreinigung')? (
+                                                        <ProductImage
+                                                            src={`${JOOMLA_URL_BASE}/images/Filterreinigung-PKW-LKW-BUS-2.jpg`}
+                                                            alt={checkoutDetails.cartItem.productName}
+                                                            fallback={`${JOOMLA_URL_BASE}/images/Filterreinigung-PKW-LKW-BUS-2.jpg`}
+                                                        />
+                                                    ) : (
+                                                        <ProductImage
+                                                            src={`${JOOMLA_URL_BASE}/media/com_hikashop/upload/${checkoutDetails.cartItem.productImage}`}
+                                                            alt={checkoutDetails.cartItem.productName}
+                                                            fallback={`${JOOMLA_URL_BASE}/media/com_hikashop/upload/beispielphoto.jpg`}
+                                                        />
+                                                    )}
 
-                                        </div>
-                                                <div className={"row g-0"}>
-                                            <div className={"col-sm-4"}>
-                                                <div>{ checkoutDetails.cartItem.productName} {checkoutDetails.cartItem.basePrice} (inkl. MwSt.)</div>
-                                                {checkoutDetails.cartItem.options.deposit && (
-                                                    <div>{checkoutDetails.cartItem.options.deposit.label}: {checkoutDetails.cartItem.options.deposit.cost} (inkl. MwSt.)</div>
-                                                )}
-                                                {checkoutDetails.cartItem.options.installation &&(
-                                                    <div>{checkoutDetails.cartItem.options.installation.label}:{checkoutDetails.cartItem.options.installation.cost} (inkl. MwSt.)</div>
-                                                )}
-                                                {checkoutDetails.cartItem.options.delivery && (
-                                                    <div>{checkoutDetails.cartItem.options.delivery.label}:{checkoutDetails.cartItem.options.delivery.cost} (inkl. MwSt.)</div>
-                                                )}
-                                                {checkoutDetails.cartItem.selectedDate && (
-                                                    <>
-                                                        <div>Abholdatum des ausgebauten Partikelfilters: {checkoutDetails.cartItem.selectedDate}</div>
-                                                        <div>Zustellung des gereinigten Partikelfilters: {checkoutDetails.cartItem.nextDay}</div>
-                                                    </>
-                                                )}
-                                            </div>
-                                            <div className={"col-sm-4"}>
+                                                </div>
+                                                <div className={"w-100 pb-3"}></div>
+                                                <div className={"row pb-2"}>
+                                                    <div className={"col-sm-6"}>
+                                                        { checkoutDetails.cartItem.productName}
+                                                    </div>
+                                                    <div className={"col-sm-6"}>
+                                                        {checkoutDetails.cartItem.basePrice} (inkl. MwSt.)
+                                                    </div>
+                                                </div>
+                                                    {checkoutDetails.cartItem.options.deposit && (
+                                                       <div className={"row  pb-2"}>
+                                                           <div className={"col-sm-6"}>
+                                                               {checkoutDetails.cartItem.options.deposit.label}
+                                                           </div>
+                                                           <div className={"col-sm-6"}>
+                                                               {checkoutDetails.cartItem.options.deposit.cost} (inkl. MwSt.)
+                                                           </div>
+                                                       </div>
+                                                   )}
+                                                    {checkoutDetails.cartItem.options.installation &&(
+                                                       <div className={"row  pb-2"}>
+                                                           <div className={"col-sm-6"}>
+                                                               {checkoutDetails.cartItem.options.installation.label}
+                                                           </div>
+                                                           <div className={"col-sm-6"}>
+                                                               {checkoutDetails.cartItem.options.installation.cost} (inkl. MwSt.)
+                                                           </div>
+                                                       </div>
+                                                    )}
+                                                    {checkoutDetails.cartItem.options.delivery && (
+                                                       <div className={"row  pb-2"}>
+                                                           <div className={"col-sm-6"}>
+                                                               {checkoutDetails.cartItem.options.delivery.label}
+                                                           </div>
+                                                           <div className={"col-sm-6"}>
+                                                               {checkoutDetails.cartItem.options.delivery.cost} (inkl. MwSt.)
+                                                           </div>
+                                                       </div>
+                                                    )}
+                                                    {checkoutDetails.cartItem.selectedDate && (
+                                                        <>
+                                                        <div className={"row  pb-2"}>
+                                                            <div className={"col-sm-6"}>
+                                                                Abholdatum des ausgebauten Partikelfilters
+                                                            </div>
+                                                            <div className={"col-sm-6"}>
+                                                                {checkoutDetails.cartItem.selectedDate}
+                                                            </div>
+                                                        </div>
+                                                        <div className={"row  pb-2"}>
+                                                            <div className={"col-sm-6"}>
+                                                                Zustellung des gereinigten Partikelfilters
+                                                            </div>
+                                                            <div className={"col-sm-6"}>
+                                                                {checkoutDetails.cartItem.nextDay}
+                                                            </div>
+                                                        </div>
+                                                        </>
+                                                    )}
+
+                                                { /*
+                                                     <div className={"row g-0"}>
+                                                        <div className={"col-sm-4"}>
+                                                            {checkoutDetails.cartItem.options.installation ? (
+                                                                <>
+                                                                    <div className={"w-100"}>Einzelpreis</div>
+                                                                    <div className={"w-100"}>{checkoutDetails.cartItem.totalPrice} (inkl. MwSt.)</div>
+                                                                </>
+                                                            ) : (
+                                                                <>
+                                                                    <div className={"w-100"}>Einzelpreis</div>
+                                                                    <div className={"w-100"}>{formatPrice(checkoutDetails.cartItem.totalPriceUnformatted)} (inkl. MwSt.)</div>
+                                                                </>
+                                                            )}
+                                                        </div>
+                                                        <div className={"col-sm-4"}>
+                                                            {checkoutDetails.cartItem.options.installation ? (
+                                                                <>
+                                                                    <div className={"w-100"}>Gesamtpreis</div>
+                                                                    <div className={"w-100"}>{checkoutDetails.cartItem.totalPrice} (inkl. MwSt.)</div>
+                                                                </>
+                                                            ) : (
+                                                                <>
+                                                                    <div className={"w-100"}>Gesamtpreis</div>
+                                                                    <div className={"w-100"}>{formatPrice(checkoutDetails.cartItem.totalPriceUnformatted)} (inkl. MwSt.)</div>
+                                                                </>
+                                                            )}
+                                                        </div>
+                                                    </div>
+                                                    */
+                                                }
+
+
                                                 {checkoutDetails.cartItem.options.installation ? (
                                                     <>
-                                                        <div className={"w-100"}>Einzelpreis</div>
-                                                        <div className={"w-100"}>{checkoutDetails.cartItem.totalPrice} (inkl. MwSt.)</div>
+                                                        <div className={"row row-cols-2 pb-2"}>
+                                                            <div className={"col "}>Summe </div>
+                                                            <div className={"col"}>
+                                                                    {checkoutDetails.cartItem.totalPrice} (inkl. MwSt.)
+                                                            </div>
+                                                        </div>
+                                                        <div className={"row row-cols-2 pb-2"}>
+                                                            <div className={"col "}>
+                                                                Anteil <b>Vorauszahlung*</b> für Produkte mit Einbau
+                                                            </div>
+                                                            <div className={"col"}>
+                                                                {formatPrice(checkoutDetails.cartItem.advancePayment)} (inkl. MwSt.)
+                                                            </div>
+                                                        </div>
                                                     </>
                                                 ) : (
+                                                    <div className={"row row-cols-2 pb-2"}>
+                                                        <div className={"col "}>Summe </div>
+                                                        <div className={"col"}>
+                                                            {formatPrice(checkoutDetails.cartItem.totalPriceUnformatted)} (inkl. MwSt.)
+                                                        </div>
+                                                    </div>
+                                                )}
+                                                <div className={"row pb-2"}>
+                                                    <div className={"col"}>MwSt.</div>
+                                                    <div className={"col"}>{checkoutDetails.cartItem.vatShare}</div>
+                                                </div>
+                                                <div className={"row pt-3"}>
+                                                    <div className={"col"}><h4 className={"gc-green"}>Gesamtsumme {checkoutDetails.cartItem.advancePayment ? formatPrice(checkoutDetails.cartItem.advancePayment) : formatPrice(checkoutDetails.cartItem.totalPriceUnformatted)}</h4></div>
+                                                </div>
+                                                {checkoutDetails.cartItem.options.installation && (
                                                     <>
-                                                        <div className={"w-100"}>Einzelpreis</div>
-                                                        <div className={"w-100"}>{formatPrice(checkoutDetails.cartItem.totalPriceUnformatted)} (inkl. MwSt.)</div>
+                                                        <div className={"row pt-2 pb-2"}>
+                                                            <div className={"col"}>
+                                                                <strong><span className={""}>* Vorauszahlung:</span></strong><br/>
+                                                                Die Vorauszahlung bei Produkten mit Einbau: 10% des Produktpreises bei Pkw und 20% bei LKW.
+                                                                Den Restbetrag entrichten Sie bitte nach Einbau direkt an die von Ihnen gewählte Einbau-Werkstatt.
+                                                            </div>
+                                                        </div>
+                                                        <div className={"row pt-2 "}>
+                                                            <div className={"col"}>
+                                                                Restbetrag: {checkoutDetails.cartItem.remainingAmount ?? "nicht verfügbar"}
+                                                            </div>
+                                                        </div>
                                                     </>
                                                 )}
-                                            </div>
-                                            <div className={"col-sm-4"}>
-                                                {checkoutDetails.cartItem.options.installation ? (
-                                                    <>
-                                                        <div className={"w-100"}>Gesamtpreis</div>
-                                                        <div className={"w-100"}>{checkoutDetails.cartItem.totalPrice} (inkl. MwSt.)</div>
-                                                    </>
-                                                ) : (
-                                                    <>
-                                                        <div className={"w-100"}>Gesamtpreis</div>
-                                                        <div className={"w-100"}>{formatPrice(checkoutDetails.cartItem.totalPriceUnformatted)} (inkl. MwSt.)</div>
-                                                    </>
-                                                )}
-                                            </div>
-                                        </div>
-                                                <div className={"row g-0"}>
-                                                {checkoutDetails.cartItem.options.installation ? (
-                                                    <>
-                                                        <div className={"text-end"}>Summe {checkoutDetails.cartItem.totalPrice} (inkl. MwSt.)</div>
-                                                        <div className={"text-end"}>Anteil <b>Vorauszahlung*</b> für Produkte mit Einbau {formatPrice(checkoutDetails.cartItem.advancePayment)} (inkl. MwSt.)</div>
-                                                    </>
-                                                ) : (
-                                                    <div className={"text-end"}>Summe {formatPrice(checkoutDetails.cartItem.totalPriceUnformatted)} (inkl. MwSt.)</div>
-                                                )}
-                                                <div className={"text-end"}><strong>MwSt.</strong> {checkoutDetails.cartItem.vatShare}</div>
-                                                <div className={"text-end"}><strong>Gesamtsumme</strong> {checkoutDetails.cartItem.advancePayment ? formatPrice(checkoutDetails.cartItem.advancePayment) : formatPrice(checkoutDetails.cartItem.totalPriceUnformatted)}</div>
-                                        </div>
                                             </div>
                                         </div>
                                         <div className={"w-100 pb-4"}></div>
-                                        <div className={"row g-0 p-4 product-detail-view rounded-4"}>
+                                        <div className={"row g-0 p-3 p-sm-4 product-detail-view rounded-4"}>
                                             {checkoutDetails.billingAddress && (
                                                 <div className={"col-sm-6"}>
                                                     <h3>Rechnungsadresse</h3>
@@ -255,7 +338,7 @@ export default function CheckoutStep2({footerArticle, termsArticle})   {
                                             )}
                                         </div>
                                         <div className={"w-100 pb-4"}></div>
-                                        <div className={"row g-0 p-4 product-detail-view rounded-4"}>
+                                        <div className={"row g-0 p-3 p-sm-4 product-detail-view rounded-4"}>
                                             <div className={"w-100"}>
                                                <h3>Datenschutzhinweise. Widerrufs- und Rückgaberecht</h3>
                                             </div>
@@ -302,7 +385,7 @@ export default function CheckoutStep2({footerArticle, termsArticle})   {
                                         {checkoutDetails.paymentMethod === "paypal" ? (termsAccepted ? (
                                             <>
                                             <div className={"w-100 pt-4"}></div>
-                                            <div className={"row g-0 p-4 product-detail-view rounded-4"}>
+                                            <div className={"row g-0 p-3 p-sm-4 product-detail-view rounded-4"}>
                                                 <div>Bitte klicken Sie auf den Button unten, um Ihre Bestellung zu bestätigen und mit PayPal zu bezahlen.</div>
                                                 <div className={"w-100 pt-3"}></div>
                                                  <div className={"col"}>
@@ -358,7 +441,7 @@ export default function CheckoutStep2({footerArticle, termsArticle})   {
                                         ) : (
                                             <>
                                                 <div className={"w-100 pt-4"}></div>
-                                                <div className={"row g-0 p-4 product-detail-view rounded-4"}>
+                                                <div className={"row g-0 p-3 p-sm-4 product-detail-view rounded-4"}>
                                                     <div className={"col"}>
                                                         <h3>Zahlungsmethode Vorauskasse / Banküberweisung</h3>
                                                         <div>Durch Anklicken des Buttons 'Kaufen' geben Sie eine verbindliche Bestellung der oben aufgelisteten Waren ab.

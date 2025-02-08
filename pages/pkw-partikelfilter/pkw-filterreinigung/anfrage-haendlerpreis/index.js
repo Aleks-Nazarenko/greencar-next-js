@@ -153,7 +153,7 @@ export async function getStaticProps() {
                 </Row>
                 <Row className="g-0">
                     <Col sm={"8"}>
-                        <Row className="g-0 p-4 product-detail-view rounded-4">
+                        <Row className="g-0 p-3 p-sm-4 product-detail-view rounded-4">
                             <Col sm={"12"} className={"mb-3"}>
                                 <Row className="g-0 pb-3">
                                     <h1 className={"mb-1"}>Anfrage Händlerpreis</h1>
@@ -175,7 +175,6 @@ export async function getStaticProps() {
                                             <Form.Control
                                                 required
                                                 type="text"
-                                                placeholder="Name"
                                                 name="name"
                                                 value={formData.name}
                                                 onChange={handleInputChange}
@@ -191,7 +190,6 @@ export async function getStaticProps() {
                                             <Form.Control
                                                 required
                                                 type="email"
-                                                placeholder="E-Mail"
                                                 name="email"
                                                 value={formData.email}
                                                 onChange={handleInputChange}
@@ -208,7 +206,6 @@ export async function getStaticProps() {
                                             <Form.Control
                                                 required
                                                 type="text"
-                                                placeholder="firma"
                                                 name="firma"
                                                 value={formData.firma}
                                                 onChange={handleInputChange}
@@ -224,7 +221,6 @@ export async function getStaticProps() {
                                             <Form.Control
                                                 required
                                                 type="text"
-                                                placeholder="ort"
                                                 name="ort"
                                                 value={formData.ort}
                                                 onChange={handleInputChange}
@@ -240,7 +236,6 @@ export async function getStaticProps() {
                                             <Form.Control
                                                 required
                                                 type="text"
-                                                placeholder="strasse"
                                                 name="strasse"
                                                 value={formData.strasse}
                                                 onChange={handleInputChange}
@@ -256,7 +251,6 @@ export async function getStaticProps() {
                                             <Form.Control
                                                 required
                                                 type="text"
-                                                placeholder="plz"
                                                 name="plz"
                                                 value={formData.plz}
                                                 onChange={handleInputChange}
@@ -268,11 +262,10 @@ export async function getStaticProps() {
                                     </Row>
                                     <Row className="mb-3 g-0">
                                         <Form.Group as={Col} sm="12" md={"6"} controlId="regPTelefon">
-                                            <Form.Label>PLZ <span className="required">*</span></Form.Label>
+                                            <Form.Label>Telefon <span className="required">*</span></Form.Label>
                                             <Form.Control
                                                 required
                                                 type="text"
-                                                placeholder="Telefon"
                                                 name="telefon"
                                                 value={formData.telefon}
                                                 onChange={handleInputChange}

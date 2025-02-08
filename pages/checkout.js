@@ -222,7 +222,7 @@ export default function CheckoutPage({footerArticle }) {
                                 {/* Cart Section */}
                                 <section>
 
-                                    <div className="row g-0 p-4 product-detail-view rounded-4">
+                                    <div className="row g-0 p-3 p-sm-4 product-detail-view rounded-4">
                                         <div className={"col"}>
                                             <div className={"row g-0"}>
                                                 <h2 className={"mb-3"}>Warenkorb</h2>
@@ -311,7 +311,7 @@ export default function CheckoutPage({footerArticle }) {
                                 <section>
 
                                     <Form noValidate validated={validated} onSubmit={handleSubmit}>
-                                        <div className="row g-0 p-4 product-detail-view rounded-4">
+                                        <div className="row g-0 p-3 p-sm-4 product-detail-view rounded-4">
                                             <div className={"col"}>
                                                     <h2 className={"mb-3"}>Ihre Rechnungsadresse</h2>
                                                     <Row className="mb-3 g-0">
@@ -558,7 +558,7 @@ export default function CheckoutPage({footerArticle }) {
                                             </div>
                                         </div>
                                         <div className={"w-100 pb-4"}></div>
-                                        <div className="row g-0 p-4 product-detail-view rounded-4">
+                                        <div className="row g-0 p-3 p-sm-4 product-detail-view rounded-4">
                                             <div className={"col"}>
                                                     <h2>Payment Method</h2>
                                                     <Row className="mb-3">
@@ -599,7 +599,7 @@ export default function CheckoutPage({footerArticle }) {
 
                             </>
                         ) : (
-                            <div className={"row g-0 p-4 product-detail-view rounded-4"}>
+                            <div className={"row g-0 p-3 p-sm-4 product-detail-view rounded-4"}>
                                 <h1>Ihr Warenkorb is leer</h1>
                             </div>
                         )}

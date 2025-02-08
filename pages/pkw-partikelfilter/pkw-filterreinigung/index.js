@@ -422,7 +422,7 @@ export default function FilterreinigungPage({ product,installation, delivery, ar
         <>
             <div className="row g-0">
                 <div className="col-sm-8">
-                    <div className="row g-0 p-4 product-detail-view rounded-4">
+                    <div className="row g-0 p-3 p-sm-4 product-detail-view rounded-4">
                         {product && (
                             <div className="col">
                                 <div className="row g-0 pb-3">
