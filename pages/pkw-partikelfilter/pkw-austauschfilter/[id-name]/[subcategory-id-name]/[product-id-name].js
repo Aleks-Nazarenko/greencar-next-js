@@ -7,6 +7,7 @@ import { JOOMLA_URL_BASE } from '@/utils/config';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation } from 'swiper/modules';
 import 'swiper/swiper-bundle.css';
+import Form from 'react-bootstrap/Form';
 function ProductImage({ src, alt, fallback, className }) {
     const [imgSrc, setImgSrc] = useState(src);
 
@@ -102,23 +103,21 @@ export async function getStaticProps({ params }) {
         console.error("Invalid product data received:", depositData);
     }
 
-    // Fetch data for the footer from Joomla API
-    const resFooter = await fetch(`${JOOMLA_API_BASE}&task=articleWithModules&id=2&format=json`);
-    const footerData = await resFooter.json();
+    const resArticle = await fetch(`${JOOMLA_API_BASE}&task=articleWithModules&id=18&format=json`);
+    const articleData = await resArticle.json();
     // Extract the footer article from the response
-    const footerArticle = footerData.article || null;
-    // Convert relative URLs in the footer content to absolute URLs
-    if (footerArticle) {
-        footerArticle.introtext = footerArticle.introtext ? convertRelativeUrls(footerArticle.introtext, joomlaBaseUrl) : '';
-        if (!footerArticle.introtext) {
-            console.log('footerArticle.introtext not found');
+    const article = articleData.article || null;
+    if (article) {
+        article.content = article.content ? convertRelativeUrls(article.content, joomlaBaseUrl) : '';
+        if (!article.content) {
+            console.log('footerArticle.content not found');
         }
     }
 
     return {
         props: {
             product,
-            footerArticle,
+            article,
             installation,
             delivery,
             deposit,
@@ -126,7 +125,7 @@ export async function getStaticProps({ params }) {
     };
 }
 
-export default function ProductPage({ product, footerArticle, installation, delivery, deposit }) {
+export default function ProductPage({ product, article, installation, delivery, deposit }) {
     const router = useRouter();
     // Constants for pricing
     const formatPrice = (price) => {
@@ -359,121 +358,160 @@ export default function ProductPage({ product, footerArticle, installation, deli
 
     return (
         <>
-            <main>
-                <div className="container-fluid container-greencar">
-                    <div className="row g-0 p-4">
+        <div className={"row g-0"}>
+            <h1 className={"pb-0"}>{product.product_name} für {product.modell_liste}</h1>
+        </div>
+            <div className="w-100 pb-4"></div>
+            <div className="row g-0 p-3 p-sm-4 product-detail-view rounded-4 align-items-center">
                         {product && (
+                            <>
                             <div className={"col"}>
                                 <div className={"row g-0"}>
-                                    <h1>{product.product_name}</h1>
-                                        {productImages && productImages.length > 1 ? (
-                                            <Swiper spaceBetween={10} slidesPerView={1} navigation modules={[Navigation]}>
-                                                {productImages.map((image, index) => (
-                                                        <SwiperSlide key={index}>
-                                                            <ProductImage
-                                                                className={"img-fluid"}
-                                                                src={`${JOOMLA_URL_BASE}/media/com_hikashop/upload/${image}`}
-                                                                alt={product.product_name}
-                                                                fallback={`${JOOMLA_URL_BASE}/media/com_hikashop/upload/beispielphoto.jpg`}
-                                                            />
-                                                        </SwiperSlide>
-                                                ))}
-                                            </Swiper>
-                                            ):(
-                                            <ProductImage
-                                                className={"img-fluid"}
-                                                src={`${JOOMLA_URL_BASE}/media/com_hikashop/upload/${productImages[0]}`}
-                                                alt={product.product_name}
-                                                fallback={`${JOOMLA_URL_BASE}/media/com_hikashop/upload/beispielphoto.jpg`}
-                                            />
-                                            )}
 
-                                    <p>{product.product_description}</p>
-                                    {/* Additional product details */}
+                                    <div className="col-sm-6">
+
+                                            {productImages && productImages.length > 1 ? (
+                                                <Swiper spaceBetween={10} slidesPerView={1} navigation modules={[Navigation]}>
+                                                    {productImages.map((image, index) => (
+                                                            <SwiperSlide key={index}>
+                                                                <ProductImage
+                                                                    className={"img-fluid"}
+                                                                    src={`${JOOMLA_URL_BASE}/media/com_hikashop/upload/${image}`}
+                                                                    alt={product.product_name}
+                                                                    fallback={`${JOOMLA_URL_BASE}/media/com_hikashop/upload/beispielphoto.jpg`}
+                                                                />
+                                                            </SwiperSlide>
+                                                    ))}
+                                                </Swiper>
+                                                ):(
+                                                <ProductImage
+                                                    className={"img-fluid"}
+                                                    src={`${JOOMLA_URL_BASE}/media/com_hikashop/upload/${productImages[0]}`}
+                                                    alt={product.product_name}
+                                                    fallback={`${JOOMLA_URL_BASE}/media/com_hikashop/upload/beispielphoto.jpg`}
+                                                />
+                                                )}
+                                    </div>
+                                    <div className={"col-sm-1"}></div>
+                                    <div className={"col-sm-5"}>
+                                        <div className={"row g-0 bg-white rounded-4 p-3"}>
+                                            <div className={"col"}>
+                                                <p className={""}><strong>Hersteller: </strong> {product.hersteller}</p>
+                                                <p><strong>Modell: </strong> {product.modell_liste} </p>
+                                                <p><strong>Hubraum KW/PS: </strong> {product.hubraum_liste} </p>
+                                                <p><strong>Bauzeit: </strong> {product.bauzeit_liste}</p>
+                                                <p><strong>Bestellnr.:</strong> {product.bestellnr}</p>
+                                                <p><strong>OE-Nummer:</strong> {product.oe_nummer}</p>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
-                                <div className="row g-0 p-4">
-                                    <div className="product-info">
-                                        <p>{formatPrice(BASE_PRICE)} pro Stück {mwStWording}</p>
+
+
+
+                            <div className="w-100 pb-3"></div>
+                            <div className="row g-0 ">
+                                    <div className="col-12 product-info">
+                                        <div>
+                                            <span className={"gc-green display-1"}>{formatPrice(BASE_PRICE)}</span><span className={"ps-2"}>pro Stück {mwStWording}</span>
+                                        </div>
+                                        <div className={"w-100 pb-3"}></div>
                                         <p>Versand +{formatPrice(DELIVERY_COST)} {mwStWording}</p>
                                         <p>Kaution +{formatPrice(DEPOSIT_COST)} {mwStWording}</p>
                                         <p>Kaution wird nach Erhalt des schadlosen Rücknahmeteils storniert</p>
                                     </div>
 
-                                    {mwSt && (<div className="installation-options">
-                                                <label>
-                                                    Mit Einbau:
-                                                    <select value={installationOption} onChange={handleInstallationChange}>
-                                                        <option value="with">Ja + {formatPrice(INSTALLATION_COST)}</option>
-                                                        <option value="without">Nein</option>
-                                                    </select>
-                                                </label>
-                                            </div>
-                                    )}
-                                    {installationOption === 'with' && (
+                            {mwSt && (
+                                <>
+                                <div className={"w-100 pb-2"}></div>
+                                    <div className="row g-0 ">
+                                        <div className={"w-100"}>Mit Einbau:</div>
+                                        <div className="col-sm-6">
+                                            <Form.Select value={installationOption} onChange={handleInstallationChange}>
+                                                <option value="with">Ja + {formatPrice(INSTALLATION_COST)}</option>
+                                                <option value="without">Nein</option>
+                                            </Form.Select>
+                                        </div>
+                                   </div>
+                                </>
+                            )}
+                           {installationOption === 'with' && (
                                         <>
-                                            <div className="land-selection">
-                                                <label>
-                                                    Select Land:
-                                                    <select value={selectedLand} onChange={handleLandChange}>
+                                            <div className={"w-100 pb-2"}></div>
+                                            <div className="row g-0 land-selection">
+                                                <div className={"w-100 pb-0"}>Bitte wählen Sie Ihren gewünschten Einbauort:</div>
+                                                <div className={"col-sm-6"}>
+                                                    <Form.Select value={selectedLand} onChange={handleLandChange}>
                                                         <option value="">- Bundesland -</option>
                                                         {lands.map((land) => (
                                                             <option key={land.id} value={land.id}>
                                                                 {land.title}
                                                             </option>
                                                         ))}
-                                                    </select>
-                                                </label>
+                                                    </Form.Select>
+                                                </div>
                                             </div>
 
                                             {selectedLand && (
-                                                <div className="city-selection">
-                                                    <label>
-                                                        Select City:
-                                                        <select value={selectedCity} onChange={handleCityChange}>
-                                                            <option value="">- Ort -</option>
-                                                            {cities.map((city) => (
-                                                                <option key={city.id} value={city.id}>
-                                                                    {city.title}
-                                                                </option>
-                                                            ))}
-                                                        </select>
-                                                    </label>
-                                                </div>
+                                                <>
+                                                    <div className={"w-100 pb-2"}></div>
+                                                    <div className="row g-0 city-selection">
+                                                        <div className={"col-sm-6"}>
+                                                            <Form.Select value={selectedCity} onChange={handleCityChange}>
+                                                                <option value="">- Ort -</option>
+                                                                {cities.map((city) => (
+                                                                    <option key={city.id} value={city.id}>
+                                                                        {city.title}
+                                                                    </option>
+                                                                    ))}
+                                                            </Form.Select>
+                                                        </div>
+                                                    </div>
+                                                </>
                                             )}
                                         </>
-                                    )}
+                           )}
 
-                                    <div className="total-price">
-                                        <h2>{getTotalPriceLabel()}: {formatPrice(totalPrice)}</h2>
-                                    </div>
+                                <div className="row g-0 total-price mt-3 pt-1">
+                                    <div className={"display-3 gc-green"}>{getTotalPriceLabel()}: {formatPrice(totalPrice)}</div>
                                 </div>
                             </div>
+                            </div>
+                            </>
                         )}
-                    </div>
-                    <div className="row g-0 p-4">
-                        <Link href={`/anfrage`}>
-                            <button className="btn btn-primary">Unverbindliches Angebot anfordern</button>
-                        </Link>
-                    </div>
-                    <div className="row g-0 p-4">
-                        <button className="btn btn-primary" type="button" onClick={handleAddToCart}>
-                            In den Warenkorb
-                        </button>
-                    </div>
-                    <div className="row g-0 p-4">
-                        <button onClick={() => router.back()} className="btn btn-primary">Zurück zur Listenansicht</button>
-                    </div>
+            </div>
+
+
+
+            <div className="row g-0 p-4 pb-3">
+                <div className={"col col-sm-6"}>
+                    <Link href={`/anfrage`}>
+                        <button className="btn btn-primary btn-yellow btn-100">Unverbindliches Angebot anfordern</button>
+                    </Link>
                 </div>
-            </main>
-            <footer>
-                <div className="container-fluid container-footer container-greencar">
-                    <div className="row g-0 p-4">
-                        {footerArticle?.introtext && (
-                            <div dangerouslySetInnerHTML={{ __html: footerArticle.introtext}} />
-                        )}
-                    </div>
+            </div>
+            <div className="row g-0 p-4 pt-3 pb-3">
+                <div className={"col col-sm-6"}>
+                    <button className="btn btn-primary btn-green btn-100" onClick={handleAddToCart}>
+                        In den Warenkorb
+                    </button>
                 </div>
-            </footer>
+            </div>
+            <div className="row g-0 p-4 pt-3">
+                <div className={"col col-sm-6"}>
+                    <button onClick={() => router.back()} className="btn btn-primary btn-green btn-100">Zurück zur Listenansicht</button>
+                </div>
+            </div>
+
+            <div className="w-100 pb-4"></div>
+
+
+            <div className="row g-0">
+                {article?.content && (
+                    <div dangerouslySetInnerHTML={{ __html: article.content}} />
+                )}
+            </div>
+
         </>
     );
 }

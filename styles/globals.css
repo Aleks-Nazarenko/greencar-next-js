@@ -173,7 +173,13 @@ header {z-index: 10}
 
 
 #maschinen {background: white; border-radius: 1rem; padding: 20px;}
-#maschinen img {border-radius: 1rem;}S
+#maschinen img {border-radius: 1rem;}
+
+.table {
+  --bs-table-color: #666 !important;
+  --bs-table-bg: #F0F7FC !important;
+  --bs-table-border-color: white!important;
+}
 
 ul.list-arrow.arrow-green li:after {
   border-left-color: #3AA655;

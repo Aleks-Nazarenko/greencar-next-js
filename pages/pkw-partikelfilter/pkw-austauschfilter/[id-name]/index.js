@@ -103,7 +103,7 @@ function AustauschfilterSubcategories({ subcategories, categories, categoryId, c
         <>
 
 
-            <div className={"row g-0 pb-3"}>
+            <div className={"row g-0"}>
                 <h1 className={"pb-1"}>PKW - Austauschfilter</h1>
                 <h4>Bitte wählen Sie zunächst den Hersteller Ihres Pkw und danach ggf. das Modell. Anschließend stellen wir Ihnen unsere Produktauswahl an passenden Austaustauschfiltern vor.</h4>
             </div>
@@ -112,7 +112,7 @@ function AustauschfilterSubcategories({ subcategories, categories, categoryId, c
                 {/* Category Select */}
                 <div className={"col"}>
                     <div className={"row g-0 "}>
-                        <div className={"col"}>
+                        <div className={"col-12"}>
                             {categories.length > 0 && (
                                 <Form.Select
                                     id="categorySelect"
@@ -133,7 +133,7 @@ function AustauschfilterSubcategories({ subcategories, categories, categoryId, c
                         </div>
                         <div className={"w-100 pb-3"}></div>
                         {/* Subcategory Select */}
-                        <div>
+                        <div className={"col-12"}>
                             {subcategories.length > 0 && (
                                 <Form.Select
                                     id="subcategorySelect"
@@ -162,7 +162,7 @@ function AustauschfilterSubcategories({ subcategories, categories, categoryId, c
 
 
             <div className="w-100 pb-4"></div>
-            <div className="w-100 pb-3"></div>
+
 
             <div className="row g-0">
                 {article?.content && (
