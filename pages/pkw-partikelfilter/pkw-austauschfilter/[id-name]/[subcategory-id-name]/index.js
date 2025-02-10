@@ -143,7 +143,7 @@ export default function ProductListPage({ products, categoryName, categoryId, su
         <>
 
             <div className={"row g-0"}>
-                <h1 className={"pb-1"}>PKW - Austauschfilter</h1>
+                <h1 className={"pb-0 mb-1"}>PKW - Austauschfilter</h1>
                 <h4>Bitte wählen Sie zunächst den Hersteller Ihres Pkw und danach ggf. das Modell. Anschließend stellen wir Ihnen unsere Produktauswahl an passenden Austaustauschfiltern vor.</h4>
             </div>
             <div className="w-100 pb-4"></div>

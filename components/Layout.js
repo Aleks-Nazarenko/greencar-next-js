@@ -46,7 +46,7 @@ export default function Layout({ children }) {
             <VehicleSwitcher />
             <main>
                 <div className={"container-fluid"}>
-                    <div className={"container-greencar container-fluid bg-gc-light-blue rounded-4 g-0 p-3 p-sm-4 pt-sm-5 pt-4 shadow"}>
+                    <div className={"container-greencar container-fluid bg-gc-light-blue rounded-4 g-0 p-3 p-sm-4 shadow"}>
                         {children}
                     </div>
                 </div>

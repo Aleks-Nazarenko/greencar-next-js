@@ -142,7 +142,10 @@ export default function CheckoutStep2({footerArticle, termsArticle})   {
                 currency: "EUR",
             }}
         >
-
+                    <div className={"row g-0"}>
+                        <h1 className={"pb-0 mb-0"}>Bestellzusammenfassung</h1>
+                    </div>
+                    <div className="w-100 pb-4"></div>
                     <div className="row g-0">
                         <div className="col-sm-8">
                             <div className="row g-0">
@@ -151,7 +154,7 @@ export default function CheckoutStep2({footerArticle, termsArticle})   {
                                         <div className={"row g-0 p-3 p-sm-4 product-detail-view rounded-4"}>
                                             <div className={"col"}>
                                                 <div className={"row g-0"}>
-                                                    <h2 className={" mb-3"}>Bestellzusammenfassung</h2>
+                                                    <h2 className={" mb-3"}>{checkoutDetails.cartItem.productName}</h2>
                                                 </div>
                                                 <div className={"row g-0 "}>
                                                     {checkoutDetails.cartItem.productName.toLowerCase().includes('filterreinigung')? (

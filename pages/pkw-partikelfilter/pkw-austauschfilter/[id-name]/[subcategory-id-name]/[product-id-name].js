@@ -303,7 +303,7 @@ export default function ProductPage({ product, article, installation, delivery, 
         // Construct the cart item with selected options
         const cartItem = {
             productName: product.product_name,
-            productImage: product.product_image,
+            productImage: product.product_images?.[0] || 'beispielphoto.jpg',
             basePrice: formatPrice(BASE_PRICE  * (mwSt ? 1 : VAT_SHARE )),
             options: {
                 // Aus- und Einbau bzw. Mit Einbau
@@ -358,9 +358,11 @@ export default function ProductPage({ product, article, installation, delivery, 
 
     return (
         <>
-        <div className={"row g-0"}>
-            <h1 className={"pb-0"}>{product.product_name} für {product.modell_liste}</h1>
-        </div>
+            {product && (
+                <div className={"row g-0"}>
+                    <h1 className={"pb-0 mb-0"}>{product.product_name} für {product.modell_liste}</h1>
+                </div>
+            )}
             <div className="w-100 pb-4"></div>
             <div className="row g-0 p-3 p-sm-4 product-detail-view rounded-4 align-items-center">
                         {product && (

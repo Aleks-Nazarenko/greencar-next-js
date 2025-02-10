@@ -214,6 +214,10 @@ export default function CheckoutPage({footerArticle }) {
 
     return (
         <>
+            <div className={"row g-0"}>
+                <h1 className={"pb-0 mb-0"}>Kasse</h1>
+            </div>
+            <div className="w-100 pb-4"></div>
             <div className="row g-0">
                 <div className="col-sm-8">
                         {cartItem ? (
@@ -246,8 +250,8 @@ export default function CheckoutPage({footerArticle }) {
                                             </div>
                                             <div className={"w-100 pb-3"}></div>
                                             <div className="cart-item">
-                                                <p><strong>Product:</strong> {cartItem.productName}</p>
-                                                <p><strong>Price:</strong> {cartItem.basePrice} (inkl. MwSt.)</p>
+                                                <p><strong>Produkt:</strong> {cartItem.productName}</p>
+                                                <p><strong>Preis:</strong> {cartItem.basePrice} (inkl. MwSt.)</p>
                                                 {/* Conditionally render available options. ProductOptions sind hier absolut unnnötig !!!!!!!!!!!!!!!!!!!!!!!!! */}
                                                 {productOptions?.deposit?.isAvailable && (
                                                     <p><strong>{cartItem.options.deposit.label}:</strong> {cartItem.options.deposit.cost} (inkl. MwSt.)</p>
@@ -314,7 +318,7 @@ export default function CheckoutPage({footerArticle }) {
                                         <div className="row g-0 p-3 p-sm-4 product-detail-view rounded-4">
                                             <div className={"col"}>
                                                     <h2 className={"mb-3"}>Ihre Rechnungsadresse</h2>
-                                                    <Row className="mb-3 g-0">
+                                                    <Row className="mb-3">
                                                         <Form.Group as={Col} md="6" controlId="billingSalutation">
                                                             <Form.Label>Anrede <span className="required">*</span></Form.Label>
                                                             <Form.Select
@@ -327,6 +331,15 @@ export default function CheckoutPage({footerArticle }) {
                                                                 <option value="Frau">Frau</option>
                                                                 <option value="Firma">Firma</option>
                                                             </Form.Select>
+                                                        </Form.Group>
+                                                        <Form.Group as={Col} md="6" controlId="billingFirma">
+                                                            <Form.Label>Firma</Form.Label>
+                                                            <Form.Control
+                                                                type="text"
+                                                                name="firma"
+                                                                value={billingAddress.firma}
+                                                                onChange={handleBillingAddressChange}
+                                                            />
                                                         </Form.Group>
                                                     </Row>
                                                     <Row className="mb-3">
@@ -389,7 +402,7 @@ export default function CheckoutPage({footerArticle }) {
                                                     </Row>
 
                                                     <Row className="mb-3">
-                                                        <Form.Group as={Col} md="4" controlId="billingCity">
+                                                        <Form.Group as={Col} md="6" controlId="billingCity">
                                                             <Form.Label>Ort <span className="required">*</span></Form.Label>
                                                             <Form.Control
                                                                 required
@@ -402,16 +415,8 @@ export default function CheckoutPage({footerArticle }) {
                                                                 Bitte geben Sie den Ort ein
                                                             </Form.Control.Feedback>
                                                         </Form.Group>
-                                                        <Form.Group as={Col} md="4" controlId="billingFirma">
-                                                            <Form.Label>Firma</Form.Label>
-                                                            <Form.Control
-                                                                type="text"
-                                                                name="firma"
-                                                                value={billingAddress.firma}
-                                                                onChange={handleBillingAddressChange}
-                                                            />
-                                                        </Form.Group>
-                                                        <Form.Group as={Col} md="4" controlId="billingZipCode">
+
+                                                        <Form.Group as={Col} md="6" controlId="billingZipCode">
                                                             <Form.Label>PLZ <span className="required">*</span></Form.Label>
                                                             <Form.Control
                                                                 required

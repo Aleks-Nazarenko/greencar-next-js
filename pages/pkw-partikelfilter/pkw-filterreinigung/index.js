@@ -4,8 +4,22 @@ import { useRouter } from 'next/router';
 import {convertRelativeUrls} from "@/utils/convertRelativeUrls";
 import { JOOMLA_API_BASE } from '@/utils/config';
 import { JOOMLA_URL_BASE } from '@/utils/config';
-import Image from "next/image";
 import Pictos from "@/components/Pictos";
+
+function ProductImage({ src, alt, fallback, className }) {
+    const [imgSrc, setImgSrc] = useState(src);
+
+    useEffect(() => {
+        const img = new Image();
+        img.src = src;
+        img.onload = () => setImgSrc(src); // If the image loads, keep the original src
+        img.onerror = () => setImgSrc(fallback); // If the image fails to load, use fallback
+    }, [src, fallback]);
+
+    return (
+        <img src={imgSrc} alt={alt}  className={className}/>
+    );
+}
 
 export async function getStaticProps() {
     // Base URL of your Joomla server (adjust this to your Joomla installation URL)
@@ -349,6 +363,7 @@ export default function FilterreinigungPage({ product,installation, delivery, ar
         next = getNextValidDay(next);
         setNextDay(formatDateToGerman(next));
     };
+    console.log('AAAAA'+ product.product_image);
     // Handle add to cart
     const handleAddToCart = (e) => {
         e.preventDefault();
@@ -366,7 +381,7 @@ export default function FilterreinigungPage({ product,installation, delivery, ar
         // Construct the cart item with selected options
         const cartItem = {
             productName: product.product_name,
-            productImage: product.product_image,
+            productImage: product.product_images[0] || 'beispielphoto.jpg',
             basePrice: formatPrice(BASE_PRICE * (mwSt ? 1 : VAT_SHARE )),
             options: {
                 // Aus- und Einbau
@@ -420,19 +435,30 @@ export default function FilterreinigungPage({ product,installation, delivery, ar
 
     return (
         <>
+            {product && (
+                <div className="row g-0 pb-4">
+                    <h1 className={"mb-1"}>{product.product_name}</h1>
+                    <div className={"display-4"}>48h Expressreinigung von der Abholung bis zur Zustellung</div>
+                </div>
+             )}
             <div className="row g-0">
                 <div className="col-sm-8">
                     <div className="row g-0 p-3 p-sm-4 product-detail-view rounded-4">
                         {product && (
                             <div className="col">
-                                <div className="row g-0 pb-3">
-                                    <h1 className={"mb-1"}>{product.product_name}</h1>
-                                    <h4>48h Expressreinigung von der Abholung bis zur Zustellung</h4>
-                                    {/* Additional product details */}
-                                </div>
                                 <div className="row g-0 ">
+                                    <div className="col-12 product-image pb-3">
+                                        <ProductImage
+                                            className={"img-fluid"}
+                                            src={`${JOOMLA_URL_BASE}/media/com_hikashop/upload/${product.product_images[0]}`}
+                                            alt={product.product_name}
+                                            fallback={`${JOOMLA_URL_BASE}/media/com_hikashop/upload/beispielphoto.jpg`}
+                                        />
+                                    </div>
                                     <div className="col-12 product-info">
-                                        <span className={"gc-green display-1"}>{formatPrice(BASE_PRICE)}</span><span className={"ps-2"}>pro Stück {mwStWording}</span>
+                                        <div>
+                                            <span className={"gc-green display-1"}>{formatPrice(BASE_PRICE)}</span><span className={"ps-2"}>pro Stück {mwStWording}</span>
+                                        </div>
                                         {mwSt && (
                                             <div className="col-12 col-sm-6 btn-haendlerpreis pt-2">
                                                 <Link href={`/pkw-partikelfilter/pkw-filterreinigung/anfrage-haendlerpreis`}>
