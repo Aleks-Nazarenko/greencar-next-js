@@ -7,7 +7,6 @@ import Col from 'react-bootstrap/Col';
 import Row from 'react-bootstrap/Row';
 import {JOOMLA_URL_BASE} from "@/utils/config";
 import {JOOMLA_API_BASE} from "@/utils/config";
-import Pictos from "@/components/Pictos";
 
 function ProductImage({ src, alt, fallback }) {
     const [imgSrc, setImgSrc] = useState(src);
@@ -219,10 +218,10 @@ export default function CheckoutPage({footerArticle }) {
             </div>
             <div className="w-100 pb-4"></div>
             <div className="row g-0">
-                <div className="col-sm-8">
+
+                <div className="col">
                         {cartItem ? (
                             <>
-
                                 {/* Cart Section */}
                                 <section>
 
@@ -231,81 +230,84 @@ export default function CheckoutPage({footerArticle }) {
                                             <div className={"row g-0"}>
                                                 <h2 className={"mb-3"}>Warenkorb</h2>
                                             </div>
-
-
-                                            <div className={"row g-0"}>
-                                                {cartItem.productName.toLowerCase().includes('filterreinigung')? (
-                                                    <ProductImage
-                                                        src={`${JOOMLA_URL_BASE}/images/Filterreinigung-PKW-LKW-BUS-2.jpg`}
-                                                        alt={cartItem.productName}
-                                                        fallback={`${JOOMLA_URL_BASE}/images/Filterreinigung-PKW-LKW-BUS-2.jpg`}
-                                                    />
-                                                ) : (
-                                                    <ProductImage
-                                                        src={`${JOOMLA_URL_BASE}/media/com_hikashop/upload/${cartItem.productImage}`}
-                                                        alt={cartItem.productName}
-                                                        fallback={`${JOOMLA_URL_BASE}/media/com_hikashop/upload/beispielphoto.jpg`}
-                                                    />
-                                                )}
-                                            </div>
-                                            <div className={"w-100 pb-3"}></div>
-                                            <div className="cart-item">
-                                                <p><strong>Produkt:</strong> {cartItem.productName}</p>
-                                                <p><strong>Preis:</strong> {cartItem.basePrice} (inkl. MwSt.)</p>
-                                                {/* Conditionally render available options. ProductOptions sind hier absolut unnnötig !!!!!!!!!!!!!!!!!!!!!!!!! */}
-                                                {productOptions?.deposit?.isAvailable && (
-                                                    <p><strong>{cartItem.options.deposit.label}:</strong> {cartItem.options.deposit.cost} (inkl. MwSt.)</p>
-                                                )}
-                                                {productOptions?.installation?.isAvailable && cartItem.options.installation &&(
-                                                    <p><strong>{cartItem.options.installation.label}:</strong> {cartItem.options.installation.cost} (inkl. MwSt.)</p>
-                                                )}
-                                                {productOptions?.delivery?.isAvailable && cartItem.options.delivery && (
-                                                    <p><strong>{cartItem.options.delivery.label}:</strong> {cartItem.options.delivery.cost} (inkl. MwSt.)</p>
-
-                                                )}
-                                                {cartItem.selectedDate && (
-                                                    <>
-                                                        <p><strong>Abholdatum des ausgebauten Partikelfilters:</strong> {cartItem.selectedDate}</p>
-                                                        <p><strong>Zustellung des gereinigten Partikelfilters:</strong> {cartItem.nextDay}</p>
-                                                    </>
-                                                )}
-
-                                                {productOptions?.installation?.isAvailable && cartItem.options.installation ? (
-                                                    <>
-                                                        <p><strong>Summe:</strong> {cartItem.totalPrice} (inkl. MwSt.)</p>
-                                                        <p>Anteil <strong>Vorauszahlung*</strong> für Produkte mit Einbau: {formatPrice(calculateAdvancePayment(cartItem.totalPriceUnformatted, productOptions.advancePayment.cost))} (inkl. MwSt.)</p>
-                                                    </>
-                                                ) : (
-                                                    <p><strong>Summe:</strong> {formatPrice(displayTotalPrice)} (inkl. MwSt.)</p>
-                                                )}
-                                                <p><strong>MwSt.</strong> {formatPrice(vatShare)}</p>
-                                                <h3 className={"gc-green"}>Gesamtsumme: {formatPrice(displayTotalPrice)}</h3>
-
-                                            </div>
-                                            {/* Restbetrag wenn Vorauszahlung */}
-                                            {productOptions?.installation?.isAvailable && cartItem.options.installation && (
-                                                <div className="cart-item restbetrag">
-                                                    <div>
-                                                        <strong><span className={""}>* Vorauszahlung:</span></strong><br/>
-
-                                                        Die Vorauszahlung bei Produkten mit Einbau: 10% des Produktpreises bei Pkw und 20% bei LKW.
-                                                        Den Restbetrag entrichten Sie bitte nach Einbau direkt an die von Ihnen gewählte Einbau-Werkstatt.
-                                                    </div>
-                                                    <div className={"w-100 pb-3"}></div>
-                                                    <div>
-                                                        <p><strong>Restbetrag: </strong><span className={""}> {formatPrice(calculateRemainingAmount(cartItem.totalPriceUnformatted, calculateAdvancePayment(cartItem.totalPriceUnformatted, productOptions.advancePayment.cost)))}</span></p>
+                                            <div className={"row "}>
+                                                <div className={"col-sm-6"}>
+                                                    <div className={"row g-0"}>
+                                                        {cartItem.productName.toLowerCase().includes('filterreinigung')? (
+                                                            <ProductImage
+                                                                src={`${JOOMLA_URL_BASE}/images/Filterreinigung-PKW-LKW-BUS-2.jpg`}
+                                                                alt={cartItem.productName}
+                                                                fallback={`${JOOMLA_URL_BASE}/images/Filterreinigung-PKW-LKW-BUS-2.jpg`}
+                                                            />
+                                                        ) : (
+                                                            <ProductImage
+                                                                src={`${JOOMLA_URL_BASE}/media/com_hikashop/upload/${cartItem.productImage}`}
+                                                                alt={cartItem.productName}
+                                                                fallback={`${JOOMLA_URL_BASE}/media/com_hikashop/upload/beispielphoto.jpg`}
+                                                            />
+                                                        )}
                                                     </div>
                                                 </div>
-                                            )}
-                                            {/* Land and City if available */}
-                                            {productOptions?.installation?.isAvailable && cartItem.options.installation && (
-                                                <div className="cart-item cart-werkstatt">
-                                                    Ihre Werkstatt: {cartItem.cityName} <br/>
-                                                    (Genaue Angabe folgt, wir setzen uns nach Abschluss der Bestellung mit Ihnen in Verbindung.)
+                                                <div className={"col-sm-6"}>
+                                                    <div className={"w-100 pb-3 pb-sm-0"}></div>
+                                                    <div className="cart-item">
+                                                        <p><strong>Produkt:</strong> {cartItem.productName}</p>
+                                                        <p><strong>Preis:</strong> {cartItem.basePrice} (inkl. MwSt.)</p>
+                                                        {/* Conditionally render available options. ProductOptions sind hier absolut unnnötig !!!!!!!!!!!!!!!!!!!!!!!!! */}
+                                                        {productOptions?.deposit?.isAvailable && (
+                                                            <p><strong>{cartItem.options.deposit.label}:</strong> {cartItem.options.deposit.cost} (inkl. MwSt.)</p>
+                                                        )}
+                                                        {productOptions?.installation?.isAvailable && cartItem.options.installation &&(
+                                                            <p><strong>{cartItem.options.installation.label}:</strong> {cartItem.options.installation.cost} (inkl. MwSt.)</p>
+                                                        )}
+                                                        {productOptions?.delivery?.isAvailable && cartItem.options.delivery && (
+                                                            <p><strong>{cartItem.options.delivery.label}:</strong> {cartItem.options.delivery.cost} (inkl. MwSt.)</p>
 
+                                                        )}
+                                                        {cartItem.selectedDate && (
+                                                            <>
+                                                                <p><strong>Abholdatum des ausgebauten Partikelfilters:</strong> {cartItem.selectedDate}</p>
+                                                                <p><strong>Zustellung des gereinigten Partikelfilters:</strong> {cartItem.nextDay}</p>
+                                                            </>
+                                                        )}
+
+                                                        {productOptions?.installation?.isAvailable && cartItem.options.installation ? (
+                                                            <>
+                                                                <p><strong>Summe:</strong> {cartItem.totalPrice} (inkl. MwSt.)</p>
+                                                                <p>Anteil <strong>Vorauszahlung*</strong> für Produkte mit Einbau: {formatPrice(calculateAdvancePayment(cartItem.totalPriceUnformatted, productOptions.advancePayment.cost))} (inkl. MwSt.)</p>
+                                                            </>
+                                                        ) : (
+                                                            <p><strong>Summe:</strong> {formatPrice(displayTotalPrice)} (inkl. MwSt.)</p>
+                                                        )}
+                                                        <p><strong>MwSt.</strong> {formatPrice(vatShare)}</p>
+                                                        <h3 className={"gc-green pt-3"}>Gesamtsumme: {formatPrice(displayTotalPrice)}</h3>
+                                                    </div>
+                                                    {/* Restbetrag wenn Vorauszahlung */}
+                                                    {productOptions?.installation?.isAvailable && cartItem.options.installation && (
+                                                        <div className="cart-item restbetrag pt-2">
+                                                            <div>
+                                                                <strong><span className={""}>* Vorauszahlung:</span></strong><br/>
+
+                                                                Die Vorauszahlung bei Produkten mit Einbau: 10% des Produktpreises bei Pkw und 20% bei LKW.
+                                                                Den Restbetrag entrichten Sie bitte nach Einbau direkt an die von Ihnen gewählte Einbau-Werkstatt.
+                                                            </div>
+                                                            <div className={"w-100 pb-3"}></div>
+                                                            <div>
+                                                                <p><strong>Restbetrag: </strong><span className={""}> {formatPrice(calculateRemainingAmount(cartItem.totalPriceUnformatted, calculateAdvancePayment(cartItem.totalPriceUnformatted, productOptions.advancePayment.cost)))}</span></p>
+                                                            </div>
+                                                        </div>
+                                                    )}
+                                                    {/* Land and City if available */}
+                                                    {productOptions?.installation?.isAvailable && cartItem.options.installation && (
+                                                        <div className="cart-item cart-werkstatt">
+                                                            Ihre Werkstatt: {cartItem.cityName} <br/>
+                                                            (Genaue Angabe folgt, wir setzen uns nach Abschluss der Bestellung mit Ihnen in Verbindung.)
+
+                                                        </div>
+                                                    )}
                                                 </div>
-                                            )}
 
+                                            </div>
                                         </div>
                                     </div>
 
@@ -565,13 +567,13 @@ export default function CheckoutPage({footerArticle }) {
                                         <div className={"w-100 pb-4"}></div>
                                         <div className="row g-0 p-3 p-sm-4 product-detail-view rounded-4">
                                             <div className={"col"}>
-                                                    <h2>Payment Method</h2>
+                                                    <h2>Zahlungsmethode</h2>
                                                     <Row className="mb-3">
                                                         <Col sm={12}>
                                                             {/* Advance Payment Option */}
                                                             <Form.Check
                                                                 type="radio"
-                                                                label="Advance Payment"
+                                                                label="Vorauskasse / Banküberweisung"
                                                                 name="paymentMethod"
                                                                 value="advance-payment"
                                                                 checked={paymentMethod === "advance-payment"}
@@ -605,7 +607,7 @@ export default function CheckoutPage({footerArticle }) {
                             </>
                         ) : (
                             <div className={"row g-0 p-3 p-sm-4 product-detail-view rounded-4"}>
-                                <h1>Ihr Warenkorb is leer</h1>
+                                <h1>Ihr Warenkorb ist leer</h1>
                             </div>
                         )}
 
@@ -617,9 +619,7 @@ export default function CheckoutPage({footerArticle }) {
                             </div>
                         </div>
                     </div>
-                <div className={"col-sm-4  text-center text-sm-end"}>
-                    <Pictos />
-                </div>
+
             </div>
         </>
     );

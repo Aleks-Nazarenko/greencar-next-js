@@ -368,7 +368,7 @@ export default function ProductPage({ product, article, installation, delivery, 
                         {product && (
                             <>
                             <div className={"col"}>
-                                <div className={"row g-0"}>
+                                <div className={"row"}>
 
                                     <div className="col-sm-6">
 
@@ -394,9 +394,9 @@ export default function ProductPage({ product, article, installation, delivery, 
                                                 />
                                                 )}
                                     </div>
-                                    <div className={"col-sm-1"}></div>
-                                    <div className={"col-sm-5"}>
-                                        <div className={"row g-0 bg-white rounded-4 p-3"}>
+
+                                    <div className={"col-sm-6"}>
+                                        <div className={"row g-0 pt-3 pt-sm-0"}>
                                             <div className={"col"}>
                                                 <p className={""}><strong>Hersteller: </strong> {product.hersteller}</p>
                                                 <p><strong>Modell: </strong> {product.modell_liste} </p>

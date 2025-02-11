@@ -9,7 +9,6 @@ import PayPalPlaceholder from "@/pages/PayPalPlaceholder";
 import { Modal, Button } from "react-bootstrap";
 import {JOOMLA_API_BASE} from "@/utils/config";
 import {JOOMLA_URL_BASE} from "@/utils/config";
-import Pictos from "@/components/Pictos";
 
 function ProductImage({ src, alt, fallback }) {
     const [imgSrc, setImgSrc] = useState(src);
@@ -147,7 +146,7 @@ export default function CheckoutStep2({footerArticle, termsArticle})   {
                     </div>
                     <div className="w-100 pb-4"></div>
                     <div className="row g-0">
-                        <div className="col-sm-8">
+                        <div className="col">
                             <div className="row g-0">
                                 {checkoutDetails && (
                                     <div className={"col"}>
@@ -156,166 +155,143 @@ export default function CheckoutStep2({footerArticle, termsArticle})   {
                                                 <div className={"row g-0"}>
                                                     <h2 className={" mb-3"}>{checkoutDetails.cartItem.productName}</h2>
                                                 </div>
-                                                <div className={"row g-0 "}>
-                                                    {checkoutDetails.cartItem.productName.toLowerCase().includes('filterreinigung')? (
-                                                        <ProductImage
-                                                            src={`${JOOMLA_URL_BASE}/images/Filterreinigung-PKW-LKW-BUS-2.jpg`}
-                                                            alt={checkoutDetails.cartItem.productName}
-                                                            fallback={`${JOOMLA_URL_BASE}/images/Filterreinigung-PKW-LKW-BUS-2.jpg`}
-                                                        />
-                                                    ) : (
-                                                        <ProductImage
-                                                            src={`${JOOMLA_URL_BASE}/media/com_hikashop/upload/${checkoutDetails.cartItem.productImage}`}
-                                                            alt={checkoutDetails.cartItem.productName}
-                                                            fallback={`${JOOMLA_URL_BASE}/media/com_hikashop/upload/beispielphoto.jpg`}
-                                                        />
-                                                    )}
 
-                                                </div>
-                                                <div className={"w-100 pb-3"}></div>
-                                                <div className={"row pb-2"}>
+                                                <div className={"row "}>
                                                     <div className={"col-sm-6"}>
-                                                        { checkoutDetails.cartItem.productName}
+
+
+                                                        <div className={"row g-0 "}>
+                                                            {checkoutDetails.cartItem.productName.toLowerCase().includes('filterreinigung')? (
+                                                                <ProductImage
+                                                                    src={`${JOOMLA_URL_BASE}/images/Filterreinigung-PKW-LKW-BUS-2.jpg`}
+                                                                    alt={checkoutDetails.cartItem.productName}
+                                                                    fallback={`${JOOMLA_URL_BASE}/images/Filterreinigung-PKW-LKW-BUS-2.jpg`}
+                                                                />
+                                                            ) : (
+                                                                <ProductImage
+                                                                    src={`${JOOMLA_URL_BASE}/media/com_hikashop/upload/${checkoutDetails.cartItem.productImage}`}
+                                                                    alt={checkoutDetails.cartItem.productName}
+                                                                    fallback={`${JOOMLA_URL_BASE}/media/com_hikashop/upload/beispielphoto.jpg`}
+                                                                />
+                                                            )}
+
+                                                        </div>
+
+
                                                     </div>
                                                     <div className={"col-sm-6"}>
-                                                        {checkoutDetails.cartItem.basePrice} (inkl. MwSt.)
-                                                    </div>
-                                                </div>
-                                                    {checkoutDetails.cartItem.options.deposit && (
-                                                       <div className={"row  pb-2"}>
-                                                           <div className={"col-sm-6"}>
-                                                               {checkoutDetails.cartItem.options.deposit.label}
-                                                           </div>
-                                                           <div className={"col-sm-6"}>
-                                                               {checkoutDetails.cartItem.options.deposit.cost} (inkl. MwSt.)
-                                                           </div>
-                                                       </div>
-                                                   )}
-                                                    {checkoutDetails.cartItem.options.installation &&(
-                                                       <div className={"row  pb-2"}>
-                                                           <div className={"col-sm-6"}>
-                                                               {checkoutDetails.cartItem.options.installation.label}
-                                                           </div>
-                                                           <div className={"col-sm-6"}>
-                                                               {checkoutDetails.cartItem.options.installation.cost} (inkl. MwSt.)
-                                                           </div>
-                                                       </div>
-                                                    )}
-                                                    {checkoutDetails.cartItem.options.delivery && (
-                                                       <div className={"row  pb-2"}>
-                                                           <div className={"col-sm-6"}>
-                                                               {checkoutDetails.cartItem.options.delivery.label}
-                                                           </div>
-                                                           <div className={"col-sm-6"}>
-                                                               {checkoutDetails.cartItem.options.delivery.cost} (inkl. MwSt.)
-                                                           </div>
-                                                       </div>
-                                                    )}
-                                                    {checkoutDetails.cartItem.selectedDate && (
-                                                        <>
-                                                        <div className={"row  pb-2"}>
-                                                            <div className={"col-sm-6"}>
-                                                                Abholdatum des ausgebauten Partikelfilters
-                                                            </div>
-                                                            <div className={"col-sm-6"}>
-                                                                {checkoutDetails.cartItem.selectedDate}
-                                                            </div>
-                                                        </div>
-                                                        <div className={"row  pb-2"}>
-                                                            <div className={"col-sm-6"}>
-                                                                Zustellung des gereinigten Partikelfilters
-                                                            </div>
-                                                            <div className={"col-sm-6"}>
-                                                                {checkoutDetails.cartItem.nextDay}
-                                                            </div>
-                                                        </div>
-                                                        </>
-                                                    )}
 
-                                                { /*
-                                                     <div className={"row g-0"}>
-                                                        <div className={"col-sm-4"}>
-                                                            {checkoutDetails.cartItem.options.installation ? (
-                                                                <>
-                                                                    <div className={"w-100"}>Einzelpreis</div>
-                                                                    <div className={"w-100"}>{checkoutDetails.cartItem.totalPrice} (inkl. MwSt.)</div>
-                                                                </>
-                                                            ) : (
-                                                                <>
-                                                                    <div className={"w-100"}>Einzelpreis</div>
-                                                                    <div className={"w-100"}>{formatPrice(checkoutDetails.cartItem.totalPriceUnformatted)} (inkl. MwSt.)</div>
-                                                                </>
-                                                            )}
+                                                        <div className={"w-100 pb-3 pb-sm-0"}></div>
+                                                        <div className={"row pb-2"}>
+                                                            <div className={"col-sm-4 gc-bold-2"}>
+                                                                Preis
+                                                            </div>
+                                                            <div className={"col-sm-8"}>
+                                                                {checkoutDetails.cartItem.basePrice} (inkl. MwSt.)
+                                                            </div>
                                                         </div>
-                                                        <div className={"col-sm-4"}>
-                                                            {checkoutDetails.cartItem.options.installation ? (
-                                                                <>
-                                                                    <div className={"w-100"}>Gesamtpreis</div>
-                                                                    <div className={"w-100"}>{checkoutDetails.cartItem.totalPrice} (inkl. MwSt.)</div>
-                                                                </>
-                                                            ) : (
-                                                                <>
-                                                                    <div className={"w-100"}>Gesamtpreis</div>
-                                                                    <div className={"w-100"}>{formatPrice(checkoutDetails.cartItem.totalPriceUnformatted)} (inkl. MwSt.)</div>
-                                                                </>
-                                                            )}
-                                                        </div>
-                                                    </div>
-                                                    */
-                                                }
+                                                        {checkoutDetails.cartItem.options.deposit && (
+                                                           <div className={"row  pb-2"}>
+                                                               <div className={"col-sm-4 gc-bold-2"}>
+                                                                   {checkoutDetails.cartItem.options.deposit.label}
+                                                               </div>
+                                                               <div className={"col-sm-8"}>
+                                                                   {checkoutDetails.cartItem.options.deposit.cost} (inkl. MwSt.)
+                                                               </div>
+                                                           </div>
+                                                       )}
+                                                        {checkoutDetails.cartItem.options.installation &&(
+                                                           <div className={"row  pb-2"}>
+                                                               <div className={"col-sm-4 gc-bold-2"}>
+                                                                   {checkoutDetails.cartItem.options.installation.label}
+                                                               </div>
+                                                               <div className={"col-sm-8"}>
+                                                                   {checkoutDetails.cartItem.options.installation.cost} (inkl. MwSt.)
+                                                               </div>
+                                                           </div>
+                                                        )}
+                                                        {checkoutDetails.cartItem.options.delivery && (
+                                                           <div className={"row  pb-2"}>
+                                                               <div className={"col-sm-4 gc-bold-2"}>
+                                                                   {checkoutDetails.cartItem.options.delivery.label}
+                                                               </div>
+                                                               <div className={"col-sm-8"}>
+                                                                   {checkoutDetails.cartItem.options.delivery.cost} (inkl. MwSt.)
+                                                               </div>
+                                                           </div>
+                                                        )}
 
+                                                        {checkoutDetails.cartItem.options.installation ? (
+                                                            <>
+                                                                <div className={"row pb-2"}>
+                                                                    <div className={"col-sm-4 gc-bold-2"}>Summe </div>
+                                                                    <div className={"col-sm-8"}>
+                                                                            {checkoutDetails.cartItem.totalPrice} (inkl. MwSt.)
+                                                                    </div>
+                                                                </div>
+                                                                <div className={"row pb-2"}>
+                                                                    <div className={"col-sm-4 gc-bold-2"}>
+                                                                        <b>Voraus&shy;zahlung*</b>
+                                                                    </div>
+                                                                    <div className={"col-sm-8"}>
+                                                                        {formatPrice(checkoutDetails.cartItem.advancePayment)} (inkl. MwSt.)
+                                                                    </div>
+                                                                </div>
+                                                            </>
+                                                        ) : (
+                                                            <div className={"row pb-2"}>
+                                                                <div className={"col-sm-4 gc-bold-2"}>Summe </div>
+                                                                <div className={"col-sm-8"}>
+                                                                    {formatPrice(checkoutDetails.cartItem.totalPriceUnformatted)} (inkl. MwSt.)
+                                                                </div>
+                                                            </div>
+                                                        )}
+                                                        <div className={"row pb-2"}>
+                                                            <div className={"col-sm-4 gc-bold-2"}>MwSt.</div>
+                                                            <div className={"col-sm-8"}>{checkoutDetails.cartItem.vatShare}</div>
+                                                        </div>
+                                                        <div className={"row pt-3"}>
+                                                            <div className={"col"}><h3 className={"gc-green "}>Gesamtsumme {checkoutDetails.cartItem.advancePayment ? formatPrice(checkoutDetails.cartItem.advancePayment) : formatPrice(checkoutDetails.cartItem.totalPriceUnformatted)}</h3></div>
+                                                        </div>
+                                                        {checkoutDetails.cartItem.selectedDate && (
+                                                            <>
+                                                                <div className={"row  pt-2"}>
+                                                                    <div className={"col"}>
+                                                                        Abholdatum des ausgebauten Partikelfilters: <span className={"gc-bold-2"}>{checkoutDetails.cartItem.selectedDate}</span>
+                                                                    </div>
+                                                                </div>
+                                                                <div className={"row  pb-2"}>
+                                                                    <div className={"col"}>
+                                                                        Zustellung des gereinigten Partikelfilters: <span className={"gc-bold-2"}>{checkoutDetails.cartItem.nextDay}</span>
+                                                                    </div>
+                                                                </div>
+                                                            </>
+                                                        )}
+                                                        {checkoutDetails.cartItem.options.installation && (
+                                                            <>
+                                                                <div className={"row pt-2 pb-2"}>
+                                                                    <div className={"col"}>
+                                                                        <strong><span className={""}>* Vorauszahlung:</span></strong><br/>
+                                                                        Die Vorauszahlung bei Produkten mit Einbau: 10% des Produktpreises bei Pkw und 20% bei LKW.
+                                                                        Den Restbetrag entrichten Sie bitte nach Einbau direkt an die von Ihnen gewählte Einbau-Werkstatt.
+                                                                    </div>
+                                                                </div>
+                                                                <div className={"row pt-2 "}>
+                                                                    <div className={"col"}>
+                                                                        Restbetrag: {checkoutDetails.cartItem.remainingAmount ?? "nicht verfügbar"}
+                                                                    </div>
+                                                                </div>
+                                                            </>
+                                                        )}
 
-                                                {checkoutDetails.cartItem.options.installation ? (
-                                                    <>
-                                                        <div className={"row row-cols-2 pb-2"}>
-                                                            <div className={"col "}>Summe </div>
-                                                            <div className={"col"}>
-                                                                    {checkoutDetails.cartItem.totalPrice} (inkl. MwSt.)
-                                                            </div>
-                                                        </div>
-                                                        <div className={"row row-cols-2 pb-2"}>
-                                                            <div className={"col "}>
-                                                                Anteil <b>Vorauszahlung*</b> für Produkte mit Einbau
-                                                            </div>
-                                                            <div className={"col"}>
-                                                                {formatPrice(checkoutDetails.cartItem.advancePayment)} (inkl. MwSt.)
-                                                            </div>
-                                                        </div>
-                                                    </>
-                                                ) : (
-                                                    <div className={"row row-cols-2 pb-2"}>
-                                                        <div className={"col "}>Summe </div>
-                                                        <div className={"col"}>
-                                                            {formatPrice(checkoutDetails.cartItem.totalPriceUnformatted)} (inkl. MwSt.)
-                                                        </div>
                                                     </div>
-                                                )}
-                                                <div className={"row pb-2"}>
-                                                    <div className={"col"}>MwSt.</div>
-                                                    <div className={"col"}>{checkoutDetails.cartItem.vatShare}</div>
+
                                                 </div>
-                                                <div className={"row pt-3"}>
-                                                    <div className={"col"}><h4 className={"gc-green"}>Gesamtsumme {checkoutDetails.cartItem.advancePayment ? formatPrice(checkoutDetails.cartItem.advancePayment) : formatPrice(checkoutDetails.cartItem.totalPriceUnformatted)}</h4></div>
-                                                </div>
-                                                {checkoutDetails.cartItem.options.installation && (
-                                                    <>
-                                                        <div className={"row pt-2 pb-2"}>
-                                                            <div className={"col"}>
-                                                                <strong><span className={""}>* Vorauszahlung:</span></strong><br/>
-                                                                Die Vorauszahlung bei Produkten mit Einbau: 10% des Produktpreises bei Pkw und 20% bei LKW.
-                                                                Den Restbetrag entrichten Sie bitte nach Einbau direkt an die von Ihnen gewählte Einbau-Werkstatt.
-                                                            </div>
-                                                        </div>
-                                                        <div className={"row pt-2 "}>
-                                                            <div className={"col"}>
-                                                                Restbetrag: {checkoutDetails.cartItem.remainingAmount ?? "nicht verfügbar"}
-                                                            </div>
-                                                        </div>
-                                                    </>
-                                                )}
                                             </div>
                                         </div>
+
                                         <div className={"w-100 pb-4"}></div>
+
                                         <div className={"row g-0 p-3 p-sm-4 product-detail-view rounded-4"}>
                                             {checkoutDetails.billingAddress && (
                                                 <div className={"col-sm-6"}>
@@ -470,9 +446,7 @@ export default function CheckoutStep2({footerArticle, termsArticle})   {
                                 </div>
                             </div>
                         </div>
-                        <div className={"col-sm-4  text-center text-sm-end"}>
-                            <Pictos />
-                        </div>
+
                     </div>
 
         </PayPalScriptProvider>

@@ -7,7 +7,7 @@ import {convertRelativeUrls} from "@/utils/convertRelativeUrls";
 import {JOOMLA_API_BASE} from "@/utils/config";
 import {JOOMLA_URL_BASE} from "@/utils/config";
 
-//const inter = Inter({ subsets: ["latin"] });
+
 
 export async function getStaticPaths() {
     // Fetch categories dynamically from your Joomla API
