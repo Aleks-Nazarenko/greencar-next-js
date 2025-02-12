@@ -70,28 +70,26 @@ export async function getStaticProps({ params }) {
     if (!productData.product_name) {
         console.error("Invalid product data received:", productData);
     }
-    // Fetch data for the footer from Joomla API
-    const resFooter = await fetch(`${JOOMLA_API_BASE}&task=articleWithModules&id=2&format=json`);
-    const footerData = await resFooter.json();
+    const resArticle = await fetch(`${JOOMLA_API_BASE}&task=articleWithModules&id=20&format=json`);
+    const articleData = await resArticle.json();
     // Extract the footer article from the response
-    const footerArticle = footerData.article || null;
-    // Convert relative URLs in the footer content to absolute URLs
-    if (footerArticle) {
-        footerArticle.introtext = footerArticle.introtext ? convertRelativeUrls(footerArticle.introtext, joomlaBaseUrl) : '';
-        if (!footerArticle.introtext) {
-            console.log('footerArticle.introtext not found');
+    const article = articleData.article || null;
+    if (article) {
+        article.content = article.content ? convertRelativeUrls(article.content, joomlaBaseUrl) : '';
+        if (!article.content) {
+            console.log('footerArticle.content not found');
         }
     }
 
     return {
         props: {
             product,
-            footerArticle,
+            article,
         },
     };
 }
 
-export default function ProductPage({ product, footerArticle }) {
+export default function ProductPage({ product, article }) {
     const formatPrice = (price) => {
         return new Intl.NumberFormat('de-DE', {
             style: 'currency',
@@ -103,13 +101,18 @@ export default function ProductPage({ product, footerArticle }) {
 
     return (
         <>
-            <main>
-                <div className="container-fluid container-greencar">
-
-                    <div className="row g-0 p-4">
-                        {product && (
-                            <>
-                                <h1>{product.product_name}</h1>
+            {product && (
+                <div className={"row g-0"}>
+                    <h1 className={"pb-0 mb-0"}>{product.product_name} für {product.modell_liste}</h1>
+                </div>
+            )}
+            <div className="w-100 pb-4"></div>
+            <div className="row g-0 p-3 p-sm-4 product-detail-view rounded-4 align-items-center">
+                {product && (
+                    <>
+                        <div className={"col"}>
+                            <div className={"row"}>
+                                <div className="col-sm-6">
 
                                     {productImages && productImages.length > 1 ? (
                                         <Swiper spaceBetween={10} slidesPerView={1} navigation modules={[Navigation]}>
@@ -132,32 +135,51 @@ export default function ProductPage({ product, footerArticle }) {
                                             fallback={`${JOOMLA_URL_BASE}/media/com_hikashop/upload/beispielphoto.jpg`}
                                         />
                                     )}
+                                </div>
+                                <div className="col-sm-6">
+                                    <div className={"row g-0 pt-3 pt-sm-0"}>
+                                        <div className={"col-12"}>
+                                            <p className={""}><strong>Hersteller: </strong> {product.hersteller}</p>
+                                            <p><strong>Modell: </strong> {product.modell_liste} </p>
+                                            <p><strong>Euronorm vor Umrüstung: </strong> {product.euronorm_liste}</p>
+                                            <p><strong>Hubraum KW/PS: </strong> {product.hubraum_liste} </p>
+                                            <p><strong>Bestellnr.:</strong> {product.bestellnr}</p>
+                                            <p><strong>OE-Nummer:</strong> {product.oe_nummer_liste}</p>
+                                        </div>
+                                    </div>
+                                </div>
 
-                                <p>{product.product_description}</p>
-                                {/* Additional product details */}
-                            </>
-                        )}
-                    </div>
-                    <div className="row g-0 p-4">
-                        <Link href={`/anfrage`}>
-                            <button className="btn btn-primary">Unverbindliches Angebot anfordern</button>
-                        </Link>
-                    </div>
-                    <div className="row g-0 p-4">
-                        <button onClick={() => router.back()} className="btn btn-primary">Zurück zur Listenansicht</button>
-                    </div>
+                            </div>
+                        </div>
 
+                    </>
+                )}
+            </div>
+
+
+            <div className="row g-0 p-4 pb-3">
+                <div className={"col col-sm-6"}>
+                    <Link href={`/anfrage`}>
+                        <button className="btn btn-primary btn-yellow btn-100">Unverbindliches Angebot anfordern</button>
+                    </Link>
                 </div>
-            </main>
-            <footer>
-                <div className="container-fluid container-footer container-greencar">
-                    <div className="row g-0 p-4">
-                        {footerArticle?.introtext && (
-                            <div dangerouslySetInnerHTML={{ __html: footerArticle.introtext}} />
-                        )}
-                    </div>
+            </div>
+
+            <div className="row g-0 p-4 pt-3">
+                <div className={"col col-sm-6"}>
+                    <button onClick={() => router.back()} className="btn btn-primary btn-green btn-100">Zurück zur Listenansicht</button>
                 </div>
-            </footer>
+            </div>
+
+
+
+            <div className="w-100 pb-4"></div>
+            <div className="row g-0">
+                {article?.content && (
+                    <div dangerouslySetInnerHTML={{ __html: article.content}} />
+                )}
+            </div>
+
         </>
     );
 }

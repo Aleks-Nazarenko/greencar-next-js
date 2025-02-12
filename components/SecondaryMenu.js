@@ -69,7 +69,6 @@ export default function SecondaryMenu() {
                             <Image src="/images/icons/bus-partikelfilter.png" alt="BUS Partikelfilter" width={50} height={50} className="me-2 picto-50" />
                             BUS
                         </Dropdown.Toggle>
-
                         {/* 🔹 Dropdown Menu */}
                         <Dropdown.Menu>
                             <Dropdown.Item href="/bus-partikelfilter/dpf-euro-vi" className="d-flex align-items-center">
@@ -77,7 +76,7 @@ export default function SecondaryMenu() {
                                 DPF EURO VI
                             </Dropdown.Item>
                             <Dropdown.Item href="/bus-partikelfilter/bus-filterreinigung" className="d-flex align-items-center">
-                                <Image src="/images/icons/pkw-austauschfilter.png" alt="BUS Filterreinigung" width={50} height={50} className="me-2 picto-50" />
+                                <Image src="/images/icons/bus-filterreinigung.png" alt="BUS Filterreinigung" width={50} height={50} className="me-2 picto-50" />
                                 Filterreinigung
                             </Dropdown.Item>
                         </Dropdown.Menu>

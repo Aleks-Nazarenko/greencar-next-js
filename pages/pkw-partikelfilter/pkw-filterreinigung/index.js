@@ -438,7 +438,7 @@ export default function FilterreinigungPage({ product,installation, delivery, ar
             {product && (
                 <div className="row g-0 pb-4">
                     <h1 className={"mb-1"}>{product.product_name}</h1>
-                    <div className={"display-4"}>48h Expressreinigung von der Abholung bis zur Zustellung</div>
+                    <h2 className={"display-4 mb-0"}>48h Expressreinigung von der Abholung bis zur Zustellung</h2>
                 </div>
              )}
             <div className="row g-0">

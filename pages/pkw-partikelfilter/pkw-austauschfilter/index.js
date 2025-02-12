@@ -47,9 +47,9 @@ export default function NachruestfilterCategories({ categories, article }) {
     };
     return (
         <>
-            <div className={"row g-0 pb-3"}>
-                <h1 className={"pb-1"}>PKW - Austauschfilter</h1>
-                <h4>Bitte wählen Sie zunächst den Hersteller Ihres Pkw und danach ggf. das Modell. Anschließend stellen wir Ihnen unsere Produktauswahl an passenden Austaustauschfiltern vor.</h4>
+            <div className={"row g-0 pb-0"}>
+                <h1 className={"mb-1"}>PKW - Austauschfilter</h1>
+                <h2 className={"display-4 mb-0"}>Bitte wählen Sie zunächst den Hersteller Ihres Pkw und danach ggf. das Modell. Anschließend stellen wir Ihnen unsere Produktauswahl an passenden Austaustauschfiltern vor.</h2>
             </div>
             <div className="w-100 pb-4"></div>
             <div className="row g-0 p-3 p-sm-4 product-detail-view rounded-4">
@@ -78,7 +78,6 @@ export default function NachruestfilterCategories({ categories, article }) {
                 </div>
             </div>
             <div className="w-100 pb-4"></div>
-            <div className="w-100 pb-3"></div>
 
             <div className="row g-0">
                         {article?.content && (

@@ -8,6 +8,7 @@ import {useEffect, useState} from "react";
 import {FormSelect} from "react-bootstrap";
 import NextImage from "next/image";
 
+
 function ProductImage({ src, alt, fallback }) {
     const [imgSrc, setImgSrc] = useState(src);
 
@@ -25,7 +26,7 @@ function ProductImage({ src, alt, fallback }) {
 export async function getStaticPaths() {
     // Fetch categories dynamically from your Joomla API
     try {
-        const res = await axios.get(`${JOOMLA_API_BASE}&task=getSubcategories&category_id=68&format=json`);
+        const res = await axios.get(`${JOOMLA_API_BASE}&task=getSubcategories&category_id=444&format=json`);
         const categories = await res.data;
         // Map the fetched categories to paths with the `id-name` format
         const paths = categories.map((category) => ({
@@ -53,7 +54,7 @@ export async function getStaticProps({ params }) {
     const name = nameParts.join('-');
     // Fetch categories for the main dropdown (assuming you want to navigate between categories)
     const categories = await axios // ment subcategories of the category_id=68
-        .get(`${JOOMLA_API_BASE}&task=getSubcategories&category_id=68&format=json`)
+        .get(`${JOOMLA_API_BASE}&task=getSubcategories&category_id=444&format=json`)
         .then((res) => res.data || [])
         .catch((error) => {
             console.log('Failed to fetch categories:', error.message);
@@ -96,48 +97,48 @@ function DpfEuroVIProductListPage({ categories, categoryId, categoryName, articl
     if (router.isFallback) {
         return (
             <div className="row g-0 justify-content-center">
-               <div className="col-auto">Loading...</div>
+                <div className="col-auto">Loading...</div>
             </div>
         );
     }
     const handleCategoryChange = (event) => {
         const selectedCategory = event.target.value;
         if (selectedCategory) {
-            router.push(`/lkw-partikelfilter/dpf-euro-vi/${selectedCategory}`);
+            router.push(`/lkw-partikelfilter/schalldaempfer-euro-vi/${selectedCategory}`);
         }
     };
     return (
         <>
             <div className={"row g-0"}>
-                <h1 className={"pb-0 mb-1"}>LKW - Partikelfilter EURO IV </h1>
-                <h2 className={"display-4 mb-0"}>Bitte wählen Sie den Hersteller Ihres Lkw. Anschließend stellen wir Ihnen unsere Produktauswahl an passenden Partikelfiltern vor</h2>
+                <h1 className={"mb-1"}>LKW - Komplettschalldämpfer EURO VI</h1>
+                <h2 className={"display-4 mb-0"}>Bitte wählen Sie den Hersteller Ihres Lkw. Anschließend stellen wir Ihnen unsere Produktauswahl an passenden Komplettschalldämpfern vor.</h2>
             </div>
             <div className="w-100 pb-4"></div>
             <div className="row g-0 p-3 p-sm-4 product-detail-view rounded-4 align-items-center">
                 <div className={"col"}>
-                            {categories.length > 0 && (
-                                <>
-                                    <FormSelect
-                                        id="categorySelect"
-                                        onChange={handleCategoryChange}
-                                        value={`${categoryId}-${categoryName.toLowerCase()}`}
+                    {categories.length > 0 && (
+                        <>
+                            <FormSelect
+                                id="categorySelect"
+                                onChange={handleCategoryChange}
+                                value={`${categoryId}-${categoryName.toLowerCase()}`}
+                            >
+                                <option value="" disabled>- Hersteller -</option>
+                                {categories.map((category) => (
+                                    <option
+                                        key={category.category_id}
+                                        value={`${category.category_id}-${category.category_name.toLowerCase().replace(/\s+/g, '-')}`}
                                     >
-                                        <option value="" disabled>- Hersteller -</option>
-                                        {categories.map((category) => (
-                                            <option
-                                                key={category.category_id}
-                                                value={`${category.category_id}-${category.category_name.toLowerCase().replace(/\s+/g, '-')}`}
-                                            >
-                                                {category.category_name}
-                                            </option>
-                                        ))}
-                                    </FormSelect>
-                                </>
-                            )}
+                                        {category.category_name}
+                                    </option>
+                                ))}
+                            </FormSelect>
+                        </>
+                    )}
                 </div>
                 <div className={"col"}>
                     <div className="col text-end d-none d-sm-block">
-                        <NextImage src={"/images/icons/lkw-nachruestfilter.png"} alt={"lkw-nachruestfilter"} width={190} height={190} className={"img-fluid"}/>
+                        <NextImage src={"/images/icons/lkw-austauschfilter.png"} alt={"Austauschfilter"} width={190} height={190} className={"img-fluid"}/>
                     </div>
                 </div>
 
@@ -145,60 +146,60 @@ function DpfEuroVIProductListPage({ categories, categoryId, categoryName, articl
 
             <div className="w-100 pb-4"></div>
             <div className="row g-0 p-3 p-sm-4 product-detail-view rounded-4 ">
-                        {products.length > 0 && (
-                            <div className="col table-responsive">
+                {products.length > 0 && (
+                    <div className="col table-responsive">
 
-                                <table className={"table table-bordered align-middle"}>
-                                <thead>
-                                    <tr>
-                                        <th>Produktname</th>
-                                        <th>Modell</th>
-                                        <th>Hubraum KW/PS</th>
-                                        <th>Euronorm</th>
-                                        <th className={"text-center"}>OE-Nummer</th>
-                                        <th>Preis</th>
-                                        <th></th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                {products.map((product) => (
-                                    <tr key={product.product_id}>
-                                        <td>
-                                            <ProductImage
-                                                src={`${JOOMLA_URL_BASE}/media/com_hikashop/upload/thumbnail_100X100/${product.product_image}`}
-                                                alt={product.product_name}
-                                                fallback={`${JOOMLA_URL_BASE}/media/com_hikashop/upload/thumbnail_100X100/beispielphoto.jpg`}
-                                            />
-                                            <span className={"d-block"}>{product.product_name}</span>
-                                        </td>
-                                        <td className={"text-center"}>
-                                            {product.modell_liste}
-                                        </td>
-                                        <td>
-                                            {product.hubraum_liste}
+                        <table className={"table table-bordered align-middle"}>
+                            <thead>
+                            <tr>
+                                <th>Produktname</th>
+                                <th>Typ</th>
+                                <th>Bauzeit</th>
+                                <th>Euronorm</th>
+                                <th className={"text-center"}>OE-Nummer</th>
+                                <th>Preis</th>
+                                <th></th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {products.map((product) => (
+                                <tr key={product.product_id}>
+                                    <td>
+                                        <ProductImage
+                                            src={`${JOOMLA_URL_BASE}/media/com_hikashop/upload/thumbnail_100X100/${product.product_image}`}
+                                            alt={product.product_name}
+                                            fallback={`${JOOMLA_URL_BASE}/media/com_hikashop/upload/thumbnail_100X100/beispielphoto.jpg`}
+                                        />
+                                        <span className={"d-block"}>{product.product_name}</span>
+                                    </td>
+                                    <td className={"text-center"}>
+                                        {product.typ_liste}
+                                    </td>
+                                    <td>
+                                        {product.bauzeit_liste}
 
-                                        </td>
-                                        <td>
-                                            {product.euronorm2_liste}
-                                        </td>
-                                        <td>
-                                            {product.oe_nummer_liste}
-                                        </td>
-                                        <td>
-                                            Auf Anfrage
-                                        </td>
-                                        <td>
-                                            <Link href={`/lkw-partikelfilter/dpf-euro-vi/${categoryId}-${categoryName}/${product.product_id}-${product.product_name.toLowerCase().replace(/\s+/g, '-')}`}>
-                                                <button className="btn btn-primary btn-green btn-100">Details</button>
-                                            </Link>
-                                        </td>
+                                    </td>
+                                    <td>
+                                        {product.euronorm2_liste}
+                                    </td>
+                                    <td>
+                                        {product.oe_nummer_liste}
+                                    </td>
+                                    <td>
+                                        Auf Anfrage
+                                    </td>
+                                    <td>
+                                        <Link href={`/lkw-partikelfilter/schalldaempfer-euro-vi/${categoryId}-${categoryName}/${product.product_id}-${product.product_name.toLowerCase().replace(/\s+/g, '-')}`}>
+                                            <button className="btn btn-primary btn-green btn-100">Details</button>
+                                        </Link>
+                                    </td>
 
-                                    </tr>
-                                ))}
-                                </tbody>
-                            </table>
-                            </div>
-                        )}
+                                </tr>
+                            ))}
+                            </tbody>
+                        </table>
+                    </div>
+                )}
             </div>
 
             <div className="w-100 pb-4"></div>
@@ -220,7 +221,7 @@ function DpfEuroVIProductListPage({ categories, categoryId, categoryName, articl
                                         <path
                                             d="m12.14 8.753-5.482 4.796c-.646.566-1.658.106-1.658-.753V3.204a1 1 0 0 1 1.659-.753l5.48 4.796a1 1 0 0 1 0 1.506z"/>
                                     </svg>
-                                    <Link href={`/lkw-partikelfilter/dpf-euro-vi/${category.category_id}-${category.category_name.toLowerCase().replace(/\s+/g, '-')}`}>{category.category_name}</Link>
+                                    <Link href={`/lkw-partikelfilter/schalldaempfer-euro-vi/${category.category_id}-${category.category_name.toLowerCase().replace(/\s+/g, '-')}`}>{category.category_name}</Link>
                                 </li>
                             ))}
                         </ul>
