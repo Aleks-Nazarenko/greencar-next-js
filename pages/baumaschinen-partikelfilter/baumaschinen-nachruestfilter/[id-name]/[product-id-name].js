@@ -25,7 +25,7 @@ export async function getStaticPaths() {
     const paths = [];
 
     try {
-        const categoryRes = await fetch(`${JOOMLA_API_BASE}&task=getSubcategories&category_id=68&format=json`);
+        const categoryRes = await fetch(`${JOOMLA_API_BASE}&task=getSubcategories&category_id=454&format=json`);
         //404 500 http errors
         //  if (!categoryRes.ok) throw new Error(`Failed to fetch categories: ${categoryRes.status}`);
         const categories = await categoryRes.json();
@@ -39,7 +39,7 @@ export async function getStaticPaths() {
                 products.forEach((product) => {
                     paths.push({
                         params: {
-                            "id-name": `${category.category_id}-${category.category_name.toLowerCase().replace(/\s+/g, '-')}`,
+                            "id-name": `${category.category_id}-${category.category_name.toLowerCase().replace(/\s*\/\s*/g, '-').replace(/\./g, '').replace(/\s+/g, '-').replace(/-+/g, '-')}`,
                             "product-id-name": `${product.product_id}-${product.product_name.toLowerCase().replace(/\s+/g, '-')}`,
                         },
                     });
@@ -57,7 +57,6 @@ export async function getStaticPaths() {
         fallback: false,
     };
 }
-
 export async function getStaticProps({ params }) {
     // Base URL of your Joomla server (adjust this to your Joomla installation URL)
     const joomlaBaseUrl = JOOMLA_URL_BASE;
@@ -70,7 +69,7 @@ export async function getStaticProps({ params }) {
     if (!productData.product_name) {
         console.error("Invalid product data received:", productData);
     }
-    const resArticle = await fetch(`${JOOMLA_API_BASE}&task=articleWithModules&id=20&format=json`);
+    const resArticle = await fetch(`${JOOMLA_API_BASE}&task=articleWithModules&id=22&format=json`);
     const articleData = await resArticle.json();
     // Extract the footer article from the response
     const article = articleData.article || null;
@@ -89,7 +88,7 @@ export async function getStaticProps({ params }) {
     };
 }
 
-export default function ProductPage({ product, article }) {
+export default function BauNachruestFilterProductPage({ product, article }) {
 
     const router = useRouter();
     const productImages = product.product_images;

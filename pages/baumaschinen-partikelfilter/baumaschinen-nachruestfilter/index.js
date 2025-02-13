@@ -36,6 +36,7 @@ export async function getStaticProps() {
 
 
 export default function dpfEuroVi({ categories, article }) {
+
     const router = useRouter();
 
     const handleCategoryChange = (event) => {
@@ -61,7 +62,7 @@ export default function dpfEuroVi({ categories, article }) {
                                 onChange={handleCategoryChange}
                                 defaultValue="" // Add a default option
                             >
-                                <option value="" disabled>- Hersteller PKW -</option>
+                                <option value="" disabled>- Motorleistung -</option>
                                 {categories.map(category => (
                                     <option
                                         key={category.category_id}
@@ -81,7 +82,7 @@ export default function dpfEuroVi({ categories, article }) {
                     )}
                 </div>
                 <div className="col text-end d-none d-sm-block">
-                    <Image src={"/images/icons/bau-nachruestfilter.png"} alt={"Bau-Nachruestfilter"} width={190} height={190} className={"img-fluid"}/>
+                    <Image src={"/images/icons/bau-nachruestfilter.png"} alt={"Bau-Nachruestfilter"} width={190} height={190} className={"img-fluid picto-190"}/>
                 </div>
             </div>
 

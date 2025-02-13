@@ -9,6 +9,7 @@ import {FormSelect} from "react-bootstrap";
 import NextImage from "next/image";
 
 
+
 function ProductImage({ src, alt, fallback }) {
     const [imgSrc, setImgSrc] = useState(src);
 
@@ -26,12 +27,12 @@ function ProductImage({ src, alt, fallback }) {
 export async function getStaticPaths() {
     // Fetch categories dynamically from your Joomla API
     try {
-        const res = await axios.get(`${JOOMLA_API_BASE}&task=getSubcategories&category_id=444&format=json`);
+        const res = await axios.get(`${JOOMLA_API_BASE}&task=getSubcategories&category_id=454&format=json`);
         const categories = await res.data;
         // Map the fetched categories to paths with the `id-name` format
         const paths = categories.map((category) => ({
             params: {
-                "id-name": `${category.category_id}-${category.category_name.toLowerCase().replace(/\s+/g, '-')}`
+                "id-name": `${category.category_id}-${category.category_name.toLowerCase().replace(/\s*\/\s*/g, '-').replace(/\./g, '').replace(/\s+/g, '-').replace(/-+/g, '-')}`
             },
         }));
         return {
@@ -54,7 +55,7 @@ export async function getStaticProps({ params }) {
     const name = nameParts.join('-');
     // Fetch categories for the main dropdown (assuming you want to navigate between categories)
     const categories = await axios // ment subcategories of the category_id=68
-        .get(`${JOOMLA_API_BASE}&task=getSubcategories&category_id=444&format=json`)
+        .get(`${JOOMLA_API_BASE}&task=getSubcategories&category_id=454&format=json`)
         .then((res) => res.data || [])
         .catch((error) => {
             console.log('Failed to fetch categories:', error.message);
@@ -68,7 +69,7 @@ export async function getStaticProps({ params }) {
             return []; // Return an empty array if the request fails
         });
 
-    const resArticle = await fetch(`${JOOMLA_API_BASE}&task=articleWithModules&id=20&format=json`);
+    const resArticle = await fetch(`${JOOMLA_API_BASE}&task=articleWithModules&id=22&format=json`);
     const articleData = await resArticle.json();
     // Extract the footer article from the response
     const article = articleData.article || null;
@@ -91,7 +92,16 @@ export async function getStaticProps({ params }) {
 }
 
 
-function DpfEuroVIProductListPage({ categories, categoryId, categoryName, article, products }) {
+function BauProductListPage({ categories, categoryId, categoryName, article, products }) {
+
+    const VAT_SHARE = 1.19; // MwSt.
+    const formatPrice = (price) => {
+        return new Intl.NumberFormat('de-DE', {
+            style: 'currency',
+            currency: 'EUR',
+        }).format(price);
+    };
+
     const router = useRouter();
 
     if (router.isFallback) {
@@ -104,14 +114,14 @@ function DpfEuroVIProductListPage({ categories, categoryId, categoryName, articl
     const handleCategoryChange = (event) => {
         const selectedCategory = event.target.value;
         if (selectedCategory) {
-            router.push(`/lkw-partikelfilter/schalldaempfer-euro-vi/${selectedCategory}`);
+            router.push(`/baumaschinen-partikelfilter/baumaschinen-nachruestfilter/${selectedCategory}`);
         }
     };
     return (
         <>
-            <div className={"row g-0"}>
-                <h1 className={"mb-1"}>LKW - Komplettschalldämpfer EURO VI</h1>
-                <h2 className={"display-4 mb-0"}>Bitte wählen Sie den Hersteller Ihres Lkw. Anschließend stellen wir Ihnen unsere Produktauswahl an passenden Komplettschalldämpfern vor.</h2>
+            <div className={"row g-0 pb-0"}>
+                <h1 className={"mb-1"}>Baumaschinen - Nachrüstfilter</h1>
+                <h2 className={"display-4 mb-0"}>Bitte wählen Sie das Modell Ihrer Baumaschine, unser Angebot bezieht sich auf Baumaschinen aller Art. Anschließend stellen wir Ihnen unsere Produktauswahl an passenden Baumaschinen-Nachrüstfiltern vor</h2>
             </div>
             <div className="w-100 pb-4"></div>
             <div className="row g-0 p-3 p-sm-4 product-detail-view rounded-4 align-items-center">
@@ -123,11 +133,17 @@ function DpfEuroVIProductListPage({ categories, categoryId, categoryName, articl
                                 onChange={handleCategoryChange}
                                 value={`${categoryId}-${categoryName.toLowerCase()}`}
                             >
-                                <option value="" disabled>- Hersteller -</option>
+                                <option value="" disabled>- Motorleitung -</option>
                                 {categories.map((category) => (
                                     <option
                                         key={category.category_id}
-                                        value={`${category.category_id}-${category.category_name.toLowerCase().replace(/\s+/g, '-')}`}
+                                        value={`${category.category_id}-${category.category_name
+                                            .toLowerCase()
+                                            .replace(/\s*\/\s*/g, '-') // Replace " / " with "-"
+                                            .replace(/\./g, '') // Remove dots (.)
+                                            .replace(/\s+/g, '-') // Replace spaces with "-"
+                                            .replace(/-+/g, '-') // Prevent double hyphens "--"
+                                        }`}
                                     >
                                         {category.category_name}
                                     </option>
@@ -138,7 +154,7 @@ function DpfEuroVIProductListPage({ categories, categoryId, categoryName, articl
                 </div>
                 <div className={"col"}>
                     <div className="col text-end d-none d-sm-block">
-                        <NextImage src={"/images/icons/lkw-austauschfilter.png"} alt={"Austauschfilter"} width={190} height={190} className={"img-fluid picto-190"}/>
+                        <NextImage src={"/images/icons/bau-nachruestfilter.png"} alt={"Bau-Nachruestfilter"} width={190} height={190} className={"img-fluid picto-190"}/>
                     </div>
                 </div>
 
@@ -151,20 +167,17 @@ function DpfEuroVIProductListPage({ categories, categoryId, categoryName, articl
 
                         <table className={"table table-bordered align-middle"}>
                             <thead>
-                            <tr className={"text-center"}>
-                                <th>Produktname</th>
-                                <th>Typ</th>
-                                <th>Bauzeit</th>
-                                <th>Ltr / KW</th>
-                                <th>OE-Nr. - alte OE-Nr.</th>
-                                <th>Euronorm</th>
-                                <th>Preis</th>
-                                <th></th>
-                            </tr>
+                                <tr className={"text-center"}>
+                                    <th>Produktname</th>
+                                    <th>Motorleistung</th>
+                                    <th>Ausführung / Einsatzgebiet</th>
+                                    <th>Preis</th>
+                                    <th></th>
+                                </tr>
                             </thead>
                             <tbody>
                             {products.map((product) => (
-                                <tr key={product.product_id} className={"text-center"}>
+                                <tr key={product.product_id} className={""}>
                                     <td className={""}>
                                         <ProductImage
                                             src={`${JOOMLA_URL_BASE}/media/com_hikashop/upload/thumbnail_100X100/${product.product_image}`}
@@ -174,27 +187,18 @@ function DpfEuroVIProductListPage({ categories, categoryId, categoryName, articl
                                         <span className={"d-block"}>{product.product_name}</span>
                                     </td>
                                     <td className={"text-center"}>
-                                        {product.typ_liste}
+                                        {product.motorleistung_liste}
                                     </td>
                                     <td>
-                                        {product.bauzeit_liste}
+                                        {product.einsatz_liste}
 
                                     </td>
                                     <td>
-                                        {product.hubraum2_liste}
+                                        {formatPrice(parseFloat(product.price_value * VAT_SHARE))} (inkl. MwSt.)
                                     </td>
                                     <td>
-                                        {product.oe_nr_liste}
-                                    </td>
-                                    <td>
-                                        {product.euronorm2_liste}
-                                    </td>
-                                    <td>
-                                        Auf Anfrage
-                                    </td>
-                                    <td>
-                                        <Link href={`/lkw-partikelfilter/schalldaempfer-euro-vi/${categoryId}-${categoryName}/${product.product_id}-${product.product_name.toLowerCase().replace(/\s+/g, '-')}`}>
-                                            <button className="btn btn-primary btn-green btn-100">Details</button>
+                                        <Link href={`/baumaschinen-partikelfilter/baumaschinen-nachruestfilter/${categoryId}-${categoryName}/${product.product_id}-${product.product_name.toLowerCase().replace(/\s+/g, '-')}`}>
+                                            <button className="btn btn-primary btn-green btn-100">Aktionpreis / Details</button>
                                         </Link>
                                     </td>
 
@@ -225,7 +229,7 @@ function DpfEuroVIProductListPage({ categories, categoryId, categoryName, articl
                                         <path
                                             d="m12.14 8.753-5.482 4.796c-.646.566-1.658.106-1.658-.753V3.204a1 1 0 0 1 1.659-.753l5.48 4.796a1 1 0 0 1 0 1.506z"/>
                                     </svg>
-                                    <Link href={`/lkw-partikelfilter/schalldaempfer-euro-vi/${category.category_id}-${category.category_name.toLowerCase().replace(/\s+/g, '-')}`}>{category.category_name}</Link>
+                                    <Link href={`/baumaschinen-partikelfilter/baumaschinen-nachruestfilter/${category.category_id}-${category.category_name.toLowerCase().replace(/\s*\/\s*/g, '-').replace(/\./g, '').replace(/\s+/g, '-').replace(/-+/g, '-')}`}>{category.category_name}</Link>
                                 </li>
                             ))}
                         </ul>
@@ -237,4 +241,4 @@ function DpfEuroVIProductListPage({ categories, categoryId, categoryName, articl
     );
 }
 
-export default DpfEuroVIProductListPage;
+export default BauProductListPage;

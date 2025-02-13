@@ -159,7 +159,7 @@ export default function ProductListPage({ products, categoryName, categoryId, su
                                     onChange={handleCategoryChange}
                                     value={`${categoryId}-${categoryName.toLowerCase()}`}
                                 >
-                                    <option value="" disabled>- Hersteller PKW -</option>
+                                    <option value="" disabled>- Hersteller -</option>
                                     {categories.map((category) => (
                                         <option
                                             key={category.category_id}
@@ -195,7 +195,7 @@ export default function ProductListPage({ products, categoryName, categoryId, su
                     </div>
                 </div>
                 <div className="col text-end d-none d-sm-block">
-                    <NextImage src={"/images/icons/pkw-austauschfilter.png"} alt={"austauchfilter"} width={190} height={190} className={"img-fluid"}/>
+                    <NextImage src={"/images/icons/pkw-austauschfilter.png"} alt={"austauchfilter"} width={190} height={190} className={"img-fluid picto-190"}/>
                 </div>
             </div>
             {products.length > 0 && (
@@ -206,7 +206,7 @@ export default function ProductListPage({ products, categoryName, categoryId, su
 
                             <table className={"table table-bordered align-middle"}>
                                 <thead>
-                                <tr>
+                                <tr className={"text-center"}>
                                     <th>Produktname</th>
                                     <th>Modell</th>
                                     <th>Hubraum KW/PS</th>
@@ -218,7 +218,7 @@ export default function ProductListPage({ products, categoryName, categoryId, su
                                 </thead>
                                 <tbody>
                                 {products.map((product) => (
-                                    <tr key={product.product_id}>
+                                    <tr key={product.product_id} className={"text-center"}>
                                         <td className={""}>
                                             <ProductImage
                                                 src={`${JOOMLA_URL_BASE}/media/com_hikashop/upload/thumbnail_100X100/${product.product_image}`}

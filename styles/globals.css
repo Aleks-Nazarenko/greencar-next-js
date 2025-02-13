@@ -154,6 +154,7 @@ header {z-index: 10}
 .required {color: red;}
 .picto-170{max-width: 170px;}
 .picto-50{max-width: 50px!important; width:100%!important;}
+.picto-190{max-width: 150px!important;}
 .bg-gc-light-blue {background: rgb(218, 239, 251, 0.92); }
 .bg-gc-light-blue-nav {background: rgb(255,255,255, 0.75); }
 .col-round {border-radius: 12px;}

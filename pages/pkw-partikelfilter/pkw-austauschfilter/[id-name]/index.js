@@ -155,7 +155,7 @@ function AustauschfilterSubcategories({ subcategories, categories, categoryId, c
                     </div>
                 </div>
                 <div className="col text-end d-none d-sm-block">
-                    <Image src={"/images/icons/pkw-austauschfilter.png"} alt={"austauchfilter"} width={190} height={190} className={"img-fluid"}/>
+                    <Image src={"/images/icons/pkw-austauschfilter.png"} alt={"austauchfilter"} width={190} height={190} className={"img-fluid picto-190"}/>
                 </div>
 
             </div>

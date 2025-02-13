@@ -137,7 +137,7 @@ function DpfEuroVIProductListPage({ categories, categoryId, categoryName, articl
                 </div>
                 <div className={"col"}>
                     <div className="col text-end d-none d-sm-block">
-                        <NextImage src={"/images/icons/lkw-nachruestfilter.png"} alt={"lkw-nachruestfilter"} width={190} height={190} className={"img-fluid"}/>
+                        <NextImage src={"/images/icons/lkw-nachruestfilter.png"} alt={"lkw-nachruestfilter"} width={190} height={190} className={"img-fluid picto-190"}/>
                     </div>
                 </div>
 
@@ -150,7 +150,7 @@ function DpfEuroVIProductListPage({ categories, categoryId, categoryName, articl
 
                                 <table className={"table table-bordered align-middle"}>
                                 <thead>
-                                    <tr>
+                                    <tr className={"text-center"}>
                                         <th>Produktname</th>
                                         <th>Modell</th>
                                         <th>Hubraum KW/PS</th>
@@ -162,7 +162,7 @@ function DpfEuroVIProductListPage({ categories, categoryId, categoryName, articl
                                 </thead>
                                 <tbody>
                                 {products.map((product) => (
-                                    <tr key={product.product_id}>
+                                    <tr key={product.product_id} className={"text-center"}>
                                         <td>
                                             <ProductImage
                                                 src={`${JOOMLA_URL_BASE}/media/com_hikashop/upload/thumbnail_100X100/${product.product_image}`}

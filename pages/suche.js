@@ -123,7 +123,7 @@ const SearchResults = ({footerArticle}) => {
                                     }-${product.product_name.toLowerCase().trim().replace(/\s+/g, '-')}`;
 
                                     return (
-                                        <tr key={product.product_id}>
+                                        <tr key={product.product_id} >
                                             {/* Cell 1: Product Name and Image */}
                                             <td>
                                                 <Link href={productUrl} passHref legacyBehavior>

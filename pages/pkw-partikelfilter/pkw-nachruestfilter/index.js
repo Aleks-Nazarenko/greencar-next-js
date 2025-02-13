@@ -78,7 +78,7 @@ export default function NachruestfilterCategories({ categories, article }) {
                         )}
                 </div>
                 <div className="col text-end d-none d-sm-block">
-                    <Image src={"/images/icons/pkw-nachruestfilter.png"} alt={"Nachrüstfilter"} width={190} height={190} className={"img-fluid"}/>
+                    <Image src={"/images/icons/pkw-nachruestfilter.png"} alt={"Nachrüstfilter"} width={190} height={190} className={"img-fluid picto-190"}/>
                 </div>
             </div>
             <div className="w-100 pb-4"></div>

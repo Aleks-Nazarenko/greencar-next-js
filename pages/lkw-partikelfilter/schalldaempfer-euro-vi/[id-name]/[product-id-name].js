@@ -25,7 +25,7 @@ export async function getStaticPaths() {
     const paths = [];
 
     try {
-        const categoryRes = await fetch(`${JOOMLA_API_BASE}&task=getSubcategories&category_id=68&format=json`);
+        const categoryRes = await fetch(`${JOOMLA_API_BASE}&task=getSubcategories&category_id=444&format=json`);
         //404 500 http errors
         //  if (!categoryRes.ok) throw new Error(`Failed to fetch categories: ${categoryRes.status}`);
         const categories = await categoryRes.json();
@@ -90,7 +90,12 @@ export async function getStaticProps({ params }) {
 }
 
 export default function ProductPage({ product, article }) {
-
+    const formatPrice = (price) => {
+        return new Intl.NumberFormat('de-DE', {
+            style: 'currency',
+            currency: 'EUR',
+        }).format(price);
+    };
     const router = useRouter();
     const productImages = product.product_images;
 
@@ -98,7 +103,7 @@ export default function ProductPage({ product, article }) {
         <>
             {product && (
                 <div className={"row g-0"}>
-                    <h1 className={"pb-0 mb-0"}>{product.product_name} für {product.modell_liste}</h1>
+                    <h1 className={"pb-0 mb-0"}>{product.product_name} für {product.typ_liste}</h1>
                 </div>
             )}
             <div className="w-100 pb-4"></div>
@@ -134,12 +139,14 @@ export default function ProductPage({ product, article }) {
                                 <div className="col-sm-6">
                                     <div className={"row g-0 pt-3 pt-sm-0"}>
                                         <div className={"col-12"}>
-                                            <p className={""}><strong>Hersteller: </strong> {product.hersteller}</p>
-                                            <p><strong>Modell: </strong> {product.modell_liste} </p>
-                                            <p><strong>Euronorm vor Umrüstung: </strong> {product.euronorm_liste}</p>
-                                            <p><strong>Hubraum KW/PS: </strong> {product.hubraum_liste} </p>
+                                            {product.hersteller && (<p className={""}><strong>Hersteller: </strong> {product.hersteller}</p>)}
+                                            <p><strong>Typ: </strong> {product.typ_liste} </p>
+                                            <p><strong>Bauzeit: </strong> {product.bauzeit_liste} </p>
+                                            <p><strong>Ltr/KW: </strong> {product.hubraum2_liste} </p>
+                                            <p><strong>Euronorm: </strong> {product.euronorm2_liste}</p>
+                                            <p><strong>OE-Nr. - alte OE-Nr.:</strong> {product.oe_nr_liste}</p>
                                             <p><strong>Bestellnr.:</strong> {product.bestellnr}</p>
-                                            <p><strong>OE-Nummer:</strong> {product.oe_nummer_liste}</p>
+
                                         </div>
                                     </div>
                                 </div>
