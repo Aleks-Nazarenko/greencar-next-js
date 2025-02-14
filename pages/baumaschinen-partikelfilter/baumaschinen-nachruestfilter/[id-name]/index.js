@@ -194,7 +194,7 @@ function BauProductListPage({ categories, categoryId, categoryName, article, pro
 
                                     </td>
                                     <td>
-                                        {formatPrice(parseFloat(product.price_value * VAT_SHARE))} (inkl. MwSt.)
+                                        {formatPrice(parseFloat(product.price_value) * VAT_SHARE)} (inkl. MwSt.)
                                     </td>
                                     <td>
                                         <Link href={`/baumaschinen-partikelfilter/baumaschinen-nachruestfilter/${categoryId}-${categoryName}/${product.product_id}-${product.product_name.toLowerCase().replace(/\s+/g, '-')}`}>
