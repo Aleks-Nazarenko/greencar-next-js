@@ -172,7 +172,51 @@ header {z-index: 10}
 .btn-100{width:100%;}
 .btn-green:hover{transition: background 0.3s; background: #45CA25!important;}
 .form-danger{color: red;}
+.dropdown-container .dropdown-menu{background: #F0F7FC!important; border: none;   min-width: auto !important; /* Allow dropdown to auto-size based on content */
+  width: max-content; }
 
+.dropdown-container .dropdown-toggle {color: #45CA25!important;}
+/* Override hover */
+.dropdown-container .dropdown-toggle:hover {
+  background-color: #F0F7FC!important;
+  color: #45CA25; /* Retain original text color */
+}
+
+/* Override active */
+.dropdown-container .dropdown-toggle:active,
+.dropdown-container .dropdown-toggle:focus,
+.dropdown-container .show > .dropdown-toggle {
+  background-color: #F0F7FC!important;
+  color: #45CA25; /* Retain text color */
+  box-shadow: none !important; /* Remove focus shadow */
+}
+/* Remove background color changes on hover, focus, and active */
+.dropdown-item {
+  background-color: transparent !important;
+  color: inherit !important; /* Retain text color */
+}
+
+/* Prevent background change on hover */
+.dropdown-item:hover {
+  background-color: #CCE9F9 !important;
+  border-radius: 1rem!important;
+  color: inherit !important;
+}
+
+/* Prevent background change on focus */
+.dropdown-item:focus {
+  background-color: #CCE9F9 !important;
+  color: inherit !important;
+  outline: none !important; /* Remove focus outline */
+}
+
+/* Prevent background change on active/click */
+.dropdown-item:active,
+.dropdown-item.active {
+  background-color: #CCE9F9 !important;
+  color: inherit !important;
+  box-shadow: none !important;
+}
 
 #maschinen {background: white; border-radius: 1rem; padding: 20px;}
 #maschinen img {border-radius: 1rem;}

@@ -23,44 +23,38 @@ export default function NavbarNazarenko() {
                             Standorte
                         </Link>
                         <NavDropdown title="Produkt und Preisliste">
-                            <NavDropdown.Item >
-                                <Link href="/pkw-partikelfilter/pkw-nachruestfilter" className="nav-link">
+                            <NavDropdown.Item href="/pkw-partikelfilter/pkw-nachruestfilter" className="nav-link">
                                     Preisliste PKW Nachrüstfilter
-                                </Link>
-                                <Link href="/pkw-partikelfilter/pkw-austauschfilter" className="nav-link">
+                            </NavDropdown.Item>
+                            <NavDropdown.Item  href="/pkw-partikelfilter/pkw-austauschfilter" className="nav-link">
                                     Preisliste PKW Austauschfilter
-                                </Link>
-                                <Link href="/pkw-partikelfilter/pkw-filterreinigung" className="nav-link">
+                            </NavDropdown.Item>
+                            <NavDropdown.Item  href="/pkw-partikelfilter/pkw-filterreinigung" className="nav-link">
                                     Preisliste PKW Filterreinigung
-                                </Link>
-                                <Link href="/lkw-partikelfilter/dpf-euro-vi"  className="nav-link">
+                            </NavDropdown.Item>
+                            <NavDropdown.Item  href="/lkw-partikelfilter/dpf-euro-vi"  className="nav-link">
                                     Preisliste LKW DPF EURO VI
-                                </Link>
-                                <Link href="/lkw-partikelfilter/schalldaempfer-euro-vi" className="nav-link">
+                            </NavDropdown.Item>
+                            <NavDropdown.Item  href="/lkw-partikelfilter/schalldaempfer-euro-vi" className="nav-link">
                                     Preisliste LKW Schalldämpfer EURO VI
-                                </Link>
+                            </NavDropdown.Item>
+                        </NavDropdown>
 
-                            </NavDropdown.Item>
-                        </NavDropdown>
                         <NavDropdown title="Informationen">
-                            <NavDropdown.Item >
-                                <Link href="/partikelfilter-info/filter-lkw-infos"  className="nav-link">
+                            <NavDropdown.Item href="/partikelfilter-info/filter-lkw-infos"  className="nav-link">
                                     Über GREENCAR
-                                </Link>
                             </NavDropdown.Item>
                         </NavDropdown>
+
                         <NavDropdown title="Händler">
-                            <NavDropdown.Item >
-                                <Link href="/haendler/login" className="nav-link">
+                            <NavDropdown.Item href="/haendler/login" className="nav-link">
                                     Login
-                                </Link>
                             </NavDropdown.Item>
-                            <NavDropdown.Item >
-                                <Link href="/haendler/registrierung" className="nav-link">
+                            <NavDropdown.Item href="/haendler/registrierung" className="nav-link">
                                     Registrierung
-                                </Link>
                             </NavDropdown.Item>
                         </NavDropdown>
+
                         <Link href="/kontakt-greencar" className="nav-link">
                             Kontakt
                         </Link>
