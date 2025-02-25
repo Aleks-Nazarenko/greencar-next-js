@@ -23,7 +23,7 @@ export default function Banner () {
                 <>
                     <div className={"container-greencar container-fluid bg-gc-light-blue rounded-4 g-0 p-sm-4 p-3 pt-2 pb-2  shadow"}>
                         <div className={"row g-0"}>
-                            <div className={"col"}>
+                            <div className={"col d-flex justify-content-center"}>
                                 <Image src={"/images/banner/filterreinigung_pkw_berlin_header_neu.png"} alt={"PKW Filterreinigung"} width={885} height={175} className={"img-fluid"} />
                             </div>
                         </div>
@@ -35,7 +35,7 @@ export default function Banner () {
                 <>
                     <div className={"container-greencar container-fluid bg-gc-light-blue rounded-4 g-0 p-sm-4 p-3 pt-2 pb-2 shadow"}>
                         <div className={"row g-0"}>
-                            <div className={"col"}>
+                            <div className={"col d-flex justify-content-center"}>
                                 <Image src={"/images/banner/240712_filterreinigung_lkw_header_be.png"} alt={"LKW Schalldämpfer"} width={885} height={221} className={"img-fluid"} />
                             </div>
                         </div>
