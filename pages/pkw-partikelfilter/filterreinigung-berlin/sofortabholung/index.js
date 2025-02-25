@@ -1,6 +1,6 @@
 import {JOOMLA_API_BASE, JOOMLA_URL_BASE} from "@/utils/config";
 import {convertRelativeUrls} from "@/utils/convertRelativeUrls";
-import { Form, Button, Row, Col, Alert } from 'react-bootstrap';
+import { Row, Col} from 'react-bootstrap';
 import Pictos from "@/components/PictosBerlin";
 import Link from "next/link";
 import Image from "next/image";
