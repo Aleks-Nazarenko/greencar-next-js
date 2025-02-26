@@ -1,7 +1,6 @@
 import Image from "next/image";
 import { useState } from "react";
 import Dropdown from "react-bootstrap/Dropdown";
-import Link from "next/link";
 export default function SecondaryMenu() {
     const [isOpen, setIsOpen] = useState(false);
     const toggleDropdown = () => {

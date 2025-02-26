@@ -12,7 +12,7 @@ export async function getStaticProps() {
     const joomlaBaseUrl = JOOMLA_URL_BASE;
     // Fetch data from Joomla API
     const categories = await axios
-        .get(`${JOOMLA_API_BASE}&task=getSubcategories&category_id=68&format=json`)
+        .get(`${JOOMLA_API_BASE}&task=getSubcategories&category_id=470&format=json`)
         .then((res) => res.data || []) // actually incorrect, because res.data is always an array d.h. true
         .catch((error) => {
             console.log('Failed to fetch categories:', error.message);
@@ -20,7 +20,7 @@ export async function getStaticProps() {
         });
 
 
-    const resArticle = await fetch(`${JOOMLA_API_BASE}&task=articleWithModules&id=20&format=json`);
+    const resArticle = await fetch(`${JOOMLA_API_BASE}&task=articleWithModules&id=25&format=json`);
     const articleData = await resArticle.json();
     // Extract the footer article from the response
     const article = articleData.article || null;
@@ -35,56 +35,56 @@ export async function getStaticProps() {
 }
 
 
-export default function dpfEuroVi({ categories, article }) {
+export default function lkwFilterreinigung({ categories, article }) {
     const router = useRouter();
 
     const handleCategoryChange = (event) => {
         const selectedCategory = event.target.value;
         if (selectedCategory) {
-            router.push(`/lkw-partikelfilter/dpf-euro-vi/${selectedCategory}`);
+            router.push(`/lkw-partikelfilter/lkw-filterreinigung/${selectedCategory}`);
         }
     };
     return (
         <>
 
             <div className={"row g-0 pb-0"}>
-                <h1 className={"mb-1"}>LKW - DPF EURO V</h1>
-                <h2 className={"display-4 mb-0"}>Bitte wählen Sie den Hersteller Ihres Lkw. Anschließend stellen wir Ihnen unsere Produktauswahl an passenden Partikelfiltern vor.</h2>
+                <h1 className={"mb-1"}>LKW - Filterreinigung</h1>
+                <h2 className={"display-4 mb-0"}>Bitte wählen Sie Ihren LKW-Hersteller. Anschließend stellen wir Ihnen unser Angebot zur LKW-Filterreinigung vor.</h2>
             </div>
             <div className="w-100 pb-4"></div>
             <div className="row g-0 p-3 p-sm-4 product-detail-view rounded-4">
                 <div className="col d-flex align-items-center">
-                        {categories.length > 0 && (
-                            <>
-                                <FormSelect
-                                    id="categorySelect"
-                                    onChange={handleCategoryChange}
-                                    defaultValue="" // Add a default option
-                                >
-                                    <option value="" disabled>- Hersteller -</option>
-                                    {categories.map(category => (
-                                        <option
-                                            key={category.category_id}
-                                            value={`${category.category_id}-${category.category_name.toLowerCase().replace(/\s+/g, '-')}`}
-                                        >
-                                            {category.category_name}
-                                        </option>
-                                    ))}
-                                </FormSelect>
-                            </>
-                        )}
+                    {categories.length > 0 && (
+                        <>
+                            <FormSelect
+                                id="categorySelect"
+                                onChange={handleCategoryChange}
+                                defaultValue="" // Add a default option
+                            >
+                                <option value="" disabled>- Hersteller -</option>
+                                {categories.map(category => (
+                                    <option
+                                        key={category.category_id}
+                                        value={`${category.category_id}-${category.category_name.toLowerCase().replace(/\s+/g, '-')}`}
+                                    >
+                                        {category.category_name}
+                                    </option>
+                                ))}
+                            </FormSelect>
+                        </>
+                    )}
                 </div>
                 <div className="col text-end d-none d-sm-block">
-                    <Image src={"/images/icons/lkw-nachruestfilter.png"} alt={"Nachrüstfilter"} width={190} height={190} className={"img-fluid picto-190"}/>
+                    <Image src={"/images/icons/lkw-filterreinigung.png"} alt={"LKW-Filterreinigung"} width={190} height={190} className={"img-fluid picto-190"}/>
                 </div>
             </div>
 
             <div className="w-100 pb-4"></div>
 
             <div className="row g-0">
-                        {article?.content && (
-                            <div dangerouslySetInnerHTML={{ __html: article.content}} />
-                        )}
+                {article?.content && (
+                    <div dangerouslySetInnerHTML={{ __html: article.content}} />
+                )}
             </div>
             <div className="w-100 pb-4"></div>
             <div className="row g-0">

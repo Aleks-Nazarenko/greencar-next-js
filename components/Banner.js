@@ -31,7 +31,7 @@ export default function Banner () {
                     <div className={"w-100 pt-4"}/>
                 </>
             )}
-            { router.pathname === "/lkw-partikelfilter/lkw-filterreinigung" || router.pathname === "/bus-partikelfilter/bus-filterreinigung" || router.pathname === "/baumaschinen-partikelfilter/baumaschinen-filterreinigun"  && (
+            { (router.pathname.startsWith( "/lkw-partikelfilter/lkw-filterreinigung") || router.pathname.startsWith("/bus-partikelfilter/bus-filterreinigung") || router.pathname.startsWith("/baumaschinen-partikelfilter/baumaschinen-filterreinigun"))  && (
                 <>
                     <div className={"container-greencar container-fluid bg-gc-light-blue rounded-4 g-0 p-sm-4 p-3 pt-2 pb-2 shadow"}>
                         <div className={"row g-0"}>

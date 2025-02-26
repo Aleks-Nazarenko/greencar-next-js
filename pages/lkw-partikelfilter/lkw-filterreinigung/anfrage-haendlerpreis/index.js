@@ -2,7 +2,7 @@ import {JOOMLA_API_BASE, JOOMLA_URL_BASE} from "@/utils/config";
 import {convertRelativeUrls} from "@/utils/convertRelativeUrls";
 import {useState} from "react";
 import { Form, Button, Row, Col} from 'react-bootstrap';
-import Pictos from "@/components/Pictos";
+import Pictos from "@/components/PictosLKW";
 
 
 
@@ -146,8 +146,8 @@ export async function getStaticProps() {
 
                 <Row className="mb-3 g-0">
                     <Col md={"12"}>
-                        {errors.apiError && <h3  className={"form-danger"}>{errors.apiError}</h3>}
-                        {successMessage && <h3  className={"gc-green"}>{successMessage}</h3>}
+                        {errors.apiError && <h3 variant="danger" className={"form-danger"}>{errors.apiError}</h3>}
+                        {successMessage && <h3 variant="success" className={"gc-green"}>{successMessage}</h3>}
                     </Col>
                 </Row>
                 <Row className="g-0">

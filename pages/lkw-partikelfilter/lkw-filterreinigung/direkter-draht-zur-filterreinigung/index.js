@@ -1,7 +1,7 @@
 import {JOOMLA_API_BASE, JOOMLA_URL_BASE} from "@/utils/config";
 import {convertRelativeUrls} from "@/utils/convertRelativeUrls";
-import { Row, Col} from 'react-bootstrap';
-import Pictos from "@/components/Pictos";
+import { Row, Col } from 'react-bootstrap';
+import Pictos from "@/components/PictosLKW";
 import Link from "next/link";
 import Image from "next/image";
 import {useState} from "react";
@@ -10,7 +10,7 @@ import {useState} from "react";
 
 
 export async function getStaticProps() {
-    const resArticle = await fetch(`${JOOMLA_API_BASE}&task=articleWithModules&id=16&format=json`);
+    const resArticle = await fetch(`${JOOMLA_API_BASE}&task=articleWithModules&id=12&format=json`);
     const articleData = await resArticle.json();
     const article = articleData.article || null;
     if (article) {
@@ -63,11 +63,10 @@ export default function AnfrageHaendlerpreis({article, article2, article3}) {
                                     )}
                                 </Col>
                             </Row>
-                            <div className={"w-100 pb-2"}></div>
                             <Row className={"g-0"}>
                                 <Col sm={"12"}>
-                                    <div className={"w-100 pb-4"}></div>
-                                    <h4>Unter "Los geht's" können Sie unser unverbindliches Anfrageformular ausfüllen oder eine ökologische Industriereinigung beauftragen.</h4>
+                                    <div className={"w-100 pb-3"}></div>
+                                    <h4>Unter "Los geht's" können Sie unser unverbindliches Anfrageformular ausfüllen.</h4>
                                     <Link href={"/pkw-partikelfilter/pkw-filterreinigung"} onMouseOver={() =>{if (!togglePictoLos) setTogglePictoLos(true);} } onMouseOut={() => {if (togglePictoLos) setTogglePictoLos(false);}}>
                                         <Image src={togglePictoLos ? "/images/pictos/rein_pikt_los_gehts_over.png" : "/images/pictos/rein_pikt_los_gehts.png"} alt={"Bestellformular"} width={331} height={120} className={"img-fluid picto-product ps-0 ps-sm-2 "} />
                                     </Link>

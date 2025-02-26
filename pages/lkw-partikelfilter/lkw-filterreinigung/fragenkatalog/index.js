@@ -1,7 +1,7 @@
 import {JOOMLA_API_BASE, JOOMLA_URL_BASE} from "@/utils/config";
 import {convertRelativeUrls} from "@/utils/convertRelativeUrls";
 import { Row, Col} from 'react-bootstrap';
-import Pictos from "@/components/Pictos";
+import Pictos from "@/components/PictosLKW";
 import Link from "next/link";
 import Image from "next/image";
 import {useState} from "react";
@@ -10,7 +10,7 @@ import {useState} from "react";
 
 
 export async function getStaticProps() {
-    const resArticle = await fetch(`${JOOMLA_API_BASE}&task=articleWithModules&id=16&format=json`);
+    const resArticle = await fetch(`${JOOMLA_API_BASE}&task=articleWithModules&id=17&format=json`);
     const articleData = await resArticle.json();
     const article = articleData.article || null;
     if (article) {

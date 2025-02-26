@@ -4,7 +4,7 @@ import { useRouter } from 'next/router';
 import {convertRelativeUrls} from "@/utils/convertRelativeUrls";
 import { JOOMLA_API_BASE } from '@/utils/config';
 import { JOOMLA_URL_BASE } from '@/utils/config';
-import Pictos from "@/components/Pictos";
+import Pictos from "@/components/PictosPDF";
 
 function ProductImage({ src, alt, fallback, className }) {
     const [imgSrc, setImgSrc] = useState(src);
@@ -21,61 +21,82 @@ function ProductImage({ src, alt, fallback, className }) {
     );
 }
 
-export async function getStaticProps() {
+export async function getStaticPaths() {
+    const paths = [];
+
+    try {
+        const categoryRes = await fetch(`${JOOMLA_API_BASE}&task=getSubcategories&category_id=475&format=json`);
+        //404 500 http errors
+        //  if (!categoryRes.ok) throw new Error(`Failed to fetch categories: ${categoryRes.status}`);
+        const categories = await categoryRes.json();
+        // Step 2: Fetch subcategories for each category
+        for (const category of categories) {
+            try {
+                const productRes = await fetch(`${JOOMLA_API_BASE}&task=getProductsBySubcategory&subcategory_id=${category.category_id}&format=json`);
+                //        if (!productRes.ok) throw new Error(`Failed to fetch products for subcategory ${subcategory.category_id}: ${productRes.status}`);
+                const products = await productRes.json();
+                // Generate paths for each product in the subcategory
+                products.forEach((product) => {
+                    paths.push({
+                        params: {
+                            "id-name": `${category.category_id}-${category.category_name.toLowerCase().replace(/\s+/g, '-')}`,
+                            "product-id-name": `${product.product_id}-${product.product_name.toLowerCase().replace(/\s+/g, '-')}`,
+                        },
+                    });
+                });
+            } catch (error) {
+                console.error(`Failed to fetch subcategories for category ID ${category.category_id}:`, error.message);
+            }
+        }
+    } catch (error) {
+        console.error("Failed to fetch categories:", error.message);
+    }
+
+    return {
+        paths,
+        fallback: false,
+    };
+}
+
+export async function getStaticProps({ params }) {
     // Base URL of your Joomla server (adjust this to your Joomla installation URL)
     const joomlaBaseUrl = JOOMLA_URL_BASE;
     // Extract product ID from `product-id-name`
-
+    const [productId] = params["product-id-name"].split('-');
     // Fetch the product details from the Joomla API
-    const resProduct = await fetch(`${JOOMLA_API_BASE}&task=getProduct&product_id=14435&format=json`);
-    const productData = await resProduct.json();
-    const product = productData.product_id ? productData : null;
-    if (!productData.product_id) {
+    const res = await fetch(`${JOOMLA_API_BASE}&task=getProduct&product_id=${productId}&format=json`);
+    const productData = await res.json();
+    const product = productData.product_name ? productData : null;
+    if (!productData.product_name) {
         console.error("Invalid product data received:", productData);
     }
-    const resInstall = await fetch(`${JOOMLA_API_BASE}&task=getProduct&product_id=8442&format=json`);
-    const installData = await resInstall.json();
-    const installation = installData.product_id ? installData : null;
-    if (!installData.product_id) {
-        console.error("Invalid product data received:", installData);
-    }
-    const resDelivery = await fetch(`${JOOMLA_API_BASE}&task=getProduct&product_id=8444&format=json`);
-    const deliveryData = await resDelivery.json();
-    const delivery = deliveryData.product_id ? deliveryData : null;
-    if (!deliveryData.product_id) {
-        console.error("Invalid product data received:", deliveryData);
-    }
-
-    const resArticle2 = await fetch(`${JOOMLA_API_BASE}&task=articleWithModules&id=10&format=json`);
-    const articleData2 = await resArticle2.json();
-    const article2 = articleData2.article || null;
-    if (article2) {
-        article2.content = article2.content ? convertRelativeUrls(article2.content, JOOMLA_URL_BASE) : '';
-        if (!article2.content) {
-            console.log('Filterreinigungsmaschinen not found');
+    const resArticle = await fetch(`${JOOMLA_API_BASE}&task=articleWithModules&id=26&format=json`);
+    const articleData = await resArticle.json();
+    // Extract the footer article from the response
+    const article = articleData.article || null;
+    if (article) {
+        article.content = article.content ? convertRelativeUrls(article.content, joomlaBaseUrl) : '';
+        if (!article.content) {
+            console.log('footerArticle.content not found');
         }
     }
-    const resArticle3 = await fetch(`${JOOMLA_API_BASE}&task=articleWithModules&id=11&format=json`);
-    const articleData3 = await resArticle3.json();
-    const article3 = articleData3.article || null;
-    if (article3) {
-        article3.content = article3.content ? convertRelativeUrls(article3.content, JOOMLA_URL_BASE) : '';
-        if (!article3.content) {
-            console.log('PKW - Filterreinigung UNTEN not found');
-        }
-    }
+    const resOptions = await fetch(`${JOOMLA_API_BASE}&task=getProductOptions&product_id=${productId}&format=json`);
+    const options = resOptions.ok ? await resOptions.json() : [];
+    // Ensure options is always an array
+    const validOptions = Array.isArray(options) ? options : [];
+    const delivery = validOptions.find(option => option.name === "Abholung") || null;
+    const installation = validOptions.find(option => option.name === "Aus- und Einbau") || null;
 
     return {
         props: {
             product,
-            installation,
+            article,
             delivery,
-            article2,
-            article3,
+            installation,
         },
     };
 }
-export default function FilterreinigungPage({ product,installation, delivery, article2, article3 }) {
+export default function BusFilterreinigungPage({ product,installation, delivery, article}) {
     const router = useRouter();
     // Constants for pricing
     const formatPrice = (price) => {
@@ -110,64 +131,28 @@ export default function FilterreinigungPage({ product,installation, delivery, ar
         return date;
     };
 
-    const [selectedDeliveryPrice, setSelectedDeliveryPrice] = useState(null);
-    const [selectedBasePrice, setSelectedBasePrice] = useState(null);
-    const [selectedInstallPrice, setSelectedInstallPrice] = useState(null);
 
-    const [totalPrice, setTotalPrice] = useState(selectedBasePrice + selectedDeliveryPrice + selectedInstallPrice);
 
-    const [mwStWording, setMwStWording] = useState('');
-    const [mwSt, setMwSt] = useState(null);
-
-    const sortedDeliveryPrices = [...delivery.product_prices].sort((a, b) => Number(a.price_value) - Number(b.price_value));
-    const sortedBasePrices = [...product.product_prices].sort((a, b) => Number(a.price_value) - Number(b.price_value));
-    const sortedInstallPrices = [...installation.product_prices].sort((a, b) => Number(a.price_value) - Number(b.price_value));
-
-    const VAT_SHARE = 1.19;
-
-    useEffect(() => {
-        if (delivery && product && installation) {
-            // Adjust prices based on the presence of authToken
-            const authToken = typeof window !== "undefined" && sessionStorage.getItem("authToken");
-
-            if (authToken) {
-                // User authenticated: Use smallest prices
-                setSelectedDeliveryPrice(parseFloat(sortedDeliveryPrices[0].price_value));
-                setSelectedBasePrice(parseFloat(sortedBasePrices[0].price_value));
-                setSelectedInstallPrice(parseFloat(sortedInstallPrices[0].price_value));
-                setTotalPrice((parseFloat(sortedBasePrices[0].price_value) + parseFloat(sortedDeliveryPrices[0].price_value)));
-                setMwStWording('(ohne MwSt.)');
-                setMwSt(false);
-                setInstallationOption('without');
-            } else {
-                // User not authenticated: Use largest prices
-                setSelectedDeliveryPrice(parseFloat(sortedDeliveryPrices[sortedDeliveryPrices.length - 1].price_value) * VAT_SHARE);
-                setSelectedBasePrice(parseFloat(sortedBasePrices[sortedBasePrices.length - 1].price_value) * VAT_SHARE);
-                setSelectedInstallPrice(parseFloat(sortedInstallPrices[sortedInstallPrices.length - 1].price_value) * VAT_SHARE);
-                setTotalPrice((parseFloat(sortedBasePrices[sortedBasePrices.length - 1].price_value) * VAT_SHARE   + parseFloat(sortedInstallPrices[sortedInstallPrices.length - 1].price_value) * VAT_SHARE + parseFloat(sortedDeliveryPrices[sortedDeliveryPrices.length - 1].price_value) * VAT_SHARE ) );
-                setMwStWording('(inkl. MwSt.)');
-                setMwSt(true);
-            }
-        }
-    }, [delivery, product, installation]);
-
-    console.log(mwSt + ' mwSt');
-
-    const BASE_PRICE = selectedBasePrice // Base product price
-    const DELIVERY_COST = selectedDeliveryPrice; // Abholung
+    const VAT_SHARE = 1.19; // MwSt.
+    const mwStWording = " (inkl. MwSt.) ";
+    const BASE_PRICE = parseFloat(product.product_prices[0].price_value) * VAT_SHARE ; // Product query returns multiple prices, we use the first one
+    const DELIVERY_COST = parseFloat(delivery.price) * VAT_SHARE; // Options query returns only one price
+    const INSTALLATION_COST = parseFloat(installation.price) * VAT_SHARE; // Options query returns only one price
     const DEPOSIT_COST = 0; // Kaution
-    const INSTALLATION_COST = selectedInstallPrice //  Aus- und Einbau
+
+    // State to manage form selections
+    const [totalPrice, setTotalPrice] = useState(BASE_PRICE + INSTALLATION_COST + DELIVERY_COST); // Initial total price
     // Product options configuration
     const productOptions = {
         installation: { //Aus- und Einbau bzw. Mit Einbau
             isAvailable: true,
-            cost: selectedInstallPrice,
+            cost: INSTALLATION_COST,
             label: "Aus- und Einbau",
             withoutLabel: "No Installation",
         },
         delivery: { //Abholung bzw. Versand
             isAvailable: true,
-            cost: selectedDeliveryPrice,
+            cost: DELIVERY_COST,
             label: "Abholung",
         },
         deposit: { //Kaution
@@ -177,11 +162,10 @@ export default function FilterreinigungPage({ product,installation, delivery, ar
         },
         advancePayment: {//Vorauszahlung
             isAvailable: true,
-            cost: 10,
+            cost: 20,
             label: "Vorauszahlung",
         },
     };
-
 
 
     // State to manage form selections
@@ -382,20 +366,20 @@ export default function FilterreinigungPage({ product,installation, delivery, ar
         const cartItem = {
             productName: product.product_name,
             productImage: product.product_images[0] || 'beispielphoto.jpg',
-            basePrice: formatPrice(BASE_PRICE * (mwSt ? 1 : VAT_SHARE )),
+            basePrice: formatPrice(BASE_PRICE ),
             options: {
                 // Aus- und Einbau
                 installation: productOptions.installation.isAvailable && installationOption === 'with'
                     ? {
                         label: productOptions.installation.label,
-                        cost: formatPrice(productOptions.installation.cost  * (mwSt ? 1 : VAT_SHARE )),
+                        cost: formatPrice(productOptions.installation.cost ),
                     }
                     : null,
                 // Abholung
                 delivery: productOptions.delivery.isAvailable && deliveryDesired === 'yes'
                     ? {
                         label: productOptions.delivery.label,
-                        cost: formatPrice(productOptions.delivery.cost  * (mwSt ? 1 : VAT_SHARE )),
+                        cost: formatPrice(productOptions.delivery.cost),
                     }
                     : null,
                 // Kaution
@@ -415,8 +399,8 @@ export default function FilterreinigungPage({ product,installation, delivery, ar
             },
             landName: selectedLand ? lands.find((land) => parseInt(land.id, 10) === parseInt(selectedLand, 10))?.title : null,
             cityName: selectedCity ? cities.find((city) => parseInt(city.id, 10) === parseInt(selectedCity, 10))?.title : null,
-            totalPrice: formatPrice(totalPrice  * (mwSt ? 1 : VAT_SHARE )),
-            totalPriceUnformatted: totalPrice  * (mwSt ? 1 : VAT_SHARE ),
+            totalPrice: formatPrice(totalPrice ),
+            totalPriceUnformatted: totalPrice ,
             vatShare: VAT_SHARE,
             selectedDate: formattedSelectedDate, // set null wenn nicht verfügbar
             nextDay: nextDay, // set null wenn nicht verfügbar
@@ -440,7 +424,7 @@ export default function FilterreinigungPage({ product,installation, delivery, ar
                     <h1 className={"mb-1"}>{product.product_name}</h1>
                     <h2 className={"display-4 mb-0"}>48h Expressreinigung von der Abholung bis zur Zustellung</h2>
                 </div>
-             )}
+            )}
             <div className="row g-0">
                 <div className="col-sm-8">
                     <div className="row g-0 p-3 p-sm-4 product-detail-view rounded-4">
@@ -459,90 +443,83 @@ export default function FilterreinigungPage({ product,installation, delivery, ar
                                         <div>
                                             <span className={"gc-green display-1"}>{formatPrice(BASE_PRICE)}</span><span className={"ps-2"}>pro Stück {mwStWording}</span>
                                         </div>
-                                        {mwSt && (
-                                            <div className="col-12 col-sm-6 btn-haendlerpreis pt-2">
-                                                <Link href={`/pkw-partikelfilter/pkw-filterreinigung/anfrage-haendlerpreis`}>
-                                                    <button className="btn btn-primary btn-yellow w-100">Anfrage Händlerpreis</button>
-                                                </Link>
-                                            </div>
-                                        )}
                                     </div>
 
                                     {installationOption === 'with' && <div className={"col-12 pt-2"}>Abholung: {formatPrice(DELIVERY_COST)} {mwStWording}</div>}
                                 </div>
-                                {mwSt && (
-                                    <div className="row g-0 installation-options pt-2">
-                                                <div className={"w-100"}>Aus und Einbau</div>
-                                                <select value={installationOption} onChange={handleInstallationChange} className={"form-select"} aria-label=".form-select">
-                                                    <option value="with">GREENCAR Werkstatt ( + {formatPrice(INSTALLATION_COST)} {mwStWording} )</option>
-                                                    <option value="without">eigene Werkstatt</option>
-                                                </select>
-                                    </div>
-                                )}
+
+                                <div className="row g-0 installation-options pt-2">
+                                        <div className={"w-100"}>Aus und Einbau</div>
+                                        <select value={installationOption} onChange={handleInstallationChange} className={"form-select"} aria-label=".form-select">
+                                            <option value="with">GREENCAR Werkstatt ( + {formatPrice(INSTALLATION_COST)} {mwStWording} )</option>
+                                            <option value="without">eigene Werkstatt</option>
+                                        </select>
+                                </div>
+
 
                                 {installationOption === 'without' && (
                                     <div className="row g-0 delivery-options pt-2">
-                                                <div className={"w-100"}>Abholung gewünscht?</div>
-                                                <select value={deliveryDesired} onChange={handleDeliveryChange} className={"form-select"} aria-label=".form-select">
-                                                    <option value="yes">Ja ( + {formatPrice(DELIVERY_COST)} {mwStWording} )</option>
-                                                    <option value="no">Nein</option>
-                                                </select>
-                                            </div>
+                                        <div className={"w-100"}>Abholung gewünscht?</div>
+                                        <select value={deliveryDesired} onChange={handleDeliveryChange} className={"form-select"} aria-label=".form-select">
+                                            <option value="yes">Ja ( + {formatPrice(DELIVERY_COST)} {mwStWording} )</option>
+                                            <option value="no">Nein</option>
+                                        </select>
+                                    </div>
                                 )}
 
                                 {installationOption === 'with' && (
                                     <>
                                         <div className={"row g-0 pt-2"}>
-                                                    <div>Bitte wählen Sie Ihren gewünschten Einbauort.</div>
-                                                    <div className="land-selection">
-                                                        <select value={selectedLand} onChange={handleLandChange} className={"form-select"} aria-label=".form-select">
-                                                            <option value="">- Bundesland -</option>
-                                                            {lands.map((land) => (
-                                                                <option key={land.id} value={land.id}>
-                                                                    {land.title}
-                                                                </option>
-                                                            ))}
-                                                        </select>
-                                                    </div>
+                                            <div>Bitte wählen Sie Ihren gewünschten Einbauort.</div>
+                                            <div className="land-selection">
+                                                <select value={selectedLand} onChange={handleLandChange} className={"form-select"} aria-label=".form-select">
+                                                    <option value="">- Bundesland -</option>
+                                                    {lands.map((land) => (
+                                                        <option key={land.id} value={land.id}>
+                                                            {land.title}
+                                                        </option>
+                                                    ))}
+                                                </select>
+                                            </div>
                                         </div>
 
                                         {selectedLand && (
                                             <div className="row g-0 pt-2 city-selection">
-                                                        <select value={selectedCity} onChange={handleCityChange} className={"form-select"} aria-label=".form-select">
-                                                            <option value="">- Ort -</option>
-                                                            {cities.map((city) => (
-                                                                <option key={city.id} value={city.id}>
-                                                                    {city.title}
-                                                                </option>
-                                                            ))}
-                                                        </select>
+                                                <select value={selectedCity} onChange={handleCityChange} className={"form-select"} aria-label=".form-select">
+                                                    <option value="">- Ort -</option>
+                                                    {cities.map((city) => (
+                                                        <option key={city.id} value={city.id}>
+                                                            {city.title}
+                                                        </option>
+                                                    ))}
+                                                </select>
                                             </div>
                                         )}
                                     </>
                                 )}
                                 {deliveryDesired === 'yes' && (
                                     <div className=" row g-0 bg-white rounded-4 p-3 mt-4 date-selection">
-                                                    <div className={"display-4 pb-2"}>48h Express-Service Rechner!</div>
+                                        <div className={"display-4 pb-2"}>48h Express-Service Rechner!</div>
 
-                                                    <div className={"col-12"}>Abholdatum des ausgebauten Partikelfilters:</div>
-                                                    <div className={"col-sm-6 col-12"}>
-                                                        <input
-                                                            type="date"
-                                                            value={selectedDate || ''}
-                                                            onChange={handleDateChange}
-                                                            min={new Date().toISOString().split('T')[0]}
-                                                            className={"form-control"} aria-label="form-date"
-                                                        />
-                                                    </div>
-                                                    <div>bis 16:00 Uhr</div>
-                                                    <div className={"w-100 pb-2"}> </div>
+                                        <div className={"col-12"}>Abholdatum des ausgebauten Partikelfilters:</div>
+                                        <div className={"col-sm-6 col-12"}>
+                                            <input
+                                                type="date"
+                                                value={selectedDate || ''}
+                                                onChange={handleDateChange}
+                                                min={new Date().toISOString().split('T')[0]}
+                                                className={"form-control"} aria-label="form-date"
+                                            />
+                                        </div>
+                                        <div>bis 16:00 Uhr</div>
+                                        <div className={"w-100 pb-2"}> </div>
 
-                                                    <div className="col-sm-6 col-12 next-day">
-                                                        <div>Zustellung des gereinigten Partikelfilters</div>
-                                                        <input type="text" value={nextDay || ''} readOnly className={"form-control"} aria-label="form-input"/>
-                                                        <div>bis 12:00 Uhr garantiert!</div>
+                                        <div className="col-sm-6 col-12 next-day">
+                                            <div>Zustellung des gereinigten Partikelfilters</div>
+                                            <input type="text" value={nextDay || ''} readOnly className={"form-control"} aria-label="form-input"/>
+                                            <div>bis 12:00 Uhr garantiert!</div>
 
-                                                    </div>
+                                        </div>
                                     </div>
                                 )}
                                 <div className="row g-0 total-price mt-4">
@@ -571,28 +548,15 @@ export default function FilterreinigungPage({ product,installation, delivery, ar
                     <Pictos />
                 </div>
             </div>
-            <div className={"w-100 pt-4"}></div>
-            <div className={"row g-0 bg-white rounded-4 p-4"} style={{border:"1px solid green"}}>
-                <div className={"col d-flex justify-content-center"}>
-                    <iframe src="https://widgets.shopvote.de/bs-widget.php?shopid=8694" style={{ position: "relative", height: "280px", width:"100%", maxWidth: "300px", borderStyle: "none", overflow: "hidden"} } scrolling="no"></iframe>
-                </div>
-            </div>
-            <div className={"w-100 pb-4 pt-2"}></div>
+            <div className={"w-100 pb-4 "}></div>
             <div className={"row g-0"}>
                 <div className={"col"}>
-                    {article2?.content && (
-                        <div dangerouslySetInnerHTML={{ __html: article2.content}} />
+                    {article?.content && (
+                        <div dangerouslySetInnerHTML={{ __html: article.content}} />
                     )}
                 </div>
             </div>
-            <div className={"w-100 pb-4 pt-2"}></div>
-            <div className={"row g-0"}>
-                <div className={"col"}>
-                    {article3?.content && (
-                        <div dangerouslySetInnerHTML={{ __html: article3.content}} />
-                    )}
-                </div>
-            </div>
+
 
         </>
     );
