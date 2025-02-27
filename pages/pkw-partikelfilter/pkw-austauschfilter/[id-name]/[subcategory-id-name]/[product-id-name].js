@@ -494,7 +494,7 @@ export default function ProductPage({ product, article, installation, delivery, 
             </div>
             <div className="row g-0 p-4 pt-3 pb-3">
                 <div className={"col col-sm-6"}>
-                    <button className="btn btn-primary btn-green btn-100" onClick={handleAddToCart}>
+                    <button className="btn btn-primary btn-light-green btn-100" onClick={handleAddToCart}>
                         In den Warenkorb
                     </button>
                 </div>

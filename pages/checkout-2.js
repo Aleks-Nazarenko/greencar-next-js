@@ -427,7 +427,7 @@ export default function CheckoutStep2({footerArticle, termsArticle})   {
                                                         Die Auftragsbestätigung erhalten Sie per E-Mail unmittelbar nach dem Absenden der Bestellung. Damit ist der Kaufvertrag geschlossen.</div>
                                                         <div className={"row g-0 pt-4"}>
                                                             <div className={"col-sm-6"}>
-                                                                <button className="btn btn-primary btn-green btn-100" onClick={handleConfirmOrder}  disabled={!termsAccepted}>Kaufen</button>
+                                                                <button className="btn btn-primary btn-light-green btn-100" onClick={handleConfirmOrder}  disabled={!termsAccepted}>Kaufen</button>
                                                             </div>
                                                         </div>
                                                     </div>

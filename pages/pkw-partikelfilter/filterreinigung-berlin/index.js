@@ -478,7 +478,7 @@ export default function FilterreinigungPage({ product,installation, delivery, ar
                     </div>
                     <div className="row g-0 p-4 pt-3">
                         <div className={"col col-sm-6"}>
-                            <button className="btn btn-primary btn-green btn-100" onClick={handleAddToCart}>
+                            <button className="btn btn-primary btn-light-green btn-100" onClick={handleAddToCart}>
                                 In den Warenkorb
                             </button>
                         </div>

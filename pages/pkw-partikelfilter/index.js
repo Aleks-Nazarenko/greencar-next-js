@@ -1,10 +1,9 @@
 
 import Image from "next/image";
-import axios from 'axios';
 import Link from "next/link";
 import {useEffect} from "react";
 import {useState} from "react";
-import {JOOMLA_API_BASE, JOOMLA_URL_BASE} from "@/utils/config";
+import {JOOMLA_API_BASE} from "@/utils/config";
 import {fixRelativeUrls} from "@/utils/fixRelativeUrl";
 
 export async function getStaticProps({ params }) {

@@ -439,6 +439,16 @@ export default function BusFilterreinigungPage({ product,installation, delivery,
                                             fallback={`${JOOMLA_URL_BASE}/media/com_hikashop/upload/beispielphoto.jpg`}
                                         />
                                     </div>
+                                    <div className={"col-12 "}>
+                                        <div className=" row g-0 bg-white rounded-4 p-3 mb-4 mt-3">
+                                            <div className={"col-12"}>
+                                                <p><strong>Hesteller: </strong> {product.hersteller}</p>
+                                                <p><strong>Model: </strong> {product.modell_liste}</p>
+                                                <p><strong>Hubraum KW/PS: </strong> {product.hubraum_liste}</p>
+                                            </div>
+                                        </div>
+                                    </div>
+
                                     <div className="col-12 product-info">
                                         <div>
                                             <span className={"gc-green display-1"}>{formatPrice(BASE_PRICE)}</span><span className={"ps-2"}>pro Stück {mwStWording}</span>
@@ -536,11 +546,16 @@ export default function BusFilterreinigungPage({ product,installation, delivery,
                             </Link>
                         </div>
                     </div>
-                    <div className="row g-0 p-4 pt-3">
+                    <div className="row g-0 p-4 pt-3 pb-3">
                         <div className={"col col-sm-6"}>
-                            <button className="btn btn-primary btn-green btn-100" onClick={handleAddToCart}>
+                            <button className="btn btn-primary btn-light-green btn-100" onClick={handleAddToCart}>
                                 In den Warenkorb
                             </button>
+                        </div>
+                    </div>
+                    <div className="row g-0 p-4 pt-3">
+                        <div className={"col col-sm-6"}>
+                            <button onClick={() => router.back()} className="btn btn-primary btn-green btn-100">Zurück zur Listenansicht</button>
                         </div>
                     </div>
                 </div>

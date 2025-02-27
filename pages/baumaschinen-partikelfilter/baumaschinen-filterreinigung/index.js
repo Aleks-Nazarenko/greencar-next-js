@@ -22,55 +22,18 @@ function ProductImage({ src, alt, fallback, className }) {
         <img src={imgSrc} alt={alt} className={className} />
     );
 }
-export async function getStaticPaths() {
-    const paths = [];
-
-    try {
-        const categoryRes = await fetch(`${JOOMLA_API_BASE}&task=getSubcategories&category_id=454&format=json`);
-        //404 500 http errors
-        //  if (!categoryRes.ok) throw new Error(`Failed to fetch categories: ${categoryRes.status}`);
-        const categories = await categoryRes.json();
-        // Step 2: Fetch subcategories for each category
-        for (const category of categories) {
-            try {
-                const productRes = await fetch(`${JOOMLA_API_BASE}&task=getProductsBySubcategory&subcategory_id=${category.category_id}&format=json`);
-                //        if (!productRes.ok) throw new Error(`Failed to fetch products for subcategory ${subcategory.category_id}: ${productRes.status}`);
-                const products = await productRes.json();
-                // Generate paths for each product in the subcategory
-                products.forEach((product) => {
-                    paths.push({
-                        params: {
-                            "id-name": `${category.category_id}-${category.category_name.toLowerCase().replace(/\s*\/\s*/g, '-').replace(/\./g, '').replace(/\s+/g, '-').replace(/-+/g, '-')}`,
-                            "product-id-name": `${product.product_id}-${product.product_name.toLowerCase().replace(/\s+/g, '-')}`,
-                        },
-                    });
-                });
-            } catch (error) {
-                console.error(`Failed to fetch subcategories for category ID ${category.category_id}:`, error.message);
-            }
-        }
-    } catch (error) {
-        console.error("Failed to fetch categories:", error.message);
-    }
-
-    return {
-        paths,
-        fallback: false,
-    };
-}
-export async function getStaticProps({ params }) {
+export async function getStaticProps() {
     // Base URL of your Joomla server (adjust this to your Joomla installation URL)
     const joomlaBaseUrl = JOOMLA_URL_BASE;
-    // Extract product ID from `product-id-name`
-    const [productId] = params["product-id-name"].split('-');
+
     // Fetch the product details from the Joomla API
-    const res = await fetch(`${JOOMLA_API_BASE}&task=getProduct&product_id=${productId}&format=json`);
+    const res = await fetch(`${JOOMLA_API_BASE}&task=getProduct&product_id=8469&format=json`);
     const productData = await res.json();
     const product = productData.product_name ? productData : null;
     if (!productData.product_name) {
         console.error("Invalid product data received:", productData);
     }
-    const resArticle = await fetch(`${JOOMLA_API_BASE}&task=articleWithModules&id=22&format=json`);
+    const resArticle = await fetch(`${JOOMLA_API_BASE}&task=articleWithModules&id=27&format=json`);
     const articleData = await resArticle.json();
     // Extract the footer article from the response
     const article = articleData.article || null;
@@ -80,24 +43,22 @@ export async function getStaticProps({ params }) {
             console.log('footerArticle.content not found');
         }
     }
-    const resOptions = await fetch(`${JOOMLA_API_BASE}&task=getProductOptions&product_id=${productId}&format=json`);
+    const resOptions = await fetch(`${JOOMLA_API_BASE}&task=getProductOptions&product_id=$8469&format=json`);
     const options = resOptions.ok ? await resOptions.json() : [];
     // Ensure options is always an array
     const validOptions = Array.isArray(options) ? options : [];
-    const versand = validOptions.find(option => option.name === "Versand") || null;
-    const einbau = validOptions.find(option => option.name === "Mit Einbau") || null;
+    const versand = validOptions.find(option => option.name === "Abholung") || null;
 
     return {
         props: {
             product,
             article,
             versand,
-            einbau,
         },
     };
 }
 
-export default function BauNachruestFilterProductPage({ product, article, versand, einbau }) {
+export default function BauNachruestFilterProductPage({ product, article, versand}) {
 
     const router = useRouter();
 
@@ -109,27 +70,26 @@ export default function BauNachruestFilterProductPage({ product, article, versan
     };
     // Utility function to determine the total price label
     const getTotalPriceLabel = () => {
-        if (installationOption === 'with') {
-            return 'Preis mit Einbau';
+        if (deliveryDesired === 'yes') {
+            return 'Preis mit Abholung';
         } else  {
-            return 'Preis mit Versand';
+            return 'Preis ';
         }
     };
     const VAT_SHARE = 1.19; // MwSt.
     const mwStWording = " (inkl. MwSt.) ";
     const BASE_PRICE = parseFloat(product.product_prices[0].price_value) * VAT_SHARE ; // Product query returns multiple prices, we use the first one
     const DELIVERY_COST = parseFloat(versand.price) * VAT_SHARE; // Options query returns only one price
-    const INSTALLATION_COST = parseFloat(einbau.price) * VAT_SHARE; // Options query returns only one price
+    const INSTALLATION_COST = 0;
 
     // State to manage form selections
-    const [installationOption, setInstallationOption] = useState('with'); // Default to 'with installation'
     const [deliveryDesired, setDeliveryDesired] = useState('yes'); //Versand. Immer berechnet, keine Auswahl. Wird nur im cartItem verwendet
-    const [totalPrice, setTotalPrice] = useState(BASE_PRICE + INSTALLATION_COST);
+    const [totalPrice, setTotalPrice] = useState(BASE_PRICE + DELIVERY_COST);
 
     // Product options configuration
     const productOptions = {
         installation: { //Aus- und Einbau bzw. Mit Einbau
-            isAvailable: true,
+            isAvailable: false,
             cost: INSTALLATION_COST,
             label: "Mit Einbau",
             withoutLabel: "No Installation",
@@ -137,7 +97,7 @@ export default function BauNachruestFilterProductPage({ product, article, versan
         delivery: { //Abholung bzw. Versand
             isAvailable: true,
             cost: DELIVERY_COST,
-            label: "Versand",
+            label: "Abholung",
         },
         deposit: { //Kaution
             isAvailable: false,
@@ -145,18 +105,23 @@ export default function BauNachruestFilterProductPage({ product, article, versan
             label: "Kaution",
         },
         advancePayment: {//Vorauszahlung
-            isAvailable: true,
+            isAvailable: false,
             cost: 20,
             label: "Vorauszahlung",
         },
     };
-    const handleInstallationChange = (e) => {
-        const selectedOption = e.target.value;
-        setInstallationOption(selectedOption);
-        // Update total price based on installation option
-        let newTotalPrice = BASE_PRICE + INSTALLATION_COST;
-        if (selectedOption === 'without') {
-            newTotalPrice = BASE_PRICE + DELIVERY_COST;
+    const handleDeliveryChange = (e) => {
+        const selectedDelivery = e.target.value;
+        setDeliveryDesired(selectedDelivery);
+        // Update total price based on delivery option
+        let newTotalPrice = BASE_PRICE ;
+
+        if (selectedDelivery === 'yes') {
+            newTotalPrice += DELIVERY_COST;
+        }
+        // Set selected date to null if delivery is not desired
+        if (selectedDelivery === 'no') {
+            newTotalPrice = BASE_PRICE ;
         }
         setTotalPrice(newTotalPrice);
     };
@@ -175,14 +140,14 @@ export default function BauNachruestFilterProductPage({ product, article, versan
             basePrice: formatPrice(BASE_PRICE),
             options: {
                 // Aus- und Einbau bzw. Mit Einbau
-                installation: productOptions.installation.isAvailable && installationOption === 'with'
+                installation: productOptions.installation.isAvailable
                     ? {
                         label: productOptions.installation.label,
                         cost: formatPrice(productOptions.installation.cost),
                     }
                     : null,
                 // Abholung bzw. Versand
-                delivery: productOptions.installation.isAvailable && installationOption === 'without'
+                delivery: productOptions.delivery.isAvailable && deliveryDesired === 'yes'
                     ? {
                         label: productOptions.delivery.label,
                         cost: formatPrice(productOptions.delivery.cost),
@@ -266,9 +231,6 @@ export default function BauNachruestFilterProductPage({ product, article, versan
                                 <div className="col-sm-6">
                                     <div className={"row g-0 pt-3 pt-sm-0"}>
                                         <div className={"col-12"}>
-                                            <p><strong>Motorleistung: </strong> {product.motorleistung_liste} </p>
-                                            <p><strong>Ausführung / Einsatzgebie: </strong> {product.einsatz_liste}</p>
-                                            <p><strong>Artikelnummer:</strong> {product.artikelnummer}</p>
                                         </div>
                                     </div>
                                 </div>
@@ -281,30 +243,20 @@ export default function BauNachruestFilterProductPage({ product, article, versan
             </div>
 
             <div className="row g-0 p-3 p-sm-4 pt-sm-3">
-                <div className="col-12 product-info">
+                <div className="col-sm-6 product-info">
                     <div>
                         <span className={"gc-green display-1"}>{formatPrice(BASE_PRICE)}</span><span className={"ps-2"}>pro Stück {mwStWording}</span>
                     </div>
-                    <div className={"w-100 pb-3"}></div>
-                    { installationOption === 'with' && (
-                        <>
-                            <p>Keine Versandkosten</p>
-                            <p>Einbau vor Ort beim Kunden, deutschlandweit</p>
-                        </>
-                    )}
-                    { installationOption === 'without' && (
-                    <p>Versand +{formatPrice(DELIVERY_COST)} {mwStWording}</p>
-                    )}
+                    <div className="row g-0 delivery-options pt-2">
+                        <div className={"w-100"}>Abholung gewünscht?</div>
+                        <select value={deliveryDesired} onChange={handleDeliveryChange} className={"form-select"} aria-label=".form-select">
+                            <option value="yes">Ja ( + {formatPrice(DELIVERY_COST)} {mwStWording} )</option>
+                            <option value="no">Nein</option>
+                        </select>
+                    </div>
                 </div>
 
-                <div className="w-100">Mit Einbau:</div>
-                <div className="col-sm-6">
-                        <FormSelect value={installationOption} onChange={handleInstallationChange}>
-                            <option value="with">Ja + {formatPrice(INSTALLATION_COST)}</option>
-                            <option value="without">Nein</option>
-                        </FormSelect>
 
-                </div>
 
                 <div className="row g-0 total-price mt-3 pt-1">
                     <div className={"display-3 gc-green"}>{getTotalPriceLabel()}: {formatPrice(totalPrice)}</div>
