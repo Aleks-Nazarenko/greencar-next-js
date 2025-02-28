@@ -60,7 +60,10 @@ export default function NavbarNazarenko() {
 
                         <NavDropdown title="Informationen">
                             <NavDropdown.Item href="/partikelfilter-info/filter-lkw-infos"  className="nav-link">
-                                    Über GREENCAR
+                                Über GREENCAR
+                            </NavDropdown.Item>
+                            <NavDropdown.Item href="/partikelfilter-info/jobs-karriere"  className="nav-link">
+                                Jobs und Karriere
                             </NavDropdown.Item>
                         </NavDropdown>
 

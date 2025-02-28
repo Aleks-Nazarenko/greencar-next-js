@@ -9,14 +9,13 @@ export default function SecondaryMenu() {
     return (
 
 
-                <div className="dropdown-container d-flex g-0 justify-content-sm-between justify-content-start">
-                    <Dropdown className={"d-inline  pe-sm-0 pe-2 pb-2 pb-sm-0 "}>
+                <div className="dropdown-container row g-0 justify-content-sm-between justify-content-start">
+                    <Dropdown className={"col-auto pe-sm-0 pe-2 pb-2 pb-sm-0 "}>
                         {/* 🔹 Dropdown Toggle Button */}
                         <Dropdown.Toggle variant="primary" id="dropdown-basic" className={"bg-gc-light-blue dropdown-gc gc-green-light gc-bold shadow rounded-4  border-0"}>
                             <Image src="/images/icons/pkw-partikelfilter.png" alt="PKW Partikelfilter" width={50} height={50} className="me-2 picto-50" />
                             <span>PKW</span>
                         </Dropdown.Toggle>
-
                         {/* 🔹 Dropdown Menu */}
                         <Dropdown.Menu className={"shadow rounded-4 mt-2"}>
                             <Dropdown.Item href="/pkw-partikelfilter/pkw-nachruestfilter" className="d-flex align-items-center pe-2 ps-2">
@@ -35,16 +34,14 @@ export default function SecondaryMenu() {
                                 <Image src="/images/icons/pkw-filterreinigung.png" alt="PKW Filterreinigung Berlin" width={50} height={50} className="me-2 picto-50" />
                                 PKW Filterreinigung Berlin
                             </Dropdown.Item>
-
                         </Dropdown.Menu>
                     </Dropdown>
-                    <Dropdown className={"d-inline  pe-sm-0 pe-2 pb-2 pb-sm-0 "}>
+                    <Dropdown className={"col-auto pe-sm-0 pe-2 pb-2 pb-sm-0 "}>
                         {/* 🔹 Dropdown Toggle Button */}
                         <Dropdown.Toggle variant="primary" id="dropdown-basic" className={"bg-gc-light-blue dropdown-gc gc-green-light gc-bold shadow rounded-4 border-0"}>
                             <Image src="/images/icons/lkw-partikelfilter.png" alt="LKW Partikelfilter" width={50} height={50} className="me-2 picto-50" />
                             LKW
                         </Dropdown.Toggle>
-
                         {/* 🔹 Dropdown Menu */}
                         <Dropdown.Menu  className={"shadow rounded-4 mt-2"}>
                             <Dropdown.Item href="/lkw-partikelfilter/dpf-euro-vi" className="d-flex align-items-center pe-2 ps-2">
@@ -59,10 +56,9 @@ export default function SecondaryMenu() {
                                 <Image src="/images/icons/lkw-filterreinigung.png" alt="LKW Filterreinigung" width={50} height={50} className="me-2 picto-50" />
                                 Filterreinigung
                             </Dropdown.Item>
-
                         </Dropdown.Menu>
                     </Dropdown>
-                    <Dropdown className={"d-inline  pe-sm-0 pe-2 pb-2 pb-sm-0 "}>
+                    <Dropdown className={"col-auto pe-sm-0 pe-2 pb-2 pb-sm-0 "}>
                         {/* 🔹 Dropdown Toggle Button */}
                         <Dropdown.Toggle variant="primary" id="dropdown-basic" className={"bg-gc-light-blue dropdown-gc gc-green-light gc-bold shadow rounded-4 border-0"}>
                             <Image src="/images/icons/bus-partikelfilter.png" alt="BUS Partikelfilter" width={50} height={50} className="me-2 picto-50" />
@@ -80,7 +76,7 @@ export default function SecondaryMenu() {
                             </Dropdown.Item>
                         </Dropdown.Menu>
                     </Dropdown>
-                    <Dropdown className={"d-inline  pe-sm-0 pe-2 pb-2 pb-sm-0 "}>
+                    <Dropdown className={"col-auto pe-sm-0 pe-2 pb-2 pb-sm-0 "}>
                         {/* 🔹 Dropdown Toggle Button */}
                         <Dropdown.Toggle variant="primary" id="dropdown-basic" className={"bg-gc-light-blue dropdown-gc gc-green-light gc-bold shadow rounded-4 border-0"}>
                             <Image src="/images/icons/bau-partikelfilter.png" alt="BAU Partikelfilter" width={50} height={50} className="me-2 picto-50" />
@@ -98,7 +94,7 @@ export default function SecondaryMenu() {
                             </Dropdown.Item>
                         </Dropdown.Menu>
                     </Dropdown>
-                    <Dropdown className={"d-inline  pe-sm-0 pe-2 pb-2 pb-sm-0 "}>
+                    <Dropdown className={"col-auto pe-sm-0 pe-2 pb-2 pb-sm-0 "}>
                         {/* 🔹 Dropdown Toggle Button */}
                         <Dropdown.Toggle variant="primary" id="dropdown-basic" className={"bg-gc-light-blue dropdown-gc gc-green-light gc-bold shadow rounded-4 border-0"}>
                             <Image src="/images/icons/filterreinigung-partikelfilter.png" alt="Reinigung" width={50} height={50} className="me-2 picto-50" />

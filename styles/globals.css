@@ -305,6 +305,11 @@ ul.arrow-list li svg {
     color-scheme: dark;
   }
 }
+@media (max-width: 820px) {
+  .dropdown-container .dropdown.pe-2{padding-right: 0.625rem!important;}
+  .dropdown-container .dropdown.pb-2{padding-bottom: 0.625rem!important;}
+}
+
 @media (max-width: 596px) {
   .search-container{margin-top: 10px;}
 }

@@ -6,7 +6,7 @@ import {useState} from "react";
 import {JOOMLA_API_BASE} from "@/utils/config";
 import {fixRelativeUrls} from "@/utils/fixRelativeUrl";
 
-export async function getStaticProps({ params }) {
+export async function getStaticProps() {
 
     const resPortal = await fetch(`${JOOMLA_API_BASE}&task=articleWithModules&id=6&format=json`);
     const portalData = await resPortal.json();
