@@ -220,8 +220,14 @@ header {z-index: 10}
   box-shadow: none !important;
 }
 
+.nav-item .dropdown-menu{border: none!important; box-shadow: var(--bs-box-shadow) !important;}
+.nav-item .dropdown-menu .nav-link.dropdown-item:hover{border-radius: 0.375rem!important;}
 #maschinen {background: white; border-radius: 1rem; padding: 20px;}
 #maschinen img {border-radius: 1rem;}
+
+.navbar-toggler:focus {box-shadow: none !important;} /* Barrierefreiheit !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! */
+.navbar-toggler {border: none!important;}
+.navbar-toggler-icon {width: 1.8em!important;}
 
 .table {
   --bs-table-color: #666 !important;
@@ -305,11 +311,15 @@ ul.arrow-list li svg {
     color-scheme: dark;
   }
 }
+
+@media (max-width: 919px) {
+  .nav-item.show.dropdown  .dropdown-menu{background:none!important; box-shadow: none!important;}
+  .nav-item .dropdown-menu .nav-link.dropdown-item:hover{background-color: unset!important;}
+}
 @media (max-width: 820px) {
   .dropdown-container .dropdown.pe-2{padding-right: 0.625rem!important;}
   .dropdown-container .dropdown.pb-2{padding-bottom: 0.625rem!important;}
 }
-
 @media (max-width: 596px) {
   .search-container{margin-top: 10px;}
 }

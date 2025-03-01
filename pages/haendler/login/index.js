@@ -2,28 +2,11 @@ import {useRouter} from "next/router";
 import {useEffect} from "react";
 import {useState} from "react";
 import { Form, Button, Alert } from "react-bootstrap";
-import {JOOMLA_API_BASE, JOOMLA_URL_BASE} from "@/utils/config";
-import {convertRelativeUrls} from "@/utils/convertRelativeUrls";
+import {JOOMLA_API_BASE} from "@/utils/config";
+import Link from "next/link";
 
-export async function getStaticProps() {
-    const joomlaBaseUrl = JOOMLA_URL_BASE;
-    // Fetch data for the footer from Joomla API
-    const resFooter = await fetch(`${JOOMLA_API_BASE}&task=articleWithModules&id=2&format=json`);
-    const footerData = await resFooter.json();
-    // Extract the footer article from the response
-    const footerArticle = footerData.article || null;
 
-    // Convert relative URLs in the footer content to absolute URLs
-    if (footerArticle) {
-        footerArticle.introtext = footerArticle.introtext ? convertRelativeUrls(footerArticle.introtext, joomlaBaseUrl) : '';
-        if (!footerArticle.introtext) {
-            console.log('footerArticle.introtext not found');
-        }
-    }
-    // Return the expected props structure
-    return { props: { footerArticle} };
-}
-const LoginPage = ({ footerArticle} ) => {
+const LoginPage = () => {
     const router = useRouter();
     const [formData, setFormData] = useState({ username: "", password: "" });
     const [error, setError] = useState(null);
@@ -97,55 +80,52 @@ const LoginPage = ({ footerArticle} ) => {
 
     return (
         <>
-            <main>
-                <div className="container-fluid container-greencar">
-                    <div className="row g-0 p-4 mb-6">
-                        <h2>Händler - Login</h2>
-                        {error && <Alert variant="danger">{error}</Alert>}
-                        {successMessage && <Alert variant="success">{successMessage}</Alert>}
+            <div className="row g-0 pb-4">
+                <h1 className={"mb-1"}>Händler - Login</h1>
+                <div className={"w-100"}>Wenn Sie bei uns als Händler registriert sind, können Sie sich hier einloggen und zu besonderen Konditionen bestellen.
+                    Wenn Sie sich als Händler bei uns registrieren lassen wollen, können Sie das unter dem Menüpunkt <Link className={"gc-green-light"} href={"/haendler/registrierung"}>"Registrierung"</Link> machen.
+                </div>
+            </div>
+            <div className="row g-0">
+                        {error && <div className={"col-12 pb-4 form-danger"}>{error}</div>}
+                        {successMessage && <div className={"col-12 gc-green-light"}>{successMessage}</div>}
                         {isLoggedIn ? (
-                            <div>
-                                <Button onClick={handleLogout}>Logout</Button>
+                            <div className={"col-12 col-sm-6"}>
+                                <Button className="btn btn-primary btn-light-green btn-100 mt-4"  onClick={handleLogout}>Logout</Button>
                             </div>
                         ) : (
-                        <Form onSubmit={handleSubmit}>
-                            <Form.Group controlId="username">
-                                <Form.Label>Username</Form.Label>
-                                <Form.Control
-                                    type="text"
-                                    name="username"
-                                    value={formData.username}
-                                    onChange={handleInputChange}
-                                    required
-                                />
-                            </Form.Group>
-                            <Form.Group controlId="password">
-                                <Form.Label>Password</Form.Label>
-                                <Form.Control
-                                    type="password"
-                                    name="password"
-                                    value={formData.password}
-                                    onChange={handleInputChange}
-                                    required
-                                />
-                            </Form.Group>
-                            <Button type="submit" disabled={loading}>
-                                {loading ? "Logging in..." : "Login"}
-                            </Button>
-                        </Form>
+                            <div className={"col-12 col-sm-6"}>
+                                <Form onSubmit={handleSubmit}>
+                                    <Form.Group controlId="username">
+                                        <Form.Label>Username</Form.Label>
+                                        <Form.Control
+                                            type="text"
+                                            name="username"
+                                            value={formData.username}
+                                            onChange={handleInputChange}
+                                            required
+                                        />
+                                    </Form.Group>
+                                    <div className="w-100 pb-2"></div>
+                                    <Form.Group controlId="password">
+                                        <Form.Label>Password</Form.Label>
+                                        <Form.Control
+                                            type="password"
+                                            name="password"
+                                            value={formData.password}
+                                            onChange={handleInputChange}
+                                            required
+                                        />
+                                    </Form.Group>
+                                    <Button className="btn btn-primary btn-light-green btn-100 mt-4" type="submit" disabled={loading}>
+                                        {loading ? "Logging in..." : "Login"}
+                                    </Button>
+                                </Form>
+                            </div>
                         )}
                     </div>
-                </div>
-            </main>
-            <footer>
-                <div className="container-fluid container-footer container-greencar">
-                    <div className="row g-0 p-4">
-                        {footerArticle?.introtext && (
-                            <div dangerouslySetInnerHTML={{ __html: footerArticle.introtext}} />
-                        )}
-                    </div>
-                </div>
-            </footer>
+
+
        </>
     );
 };

@@ -30,9 +30,10 @@ export default function JobsKarriere({ article }) {
         .replace(/{\/source}/g, "");  // Remove `{/source}`
 
     return (
-        <div className="container mt-4">
-            <h1>Article</h1>
-            <div dangerouslySetInnerHTML={{ __html: decodedContent }} />
+        <div className="row g-0">
+            <div className="col-12">
+                <div dangerouslySetInnerHTML={{ __html: decodedContent }} />
+            </div>
         </div>
     );
 }

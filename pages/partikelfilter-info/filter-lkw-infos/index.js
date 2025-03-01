@@ -13,50 +13,29 @@ export async function getStaticProps() {
     const article = data.article || null;
     // Convert relative URLs in the footer content to absolute URLs
     if (article) {
-        article.introtext = article.introtext ? convertRelativeUrls(article.introtext, joomlaBaseUrl) : '';
-        if(!article.introtext) {
-            console.log('article.introtext not found');
+        article.content = article.content ? convertRelativeUrls(article.content, joomlaBaseUrl) : '';
+        if(!article.content) {
+            console.log('article.content not found');
         }
     }
-    // Fetch data for the footer from Joomla API
-    const resFooter = await fetch(`${JOOMLA_API_BASE}&task=articleWithModules&id=2&format=json`);
-    const footerData = await resFooter.json();
-    console.log("API Response:", footerData);
-    // Extract the footer article from the response
-    const footerArticle = footerData.article || null;
 
-    // Convert relative URLs in the footer content to absolute URLs
-    if (footerArticle) {
-        footerArticle.introtext = footerArticle.introtext ? convertRelativeUrls(footerArticle.introtext, joomlaBaseUrl) : '';
-        if (!footerArticle.introtext) {
-            console.log('footerArticle.introtext not found');
-        }
-    }
     // Return the expected props structure
-    return { props: { article, footerArticle} };
+    return { props: { article} };
 }
 
 export default function aboutGreencar({article, footerArticle}) {
     return (
         <>
-            <main>
-                <div className="container-fluid container-greencar">
-                    <div className="row g-0 p-4">
-                        {article?.introtext && (
-                            <div dangerouslySetInnerHTML={{ __html: article.introtext}} />
-                        )}
+
+                    <div className="row g-0">
+                        <div className="col-12">
+                            {article?.content && (
+                                <div dangerouslySetInnerHTML={{ __html: article.content}} />
+                            )}
+                        </div>
                     </div>
-                </div>
-            </main>
-            <footer>
-                <div className="container-fluid container-footer container-greencar">
-                    <div className="row g-0 p-4">
-                        {footerArticle?.introtext && (
-                            <div dangerouslySetInnerHTML={{ __html: footerArticle.introtext}} />
-                        )}
-                    </div>
-                </div>
-            </footer>
+
+
         </>
     );
 }
