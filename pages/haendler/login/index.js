@@ -1,7 +1,7 @@
 import {useRouter} from "next/router";
 import {useEffect} from "react";
 import {useState} from "react";
-import { Form, Button, Alert } from "react-bootstrap";
+import { Form, Button} from "react-bootstrap";
 import {JOOMLA_API_BASE} from "@/utils/config";
 import Link from "next/link";
 
@@ -91,7 +91,7 @@ const LoginPage = () => {
                         {successMessage && <div className={"col-12 gc-green-light"}>{successMessage}</div>}
                         {isLoggedIn ? (
                             <div className={"col-12 col-sm-6"}>
-                                <Button className="btn btn-primary btn-light-green btn-100 mt-4"  onClick={handleLogout}>Logout</Button>
+                                <Button className="btn btn-primary btn-100 mt-4 btn-green"   onClick={handleLogout}>Logout</Button>
                             </div>
                         ) : (
                             <div className={"col-12 col-sm-6"}>
@@ -123,7 +123,15 @@ const LoginPage = () => {
                                 </Form>
                             </div>
                         )}
-                    </div>
+            </div>
+            <div className={"w-100 pb-4"}></div>
+            <div className="row g-0">
+                <div className={"col-12"}>
+                    Bitte nehmen Sie Kontakt auf, wenn Sie Fragen haben:<br/>
+                    Fon +49 (0) 30 417 22 08 - 0<br/>
+                    info@greencar.eu
+                </div>
+            </div>
 
 
        </>

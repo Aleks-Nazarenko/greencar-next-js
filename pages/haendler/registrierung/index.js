@@ -1,6 +1,6 @@
 import {useRouter} from "next/router";
 import {useState} from "react";
-import { Form, Button, Row, Col, Alert } from 'react-bootstrap';
+import { Form, Button, Row, Col} from 'react-bootstrap';
 import {JOOMLA_API_BASE} from "@/utils/config";
 import {useEffect} from "react";
 import Link from "next/link";
@@ -142,47 +142,49 @@ const RegisterPage = () => {
         return (
             <>
 
-                        <Row className="g-0 pb-4">
-                            <Col md={"12"}><h4>Sie sind als Händler angemeldet</h4></Col>
-                        </Row>
                         <Row className="g-0">
-                            <Col sm={"6"}>Anrede: </Col>
+                            <Col ><h1 className={"mb-4"}>Sie sind als Händler angemeldet</h1></Col>
+                        </Row>
+                        <Row className="g-0 mb-2">
+                            <Col sm={"3"}><strong>Anrede: </strong></Col>
                             <Col sm={"6"}>{userInfo?.anrede}</Col>
                         </Row>
-                        <Row className="g-0">
-                            <Col sm={"6"}>Name: </Col>
+                        <Row className="g-0 mb-2">
+                            <Col sm={"3"}><strong>Name: </strong></Col>
                             <Col sm={"6"}>{userInfo?.name}</Col>
                         </Row>
-                        <Row className="g-0">
-                            <Col sm={"6"}>Benutzername: </Col>
+                        <Row className="g-0 mb-2">
+                            <Col sm={"3"}><strong>Benutzername: </strong></Col>
                             <Col sm={"6"}>{userInfo?.username}</Col>
                         </Row>
-                        <Row className="g-0">
-                            <Col sm={"6"}>E-Mail: </Col>
+                        <Row className="g-0 mb-2">
+                            <Col sm={"3"}><strong>E-Mail: </strong></Col>
                             <Col sm={"6"}>{userInfo?.email}</Col>
                         </Row>
-                        <Row className="g-0">
-                            <Col sm={"6"}>Firma: </Col>
+                        <Row className="g-0 mb-2">
+                            <Col sm={"3"}><strong>Firma: </strong></Col>
                             <Col sm={"6"}>{userInfo?.firma}</Col>
                         </Row>
-                        <Row className="g-0">
-                            <Col sm={"6"}>Ort: </Col>
+                        <Row className="g-0 mb-2">
+                            <Col sm={"3"}><strong>Ort: </strong></Col>
                             <Col sm={"6"}>{userInfo?.ort}</Col>
                         </Row>
-                        <Row className="g-0">
-                            <Col sm={"6"}>Straße: </Col>
+                        <Row className="g-0 mb-2">
+                            <Col sm={"3"}><strong>Straße: </strong></Col>
                             <Col sm={"6"}>{userInfo?.strasse}</Col>
                         </Row>
                         <Row className="g-0">
-                            <Col sm={"6"}>PLZ: </Col>
+                            <Col sm={"3"}><strong>PLZ: </strong></Col>
                             <Col sm={"6"}>{userInfo?.plz}</Col>
                         </Row>
+                        <div className="w-100 pb-4"></div>
                         <Row className="g-0">
                             <Col sm={"6"}>
-                                <Button variant="danger" onClick={handleLogout}>Abmelden</Button>
+                                <Button className="btn btn-primary btn-100 btn-green"  onClick={handleLogout}>Abmelden</Button>
                             </Col>
                         </Row>
-                        <Row className="mb-3 g-0">
+                        <div className="w-100 pb-4"></div>
+                        <Row className="g-0">
                             <Col md={"12"}>
                                 Bitte nehmen Sie Kontakt auf, wenn Sie Fragen haben:<br/>
                                 Fon +49 (0) 30 417 22 08 - 0<br/>
@@ -195,35 +197,34 @@ const RegisterPage = () => {
     }
     return (
         <>
-                    <Row className="mb-3 g-0">
-                        <Col md={"12"}>
-                            {errors.apiError && <Alert variant="danger">{errors.apiError}</Alert>}
-                            {successMessage && <Alert variant="success">{successMessage}</Alert>}
+                    <Row className="g-0 ">
+                        <Col >
+                            {errors.apiError && <div className={"w-100 form-danger pb-4"}>{errors.apiError}</div>}
+                            {successMessage && <div className={"w-100 gc-green-light pb-4"}>{successMessage}</div>}
                         </Col>
                     </Row>
-                    <Row className="mb-3 g-0">
-                        <Col md={"12"}>
-                            <h4>Händler - Registrierung</h4>
-                        </Col>
-                        <Col md={"12"}>
+                    <Row className="pb-4 g-0">
+                        <h1 className={"mb-1"}>Händler - Registrierung</h1>
+                        <Col>
                             Bitte registrieren Sie sich hier, wenn Sie bei GREENCAR als Händler zu besonderen Konditionen einkaufen möchten.
-                            Wenn Sie sich bereits bei uns registriert haben, können Sie sich über den Menüpunkt
-                            <Link href="/haendler/login" passHref legacyBehavior>
-                                <a className="nav-link">"Login"</a>
-                            </Link>als Händler einloggen
+                            Wenn Sie sich bereits bei uns registriert haben, können Sie sich über den Menüpunkt&nbsp;
+                            <Link className={"gc-green-light"} href="/haendler/login" >
+                                Login
+                            </Link> als Händler einloggen
                         </Col>
                     </Row>
                     <Form noValidate validated={validated} onSubmit={handleSubmit}>
-                        <Row className="mb-3 g-0">
-                            <Col md={"12"}><h4>Login</h4></Col>
+                        <Row className="g-0">
+                            <Col >
+                                <h3 className={"mb-3"}>Login</h3>
+                            </Col>
                         </Row>
                         <Row className="mb-3 g-0">
-                            <Form.Group as={Col} sm="12" md={"6"} controlId="regBenutzername">
+                            <Form.Group as={Col} sm={"6"} controlId="regBenutzername">
                                     <Form.Label>Benutzername <span className="required">*</span></Form.Label>
                                     <Form.Control
                                         required
                                         type="text"
-                                        placeholder="Benutzername"
                                         name="benutzername"
                                         value={formData.benutzername}
                                         onChange={handleInputChange}
@@ -234,12 +235,11 @@ const RegisterPage = () => {
                             </Form.Group>
                         </Row>
                         <Row className="mb-3 g-0">
-                            <Form.Group as={Col} md="6" sm={"12"} controlId="regPasswort">
+                            <Form.Group as={Col} sm={"6"} controlId="regPasswort">
                                 <Form.Label>Passwort <span className="required">*</span></Form.Label>
                                 <Form.Control
                                     required
                                     type="password"
-                                    placeholder="Passwort"
                                     name="passwort"
                                     value={formData.passwort}
                                     onChange={handleInputChange}
@@ -250,12 +250,11 @@ const RegisterPage = () => {
                             </Form.Group>
                         </Row>
                         <Row className="mb-3 g-0">
-                            <Form.Group as={Col} md="6" sm={"12"} controlId="regPasswort2">
+                            <Form.Group as={Col} sm={"6"} controlId="regPasswort2">
                                 <Form.Label>Passwort bestätigen <span className="required">*</span></Form.Label>
                                 <Form.Control
                                     required
                                     type="password"
-                                    placeholder="Passwort bestätigen"
                                     name="passwort2"
                                     value={formData.passwort2}
                                     onChange={handleInputChange}
@@ -266,11 +265,14 @@ const RegisterPage = () => {
                                 </Form.Control.Feedback>
                             </Form.Group>
                         </Row>
-                        <Row className="mb-3 g-0">
-                            <Col md={"12"}><h4>Ansprechpartner</h4></Col>
+                        <div className="w-100 pb-3"></div>
+                        <Row className="g-0">
+                            <Col>
+                                <h3 className={"mb-3"}>Ansprechpartner</h3>
+                            </Col>
                         </Row>
                         <Row className="mb-3 g-0">
-                            <Form.Group as={Col} md="2" controlId="regAnrede">
+                            <Form.Group as={Col} sm="6" controlId="regAnrede">
                                 <Form.Label>Anrede <span className="required">*</span></Form.Label>
                                 <Form.Select
                                     required
@@ -284,12 +286,11 @@ const RegisterPage = () => {
                             </Form.Group>
                         </Row>
                         <Row className="mb-3 g-0">
-                            <Form.Group as={Col} sm="12" md={"6"} controlId="regName">
+                            <Form.Group as={Col}  sm={"6"} controlId="regName">
                                 <Form.Label>Name <span className="required">*</span></Form.Label>
                                 <Form.Control
                                     required
                                     type="text"
-                                    placeholder="Name"
                                     name="name"
                                     value={formData.name}
                                     onChange={handleInputChange}
@@ -300,12 +301,11 @@ const RegisterPage = () => {
                             </Form.Group>
                         </Row>
                         <Row className="mb-3 g-0">
-                            <Form.Group as={Col} md="6" sm="12" controlId="regEmail">
+                            <Form.Group as={Col} sm="6" controlId="regEmail">
                                 <Form.Label>E-Mail-Adresse <span className="required">*</span></Form.Label>
                                 <Form.Control
                                     required
                                     type="email"
-                                    placeholder="E-Mail"
                                     name="email"
                                     value={formData.email}
                                     onChange={handleInputChange}
@@ -316,12 +316,11 @@ const RegisterPage = () => {
                             </Form.Group>
                         </Row>
                         <Row className="mb-3 g-0">
-                            <Form.Group as={Col} md="6" sm={"12"} controlId="regEmail2">
+                            <Form.Group as={Col} sm={"6"} controlId="regEmail2">
                                 <Form.Label>E-Mail-Adresse bestätigen <span className="required">*</span></Form.Label>
                                 <Form.Control
                                     required
                                     type="email"
-                                    placeholder="E-Mail bestätigen"
                                     name="email2"
                                     value={formData.email2}
                                     onChange={handleInputChange}
@@ -332,16 +331,16 @@ const RegisterPage = () => {
                                 </Form.Control.Feedback>
                             </Form.Group>
                         </Row>
-                        <Row className="mb-3 g-0">
-                            <Col md={"12"}><h4>Unternehmen</h4></Col>
+                        <div className="w-100 pb-3"></div>
+                        <Row className="g-0">
+                            <Col ><h3 className={"mb-3"}>Unternehmen</h3></Col>
                         </Row>
                         <Row className="mb-3 g-0">
-                            <Form.Group as={Col} sm="12" md={"6"} controlId="regFirma">
+                            <Form.Group as={Col} sm={"6"} controlId="regFirma">
                                 <Form.Label>Firma <span className="required">*</span></Form.Label>
                                 <Form.Control
                                     required
                                     type="text"
-                                    placeholder="firma"
                                     name="firma"
                                     value={formData.firma}
                                     onChange={handleInputChange}
@@ -352,12 +351,11 @@ const RegisterPage = () => {
                             </Form.Group>
                         </Row>
                         <Row className="mb-3 g-0">
-                            <Form.Group as={Col} sm="12" md={"6"} controlId="regOrt">
+                            <Form.Group as={Col} sm={"6"} controlId="regOrt">
                                 <Form.Label>Ort <span className="required">*</span></Form.Label>
                                 <Form.Control
                                     required
                                     type="text"
-                                    placeholder="ort"
                                     name="ort"
                                     value={formData.ort}
                                     onChange={handleInputChange}
@@ -368,12 +366,11 @@ const RegisterPage = () => {
                             </Form.Group>
                         </Row>
                         <Row className="mb-3 g-0">
-                            <Form.Group as={Col} sm="12" md={"6"} controlId="regStrasse">
+                            <Form.Group as={Col}  sm={"6"} controlId="regStrasse">
                                 <Form.Label>Straße <span className="required">*</span></Form.Label>
                                 <Form.Control
                                     required
                                     type="text"
-                                    placeholder="strasse"
                                     name="strasse"
                                     value={formData.strasse}
                                     onChange={handleInputChange}
@@ -384,12 +381,11 @@ const RegisterPage = () => {
                             </Form.Group>
                         </Row>
                         <Row className="mb-3 g-0">
-                            <Form.Group as={Col} sm="12" md={"6"} controlId="regPlz">
+                            <Form.Group as={Col}  sm={"6"} controlId="regPlz">
                                 <Form.Label>PLZ <span className="required">*</span></Form.Label>
                                 <Form.Control
                                     required
                                     type="text"
-                                    placeholder="plz"
                                     name="plz"
                                     value={formData.plz}
                                     onChange={handleInputChange}
@@ -400,16 +396,20 @@ const RegisterPage = () => {
                             </Form.Group>
                         </Row>
 
-                        <Row className="mb-3 g-0">
-                            <Col md={"12"}><span className="required">*</span> Benötigtes Feld</Col>
+                        <Row className="mb-4 g-0">
+                            <Col ><span className="required">*</span> Benötigtes Feld</Col>
                         </Row>
-                        <Row className="mb-3 g-0 justify-content-start">
-                            <Col md={"12"}>
-                                <Button type="submit">Registrieren</Button>
-                                <Button type="button" className={"ms-4"} onClick={() => router.push('/')}>Abbrechen</Button>
+                        <Row className="g-0 justify-content-start">
+                            <Col sm={"6"}>
+                                <Button className="btn btn-primary btn-light-green btn-100 " type="submit">registrieren</Button>
+                            </Col>
+                            <div className={"w-100 pb-4"}></div>
+                            <Col sm={"6"}>
+                                <Button className="btn btn-primary btn-green btn-100" type="button" onClick={() => router.push('/')}>abbrechen</Button>
                             </Col>
                         </Row>
                     </Form>
+                    <div className={"w-100 pb-4"}></div>
                     <Row className="mb-3 g-0">
                         <Col md={"12"}>
                             Bitte nehmen Sie Kontakt auf, wenn Sie Fragen haben:<br/>

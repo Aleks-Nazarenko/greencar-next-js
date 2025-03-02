@@ -144,10 +144,10 @@ export async function getStaticProps() {
      return (
             <>
 
-                <Row className="mb-3 g-0">
+                <Row className="g-0">
                     <Col md={"12"}>
-                        {errors.apiError && <h3  className={"form-danger"}>{errors.apiError}</h3>}
-                        {successMessage && <h3  className={"gc-green"}>{successMessage}</h3>}
+                        {errors.apiError && <h4  className={"form-danger mb-4"}>{errors.apiError}</h4>}
+                        {successMessage && <h4  className={"gc-green mb-4"}>{successMessage}</h4>}
                     </Col>
                 </Row>
                 <Row className="g-0">
@@ -260,7 +260,7 @@ export async function getStaticProps() {
                                         </Form.Group>
                                     </Row>
                                     <Row className="mb-3 g-0">
-                                        <Form.Group as={Col} sm="12" md={"6"} controlId="regPTelefon">
+                                        <Form.Group as={Col} md={"6"} controlId="regPTelefon">
                                             <Form.Label>Telefon <span className="required">*</span></Form.Label>
                                             <Form.Control
                                                 required
