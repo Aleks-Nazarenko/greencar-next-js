@@ -237,7 +237,7 @@ export default function LkwReinigungProductPage({ product, article }) {
 
                     <div className="row g-0 p-4 pb-3">
                         <div className={"col col-sm-6"}>
-                            <Link href={`/anfrage`}>
+                            <Link href={`/anfrage-filterreinigung`}>
                                 <button className="btn btn-primary btn-yellow btn-100">Unverbindliches Angebot anfordern</button>
                             </Link>
                         </div>

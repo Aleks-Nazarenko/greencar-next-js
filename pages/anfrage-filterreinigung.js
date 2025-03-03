@@ -3,7 +3,7 @@ import { Form, Button, Row, Col} from 'react-bootstrap';
 import {useState} from "react";
 import {useRouter} from "next/router";
 
-export default function Anfrage() {
+export default function AnfrageFilterreinigung() {
 
     const router = useRouter();
 
@@ -14,12 +14,10 @@ export default function Anfrage() {
         ort: '',
         plz: '',
         telefon: '',
-        einbau: 'ja',
-        einbauort: '',
+        reinigungsversuche: 'nein',
+        einbau: 'GREENCAR-Werkstatt',
         hersteller: '',
         modell: '',
-        baujahr: '',
-        euro_norm: '',
         message: '',
     });
 
@@ -69,16 +67,14 @@ export default function Anfrage() {
                 ort: formData.ort,
                 plz: formData.plz,
                 telefon: formData.telefon,
+                reinigungsversuche: formData.reinigungsversuche,
                 einbau: formData.einbau,
-                einbauort: formData.einbauort,
                 hersteller: formData.hersteller,
                 modell: formData.modell,
-                baujahr: formData.baujahr,
-                euro_norm: formData.euro_norm,
                 message: formData.message,
 
             };
-            const response = await fetch(`${JOOMLA_API_BASE}&task=anfrage&format=json`, {
+            const response = await fetch(`${JOOMLA_API_BASE}&task=anfrageFilterreinigung&format=json`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(payload),
@@ -99,12 +95,10 @@ export default function Anfrage() {
                         ort: '',
                         plz: '',
                         telefon: '',
+                        reinigungsversuche: '',
                         einbau: '',
-                        einbauort: '',
                         hersteller: '',
                         modell: '',
-                        baujahr: '',
-                        euro_norm: '',
                         message: '',
                     });
                     setValidated(false);
@@ -219,30 +213,7 @@ export default function Anfrage() {
                         />
                     </Form.Group>
                 </Row>
-                <Row className="mb-3 g-0">
-                    <Form.Group as={Col} sm="6" controlId="regEinabu">
-                        <Form.Label>Einbau gewünscht?</Form.Label>
-                        <Form.Select
-                            name="einbau"
-                            value={formData.einbau}
-                            onChange={handleInputChange}
-                        >
-                            <option value="ja">ja</option>
-                            <option value="nein">nein</option>
-                        </Form.Select>
-                    </Form.Group>
-                </Row>
-                <Row className="mb-3 g-0">
-                    <Form.Group as={Col} sm={"6"} controlId="regEinbauort">
-                        <Form.Label>Einbauort</Form.Label>
-                        <Form.Control
-                            type="text"
-                            name="einbauort"
-                            value={formData.einbauort}
-                            onChange={handleInputChange}
-                        />
-                    </Form.Group>
-                </Row>
+
                 <Row className="mb-3 g-0">
                     <Form.Group as={Col} sm={"6"} controlId="regHersteller">
                         <Form.Label>Hersteller</Form.Label>
@@ -266,25 +237,29 @@ export default function Anfrage() {
                     </Form.Group>
                 </Row>
                 <Row className="mb-3 g-0">
-                    <Form.Group as={Col} sm={"6"} controlId="regBaujahr">
-                        <Form.Label>Baujahr</Form.Label>
-                        <Form.Control
-                            type="text"
-                            name="baujahr"
-                            value={formData.baujahr}
+                    <Form.Group as={Col} sm="6" controlId="regReinigungsversuche">
+                        <Form.Label>Haben Reinigungsversuche stattgefunden?</Form.Label>
+                        <Form.Select
+                            name="reinigungsversuche"
+                            value={formData.reinigungsversuche}
                             onChange={handleInputChange}
-                        />
+                        >
+                            <option value="nein">nein</option>
+                            <option value="ja">ja</option>
+                        </Form.Select>
                     </Form.Group>
                 </Row>
                 <Row className="mb-3 g-0">
-                    <Form.Group as={Col} sm={"6"} controlId="regNorm">
-                        <Form.Label>Euro-Norm</Form.Label>
-                        <Form.Control
-                            type="text"
-                            name="euro_norm"
-                            value={formData.euro_norm}
+                    <Form.Group as={Col} sm="6" controlId="regEinbau">
+                        <Form.Label>Aus- und Einbau in</Form.Label>
+                        <Form.Select
+                            name="einbau"
+                            value={formData.einbau}
                             onChange={handleInputChange}
-                        />
+                        >
+                            <option value="GREENCAR-Werkstatt">GREENCAR-Werkstatt</option>
+                            <option value="eigene Werkstatt">Eigene Werkstatt</option>
+                        </Form.Select>
                     </Form.Group>
                 </Row>
                 <Row className="g-0">
@@ -308,6 +283,11 @@ export default function Anfrage() {
                     </Col>
                 </Row>
             </Form>
+            <div className={"w-100 pt-4"}>
+                Danach senden wir Ihnen schnellstmöglich ein Angebot und Informationen zur Filterreinigung per E-Mail. Falls wir Ihnen das Angebot und Informationen zur Filterreinigung zusätzlich per Post zusenden sollen, bitten wir um einen kurzen Hinweis.
+                <p></p>
+                Ihre Daten werden nur einmalig für die Erstellung dieses Angebotes verwendet und nicht für anschließende Werbezwecke genutzt. Selbstverständlich werden wir Ihre Daten nicht an Dritte weitergegeben.
+            </div>
 
         </>
     );

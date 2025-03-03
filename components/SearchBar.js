@@ -24,7 +24,7 @@ export default function SearchBar() {
                             <Image src={"/images/icons/greencar-filter-tel.png"} alt={"telefon"} width={197} height={32} />
                         </div>
                         <div className={"col-auto"}>
-                            <Link href={`/anfrage`}>
+                            <Link href={`/anfrage-partikelfilter`}>
                                 <button className="btn btn-primary btn-yellow btn-100" style={{maxWidth:"194px"}}>Jetzt anfragen</button>
                             </Link>
                         </div>
