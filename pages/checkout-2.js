@@ -25,21 +25,10 @@ function ProductImage({ src, alt, fallback }) {
     );
 }
 
-export async function getStaticProps({ params }) {
+export async function getStaticProps() {
     // Base URL of your Joomla server (adjust this to your Joomla installation URL)
     const joomlaBaseUrl = JOOMLA_URL_BASE;
-    // Fetch data for the footer from Joomla API
-    const resFooter = await fetch(`${JOOMLA_API_BASE}&task=articleWithModules&id=2&format=json`);
-    const footerData = await resFooter.json();
-    // Extract the footer article from the response
-    const footerArticle = footerData.article || null;
-    // Convert relative URLs in the footer content to absolute URLs
-    if (footerArticle) {
-        footerArticle.introtext = footerArticle.introtext ? convertRelativeUrls(footerArticle.introtext, joomlaBaseUrl) : '';
-        if (!footerArticle.introtext) {
-            console.log('footerArticle.introtext not found');
-        }
-    }
+
     // Fetch data for the footer from Joomla API
     const resTerms = await fetch(`${JOOMLA_API_BASE}&task=articleWithModules&id=5&format=json`);
     const termsData = await resTerms.json();
@@ -54,12 +43,11 @@ export async function getStaticProps({ params }) {
     }
     return {
         props: {
-            footerArticle,
             termsArticle,
         },
     };
 }
-export default function CheckoutStep2({footerArticle, termsArticle})   {
+export default function CheckoutStep2({termsArticle})   {
     const router = useRouter();
     const [checkoutDetails, setCheckoutDetails] = useState(null);
     const [termsAccepted, setTermsAccepted] = useState(false);
@@ -125,7 +113,7 @@ export default function CheckoutStep2({footerArticle, termsArticle})   {
         sessionStorage.removeItem("checkoutDetails");
         sessionStorage.removeItem("cart");
         sessionStorage.removeItem("productOptions");
-        router.push( {pathname: '/thank-you', query: { paymentMethod: checkoutDetails.paymentMethod, orderNumber: orderNumber, }});
+        router.push( {pathname: '/bestellbestaetigung', query: { paymentMethod: checkoutDetails.paymentMethod, orderNumber: orderNumber, }});
     };
     const formatPrice = (price) => {
         return new Intl.NumberFormat('de-DE', {

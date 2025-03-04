@@ -1,11 +1,9 @@
-import {convertRelativeUrls} from "@/utils/convertRelativeUrls";
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
-import { JOOMLA_API_BASE } from '@/utils/config';
-import { JOOMLA_URL_BASE } from '@/utils/config';
 
 
-export default function thankYou(){
+
+export default function bestellBestaetigung(){
     const [productUrl, setProductUrl] = useState(null);
     const router = useRouter();
     const {orderNumber} = router.query;
@@ -16,7 +14,7 @@ export default function thankYou(){
             setProductUrl(savedUrl);
         }
     }, []);
-    const goToProductPage = (u) => {
+    const goToProductPage = () => {
         if (productUrl) {
             router.push(productUrl);
             sessionStorage.removeItem('lastVisitedProduct');
@@ -26,8 +24,11 @@ export default function thankYou(){
         <>
 
 
-                    <div className="row g-0 p-3 p-sm-4">
-                        <h1>Bestell&shy;bestätigung</h1>
+                    <div className="row g-0">
+                        <h1 className={"mb-0"}>Bestell&shy;bestätigung</h1>
+                    </div>
+                    <div className={"w-100 pb-4"}></div>
+                    <div className="row g-0">
                         <div>Ihre Bestellung wurde ausgeführt.</div>
                         {(paymentMethod === 'paypal') && (
                             <div>Wir senden Ihnen in Kürze eine Bestätigungs-E-Mail</div>
@@ -39,10 +40,13 @@ export default function thankYou(){
                         <div>Herzlichen Dank für Ihren Einkauf!</div>
                     </div>
                     {productUrl && (
-                        <div className="row g-0 p-3 p-sm-4">
-                            <button onClick={goToProductPage} className="btn btn-primary btn-green" aria-label="zurück zur Produktseite">zurück zur Produktseite</button>
+                        <div className="row g-0 pt-4">
+                            <div className={"col-sm-6"}>
+                                <button onClick={goToProductPage} className="btn btn-primary btn-green w-100" aria-label="zurück zur Produktseite">zurück zur Produktseite</button>
+                            </div>
                         </div>
                     )}
+
 
 
 

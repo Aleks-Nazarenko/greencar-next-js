@@ -6,7 +6,6 @@ import { JOOMLA_API_BASE, JOOMLA_URL_BASE } from '@/utils/config';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation } from 'swiper/modules';
 import 'swiper/swiper-bundle.css';
-import {FormSelect} from "react-bootstrap";
 
 function ProductImage({ src, alt, fallback, className }) {
     const [imgSrc, setImgSrc] = useState(src);
@@ -272,17 +271,11 @@ export default function BauNachruestFilterProductPage({ product, article, versan
                 </div>
             </div>
 
-            <div className="row g-0 p-4 pt-3 pb-3">
+            <div className="row g-0 p-4 pt-3 pb-4">
                 <div className={"col col-sm-6"}>
                     <button className="btn btn-primary btn-light-green btn-100" onClick={handleAddToCart}>
                         In den Warenkorb
                     </button>
-                </div>
-            </div>
-
-            <div className="row g-0 p-4 pt-3">
-                <div className={"col col-sm-6"}>
-                    <button onClick={() => router.back()} className="btn btn-primary btn-green btn-100">Zurück zur Listenansicht</button>
                 </div>
             </div>
 
