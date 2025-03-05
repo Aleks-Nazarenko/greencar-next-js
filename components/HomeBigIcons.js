@@ -20,7 +20,7 @@ export default function HomeBigIcons () {
                                 </div>
                                 <Image  onMouseEnter={() => setIsHoveredReinPkw(true)} onMouseLeave={() => setIsHoveredReinPkw(false)}
                                        src={isHoveredReinPkw ? "/images/icons/PKW_Reinigung_mouse_in.png" : "/images/icons/PKW_Reinigung_mouse.png"} alt={"PKW Filterreinigung"} width={230} height={253}
-                                       style={{maxWidth:"230px",width:"100%",height:"auto"}}
+                                       style={{maxWidth:"230px",width:"100%",height:"auto"}} priority={true}
                                 />
                             </Link>
                         </div>
@@ -31,7 +31,7 @@ export default function HomeBigIcons () {
                                 </div>
                                 <Image  onMouseEnter={() => setIsHoveredReinLKW(true)} onMouseLeave={() => setIsHoveredReinLKW(false)}
                                        src={isHoveredReinLKW ? "/images/icons/LKW_Reinigung_mouse_in.png" : "/images/icons/LKW_Reinigung_mouse.png"} alt={"PKW Filterreinigung"} width={230} height={253}
-                                       style={{maxWidth:"230px",width:"100%",height:"auto"}}
+                                       style={{maxWidth:"230px",width:"100%",height:"auto"}} priority={true}
                                 />
                             </Link>
                         </div>
@@ -40,7 +40,9 @@ export default function HomeBigIcons () {
                                 <div className={"d-flex justify-content-center gc-green-light gc-bold"} style={{paddingBottom:"26px"}}>
                                     LKW Schall&shy;dämpfer
                                 </div>
-                                <Image src={"/images/icons/lkw-austauschfilter_in.png"} alt={"LKW Schalldämpfer"} width={196} height={255} style={{maxWidth:"188px",width:"100%",height:"auto"}}/>
+                                <Image src={"/images/icons/lkw-austauschfilter_in.png"} alt={"LKW Schalldämpfer"} width={196} height={255} style={{maxWidth:"188px",width:"100%",height:"auto"}}
+                                    priority={true}
+                                />
                             </Link>
                         </div>
                     </div>
