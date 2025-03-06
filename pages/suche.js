@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import Link from "next/link";
 import { JOOMLA_API_BASE, JOOMLA_URL_BASE } from '@/utils/config';
-import {convertRelativeUrls} from "@/utils/convertRelativeUrls";
 
 function ProductImage({ src, alt, fallback }) {
     const [imgSrc, setImgSrc] = useState(src);
@@ -18,29 +17,8 @@ function ProductImage({ src, alt, fallback }) {
         <img src={imgSrc} alt={alt}  />
     );
 }
-export async function getStaticProps({ params }) {
-    // Base URL of your Joomla server (adjust this to your Joomla installation URL)
-    const joomlaBaseUrl = JOOMLA_URL_BASE;
-    // Fetch data for the footer from Joomla API
-    const resFooter = await fetch(`${JOOMLA_API_BASE}&task=articleWithModules&id=2&format=json`);
-    const footerData = await resFooter.json();
-    // Extract the footer article from the response
-    const footerArticle = footerData.article || null;
-    // Convert relative URLs in the footer content to absolute URLs
-    if (footerArticle) {
-        footerArticle.introtext = footerArticle.introtext ? convertRelativeUrls(footerArticle.introtext, joomlaBaseUrl) : '';
-        if (!footerArticle.introtext) {
-            console.log('footerArticle.introtext not found');
-        }
-    }
 
-    return {
-        props: {
-            footerArticle,
-        },
-    };
-}
-const SearchResults = ({footerArticle}) => {
+const SearchResults = () => {
     const [products, setProducts] = useState([]);
     const [loading, setLoading] = useState(true);
     const router = useRouter();
@@ -73,26 +51,25 @@ const SearchResults = ({footerArticle}) => {
 
     return (
         <>
-            <main>
-                <div className="container-fluid container-greencar">
-                    <div className="row g-0 p-4">
-                        <h1>Search Results for "{query}"</h1>
+
+                    <div className="row g-0 ">
+                        <h1>Suchergebnisse für "{query}"</h1>
                         {/* Display the number of hits */}
                         <p>
                             {products.length > 0
                                 ? `Insgesamt ${products.length} Ergebnisse gefunden!`
                                 : `Keine Ergebnisse für "${query}".`}
                         </p>
-                        {products.length > 0 ? (
-                            <table className="table table-bordered">
+                        {products.length > 0 && (
+                            <table className="table table-bordered align-middle">
                                 <thead>
-                                <tr>
-                                    <th>Product</th>
-                                    <th>Hersteller</th>
-                                    <th>Modell List</th>
-                                    <th>OE Nummer</th>
-                                    <th>Actions</th>
-                                </tr>
+                                    <tr className={"text-center align-middle"}>
+                                        <th>Produktname</th>
+                                        <th>Hersteller</th>
+                                        <th>Modell</th>
+                                        <th>OE Nummer</th>
+                                        <th></th>
+                                    </tr>
                                 </thead>
                                 <tbody>
                                 {products.map((product) => {
@@ -105,7 +82,7 @@ const SearchResults = ({footerArticle}) => {
                                         "N/A";
 
                                     // Extract the first category hierarchy from the product's categories
-                                    const category = product.categories[0] || {};
+                            /*        const category = product.categories[0] || {};
                                     let firstSlug = "pkw-partikelfilter";
                                     if(category.parent_parent_category_id === 68 || category.parent_parent_category_id === 444 || category.parent_parent_category_id === 470){
                                         firstSlug = "lkw-partikelfilter";
@@ -121,24 +98,43 @@ const SearchResults = ({footerArticle}) => {
                                     }-${category.category_name?.toLowerCase().trim().replace(/\s+/g, '-') || "unknown"}/${
                                         product.product_id
                                     }-${product.product_name.toLowerCase().trim().replace(/\s+/g, '-')}`;
+*/
+                                    const category = product.categories[0] || {};
+                                    let firstSlug = "pkw-partikelfilter";
+                                    if(category.parent_category_id === 68 || category.parent_category_id === 444 || category.parent_category_id === 470){
+                                        firstSlug = "lkw-partikelfilter";
+                                    }
+                                    if(category.parent_category_id === 69){
+                                        firstSlug = "bus-partikelfilter";
+                                    }
+                                    if(category.parent_category_id === 68 ){
+                                        category.parent_category_name = "dpf-euro-vi";
+                                    }
+                                    if(category.parent_category_id === 444 ){
+                                        category.parent_category_name = "schalldaempfer-euro-vi";
+                                    }
+                                    if(category.parent_category_id === 69 ){
+                                        category.parent_category_name = "dpf-euro-vi";
+                                    }
+
+                                    const productUrl = `/${firstSlug}/${(category.parent_category_name || "unknown").trim().toLowerCase().replace(/\s+/g, '-')}/
+                                        ${category.category_id || "unknown"}-${(category.category_name || "unknown").trim().toLowerCase().replace(/\s+/g, '-')}/
+                                        ${product.product_id}-${product.product_name.trim().toLowerCase().replace(/\s+/g, '-')}`;
 
                                     return (
-                                        <tr key={product.product_id} >
+                                        <tr key={product.product_id} className={"text-center"}>
                                             {/* Cell 1: Product Name and Image */}
                                             <td>
-                                                <Link href={productUrl} passHref legacyBehavior>
-                                                    <a>
-                                                        <strong>{product.product_name}</strong>
-                                                    </a>
-                                                </Link>
-                                                <br />
                                                 {product.file_path && (
                                                     <ProductImage
-                                                    src={`${JOOMLA_URL_BASE}/media/com_hikashop/upload/thumbnail_100X100/${product.file_path}`}
-                                                    alt={product.product_name}
-                                                    fallback={`${JOOMLA_URL_BASE}/media/com_hikashop/upload/thumbnail_100X100/beispielphoto.jpg`}
+                                                        src={`${JOOMLA_URL_BASE}/media/com_hikashop/upload/thumbnail_100X100/${product.file_path}`}
+                                                        alt={product.product_name}
+                                                        fallback={`${JOOMLA_URL_BASE}/media/com_hikashop/upload/thumbnail_100X100/beispielphoto.jpg`}
                                                     />
                                                 )}
+                                                <Link href={productUrl} className={"d-block"}>
+                                                    {product.product_name}
+                                                </Link>
                                             </td>
 
                                             {/* Cell 2: Hersteller */}
@@ -152,8 +148,8 @@ const SearchResults = ({footerArticle}) => {
 
                                             {/* Cell 5: Actions (Button to the product page) */}
                                             <td>
-                                                <Link href={productUrl} passHref legacyBehavior>
-                                                    <button className="btn btn-primary">View Product</button>
+                                                <Link href={productUrl} >
+                                                    <button className="btn btn-primary btn-green btn-100">Details</button>
                                                 </Link>
                                             </td>
                                         </tr>
@@ -161,21 +157,9 @@ const SearchResults = ({footerArticle}) => {
                                 })}
                                 </tbody>
                             </table>
-                        ) : (
-                            <p>No products found for "{query}".</p>
                         )}
                     </div>
-                </div>
-            </main>
-            <footer>
-                <div className="container-fluid container-footer container-greencar">
-                    <div className="row g-0 p-4">
-                        {footerArticle?.introtext && (
-                            <div dangerouslySetInnerHTML={{ __html: footerArticle.introtext}} />
-                        )}
-                    </div>
-                </div>
-            </footer>
+
         </>
     );
 };

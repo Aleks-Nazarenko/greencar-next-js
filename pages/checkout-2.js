@@ -52,6 +52,7 @@ export default function CheckoutStep2({termsArticle})   {
     const [checkoutDetails, setCheckoutDetails] = useState(null);
     const [termsAccepted, setTermsAccepted] = useState(false);
     const [showModal, setShowModal] = useState(false);
+    const [errors, setErrors] = useState('');
     const handleModalOpen = () => {
         setShowModal(true);
     };
@@ -68,6 +69,12 @@ export default function CheckoutStep2({termsArticle})   {
         }
     }, [router]);
 
+    const scrollToTop = () => {
+        window.scrollTo({
+            top: 0,
+            behavior: "smooth", // Optional: Adds smooth scrolling effect
+        });
+    };
     const handleConfirmOrder = async () => {
         if (!termsAccepted) {
             alert("Bitte akzeptieren Sie die allgemeinen Geschäftsbedingungen, um fortzufahren.");
@@ -84,36 +91,49 @@ export default function CheckoutStep2({termsArticle})   {
         const orderNumber = generateOrderNumber();
         const orderData = JSON.parse(sessionStorage.getItem("checkoutDetails"));
         if (!orderData) {
-            alert("Order data is missing. Please try again.");
+            alert("Es fehlen Bestelldaten. Bitte versuchen Sie es erneut.");
             return;
         }
         orderData.orderNumber = orderNumber;
-        // Send the request to Joomla controller
-        const response = await fetch(`${JOOMLA_API_BASE}&task=confirmOrder&format=json`, {
-            method: "POST", // Use POST for sending data securely
-            headers: {
-                "Content-Type": "application/json", // Ensure the server knows it's JSON
-            },
-            body: JSON.stringify(orderData), // Convert the data to JSON string
-        });
-        // Check if the response is OK
-        if (!response.ok) {
-            const errorData = await response.json();
-            console.error("Error from server:", errorData);
-            alert("Bestellung konnte nicht bestätigt werden. Bitte versuchen Sie es erneut.");
-            return;
+
+        try {
+            // Send the request to Joomla controller
+            const response = await fetch(`${JOOMLA_API_BASE}&task=confirmOrder&format=json`, {
+                method: "POST", // Use POST for sending data securely
+                headers: {
+                    "Content-Type": "application/json", // Ensure the server knows it's JSON
+                },
+                body: JSON.stringify(orderData), // Convert the data to JSON string
+            });
+            const data = await response.json();
+            // Check if the response is OK
+            if (!response.ok) {
+                console.log('Bestellung Checkout_2 Error', data);
+                setErrors('Es ist ein Fehler aufgetreten. Bitte versuchen Sie es später erneut.');
+                scrollToTop();
+            }else {
+                if (data.status === 'success') {
+                    // Clear sessionStorage and navigate to Thank You page
+                    // alert("Order placed successfully!");
+                    sessionStorage.removeItem("checkoutDetails");
+                    sessionStorage.removeItem("cart");
+                    sessionStorage.removeItem("productOptions");
+                    setErrors('');
+                    router.push({
+                        pathname: '/bestellbestaetigung',
+                        query: {paymentMethod: checkoutDetails.paymentMethod, orderNumber: orderNumber,}
+                    });
+                } else {
+                    console.log('Bestellung Checkout_2 Error', data);
+                    setErrors('Es ist ein Fehler aufgetreten. Bitte versuchen Sie es später erneut.');
+                    scrollToTop();
+                }
+            }
+        } catch (error) {
+            console.error("Error confirming order:", error);
+            setErrors('Es ist ein Fehler aufgetreten. Bitte versuchen Sie es später erneut.');
+            scrollToTop();
         }
-
-        // Process the server response
-        const result = await response.json();
-        console.log("Order confirmation successful:", result);
-
-        // Clear sessionStorage and navigate to Thank You page
-       // alert("Order placed successfully!");
-        sessionStorage.removeItem("checkoutDetails");
-        sessionStorage.removeItem("cart");
-        sessionStorage.removeItem("productOptions");
-        router.push( {pathname: '/bestellbestaetigung', query: { paymentMethod: checkoutDetails.paymentMethod, orderNumber: orderNumber, }});
     };
     const formatPrice = (price) => {
         return new Intl.NumberFormat('de-DE', {
@@ -129,6 +149,12 @@ export default function CheckoutStep2({termsArticle})   {
                 currency: "EUR",
             }}
         >
+                    <div className={"row g-0"}>
+                        <div className={"col"}>
+                            {errors && <div className={"w-100 form-danger pb-4"}>{errors}</div>}
+                        </div>
+                    </div>
+
                     <div className={"row g-0"}>
                         <h1 className={"pb-0 mb-0"}>Bestellzusammenfassung</h1>
                     </div>
@@ -146,8 +172,6 @@ export default function CheckoutStep2({termsArticle})   {
 
                                                 <div className={"row "}>
                                                     <div className={"col-sm-6"}>
-
-
                                                         <div className={"row g-0 "}>
                                                             {checkoutDetails.cartItem.productName.toLowerCase().includes('filterreinigung')? (
                                                                 <ProductImage
@@ -164,8 +188,6 @@ export default function CheckoutStep2({termsArticle})   {
                                                             )}
 
                                                         </div>
-
-
                                                     </div>
                                                     <div className={"col-sm-6"}>
 

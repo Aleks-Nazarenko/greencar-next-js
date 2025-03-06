@@ -153,6 +153,7 @@ header {z-index: 10}
 .gc-green-light{color: #45CA25}
 .required {color: red;}
 .picto-170{max-width: 170px;}
+.picto-110{max-width: 80px;}
 .picto-50{max-width: 50px!important; width:100%!important;}
 .picto-190{max-width: 150px!important;}
 .bg-gc-light-blue {background: rgb(218, 239, 251, 0.92); }

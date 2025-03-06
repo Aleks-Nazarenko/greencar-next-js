@@ -1,4 +1,3 @@
-import axios from 'axios';
 import Link from "next/link";
 import { useRouter } from 'next/router';
 import {convertRelativeUrls} from "@/utils/convertRelativeUrls";
@@ -24,15 +23,7 @@ function ProductImage({ src, alt, fallback }) {
         <img src={imgSrc} alt={alt}  />
     );
 }
-function replaceSlashesExceptTrailing(str) {
-    const hasTrailingSlash = str.endsWith('/');
-    // Remove the trailing slash temporarily for processing
-    const modifiedStr = hasTrailingSlash ? str.slice(0, -1) : str;
-    // Replace all other slashes with hyphens
-    const result = modifiedStr.replace(/\//g, '-');
-    // Add the trailing slash back if it was present
-    return hasTrailingSlash ? result + '/' : result;
-}
+
 export async function getStaticPaths() {
     const paths = [];
     try {
@@ -206,8 +197,8 @@ export default function ProductListPage({ products, categoryName, categoryId, su
                     <div className="col-12 table-responsive">
                             <table className={"table table-bordered align-middle"}>
                                 <thead>
-                                <tr className={"text-center"}>
-                                    <th>Produktname</th>
+                                <tr className={"text-center align-middle"}>
+                                    <th >Produktname</th>
                                     <th>Modell</th>
                                     <th>Euronorm vor Umrüstung</th>
                                     <th>Hubraum KW/PS</th>
