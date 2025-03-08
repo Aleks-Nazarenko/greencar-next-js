@@ -1,4 +1,4 @@
-import {JOOMLA_API_BASE} from "@/utils/config";
+import {JOOMLA_API_BASE,trackGoogleConversion} from "@/utils/config";
 import { Form, Button, Row, Col} from 'react-bootstrap';
 import {useState} from "react";
 import {useRouter} from "next/router";
@@ -103,7 +103,9 @@ export default function AnfrageFilterreinigungBau() {
                 scrollToTop();
             } else {
                 if (data.status === 'success') {
-                    setSuccessMessage(data.message);
+                    setSuccessMessage('Vielen Dank für Ihre Anfrage! Sie erhalten umgehend Ihr Angebot per Email.');
+                    // Trigger Google Ads Conversion tracking
+                    trackGoogleConversion();
                     setFormData({
                         name: '',
                         email: '',
@@ -139,7 +141,14 @@ export default function AnfrageFilterreinigungBau() {
             <Row className="g-0">
                 <Col md={"12"}>
                     {errors.apiError && <div className={"w-100 form-danger pb-4"}>{errors.apiError}</div>}
-                    {successMessage && <div className={"w-100 gc-green-light pb-4"}>{successMessage}</div>}
+                    {successMessage &&
+                        <>
+                            <h4 className={"w-100 gc-green-light mb-1"}>{successMessage}</h4>
+                            <h4 className={"w-100 pb-4 mb-0 gc-green-light"}>
+                                Ihr GREENCAR-Team
+                            </h4>
+                        </>
+                    }
                 </Col>
             </Row>
             <Row className="pb-4 g-0">

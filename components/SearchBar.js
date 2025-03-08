@@ -13,7 +13,7 @@ export default function SearchBar() {
     const handleSearch = (e) => {
         e.preventDefault();
         if (searchQuery.trim()) {
-            router.push(`/suche?query=${encodeURIComponent(searchQuery)}`);
+            router.push(`/suche?query=${encodeURIComponent(searchQuery.trim())}`);
         }
     };
     return (

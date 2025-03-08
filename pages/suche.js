@@ -80,46 +80,34 @@ const SearchResults = () => {
                                         product.oe_nr_liste ||
                                         product.oe_nummer_liste ||
                                         "N/A";
-
-                                    // Extract the first category hierarchy from the product's categories
-                            /*        const category = product.categories[0] || {};
-                                    let firstSlug = "pkw-partikelfilter";
-                                    if(category.parent_parent_category_id === 68 || category.parent_parent_category_id === 444 || category.parent_parent_category_id === 470){
-                                        firstSlug = "lkw-partikelfilter";
-                                    }
-                                    if(category.parent_parent_category_id === 69){
-                                        firstSlug = "bus-partikelfilter";
-                                    }
-
-                                    const productUrl = `/${firstSlug}/${category.parent_parent_category_name?.toLowerCase().trim().replace(/\s+/g, '-') || "unknown"}/${
-                                        category.parent_category_id || "unknown"
-                                    }-${category.parent_category_name?.toLowerCase().trim().replace(/\s+/g, '-') || "unknown"}/${
-                                        category.category_id || "unknown"
-                                    }-${category.category_name?.toLowerCase().trim().replace(/\s+/g, '-') || "unknown"}/${
-                                        product.product_id
-                                    }-${product.product_name.toLowerCase().trim().replace(/\s+/g, '-')}`;
-*/
+                                    /*
+                                    In HikaShop scheinen die Möglichkeiten, die defundenen Produkte (anhand von OE-Nummern) mit ihren orig. URL zu verlinken, sehr begrenzt zu sein (und Prodkut-Detailansicht hat ne andere URL in search results).
+                                    Außerdem sind Product-URLS ein Misch-Masch aus der Kategorien-Struktur und Menü-Struktur.
+                                    Ich habe die Suche im Controller anders gelöst. Der JSON-Response beinhaltet immer 3 Kategorien, da Momentan sind die Produkte mit OE-Nummern immer in 2 oder 3 Kategorien.
+                                    Deshalb wird 'manuell' anhand von Kategorien_IDs die Slugs für die Kategorien bestimmt.
+                                     */
                                     const category = product.categories[0] || {};
-                                    let firstSlug = "pkw-partikelfilter";
-                                    if(category.parent_category_id === 68 || category.parent_category_id === 444 || category.parent_category_id === 470){
-                                        firstSlug = "lkw-partikelfilter";
-                                    }
-                                    if(category.parent_category_id === 69){
-                                        firstSlug = "bus-partikelfilter";
-                                    }
-                                    if(category.parent_category_id === 68 ){
-                                        category.parent_category_name = "dpf-euro-vi";
-                                    }
-                                    if(category.parent_category_id === 444 ){
-                                        category.parent_category_name = "schalldaempfer-euro-vi";
-                                    }
-                                    if(category.parent_category_id === 69 ){
-                                        category.parent_category_name = "dpf-euro-vi";
-                                    }
+                                    let firstSlug = "";
+                                    let productUrl = "";
+                                    if(category.parent_parent_category_id === 2) { //Produkt is in 2 Kategorien
+                                        if (category.parent_category_id === 68) {
+                                            firstSlug = "lkw-partikelfilter/dpf-euro-vi/"; //Kategorie: LKW Nachrüstfilter
+                                        }
+                                        if(category.parent_category_id === 69){
+                                            firstSlug = "bus-partikelfilter/dpf-euro-vi/"; //Kategorie: Bus Nachrüstfilter
+                                        }
+                                        if(category.parent_category_id === 444 ){
+                                            firstSlug = "lkw-partikelfilter/schalldaempfer-euro-vi/"; //Kategorie: LKW Austauschfilter
+                                        }
+                                        if(category.parent_category_id === 470 ){
+                                            firstSlug = "lkw-partikelfilter/lkw-filterreinigung/"; //Kategorie: LKW Filterreiningung
+                                        }
+                                        productUrl = `/${firstSlug}/${category.category_id || "unknown"}-${(category.category_name || "unknown").trim().toLowerCase().replace(/\s+/g, '-')}/${product.product_id}-${product.product_name.trim().toLowerCase().replace(/\s+/g, '-')}`;
 
-                                    const productUrl = `/${firstSlug}/${(category.parent_category_name || "unknown").trim().toLowerCase().replace(/\s+/g, '-')}/
-                                        ${category.category_id || "unknown"}-${(category.category_name || "unknown").trim().toLowerCase().replace(/\s+/g, '-')}/
-                                        ${product.product_id}-${product.product_name.trim().toLowerCase().replace(/\s+/g, '-')}`;
+                                    }else{
+                                        firstSlug = "pkw-partikelfilter/pkw-austauschfilter/";
+                                        productUrl = `/${firstSlug}/${category.parent_category_id || "unknown"}-${(category.parent_category_name || "unknown").trim().toLowerCase().replace(/\s+/g, '-')}/${category.category_id || "unknown"}-${(category.category_name || "unknown").trim().toLowerCase().replace(/\s+/g, '-')}/${product.product_id}-${product.product_name.trim().toLowerCase().replace(/\s+/g, '-')}`;
+                                    }
 
                                     return (
                                         <tr key={product.product_id} className={"text-center"}>

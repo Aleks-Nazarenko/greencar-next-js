@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
-
+import {trackGoogleConversion} from "@/utils/config";
 
 
 export default function bestellBestaetigung(){
@@ -13,6 +13,9 @@ export default function bestellBestaetigung(){
         if (savedUrl) {
             setProductUrl(savedUrl);
         }
+    }, []);
+    useEffect(() => {
+        trackGoogleConversion();
     }, []);
     const goToProductPage = () => {
         if (productUrl) {

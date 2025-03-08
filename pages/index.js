@@ -1,17 +1,8 @@
-import Head from "next/head";
-import Image from "next/image";
-import { Inter } from "next/font/google";
-import styles from "@/styles/Home.module.css";
-import Link from "next/link";
-import Row from "react-bootstrap/Row";
-import axios from "axios";
-//import {console} from "next/dist/compiled/@edge-runtime/primitives";
 import {convertRelativeUrls} from "@/utils/convertRelativeUrls";
 import{JOOMLA_API_BASE} from "@/utils/config";
 import {JOOMLA_URL_BASE} from "@/utils/config";
 
 
-const inter = Inter({ subsets: ["latin"] });
 
 export async function getStaticProps() {
     // Base URL of your Joomla server (adjust this to your Joomla installation URL)
@@ -23,38 +14,24 @@ export async function getStaticProps() {
     const article = data.article || null;
     // Convert relative URLs in the footer content to absolute URLs
     if (article) {
-        article.introtext = article.introtext ? convertRelativeUrls(article.introtext, joomlaBaseUrl) : '';
-        if(!article.introtext) {
-            console.log('article.introtext not found');
-        }
-    }
-    // Fetch data for the footer from Joomla API
-    const resFooter = await fetch(`${JOOMLA_API_BASE}&task=articleWithModules&id=2&format=json`);
-    const footerData = await resFooter.json();
-    console.log("API Response:", footerData);
-    // Extract the footer article from the response
-    const footerArticle = footerData.article || null;
-
-    // Convert relative URLs in the footer content to absolute URLs
-    if (footerArticle) {
-        footerArticle.introtext = footerArticle.introtext ? convertRelativeUrls(footerArticle.introtext, joomlaBaseUrl) : '';
-        if (!footerArticle.introtext) {
-            console.log('footerArticle.introtext not found');
+        article.content = article.content ? convertRelativeUrls(article.content, joomlaBaseUrl) : '';
+        if(!article.content) {
+            console.log('article.content not found');
         }
     }
 
     // Return the expected props structure
-    return { props: { article, footerArticle } };
+    return { props: { article} };
 }
-export default function Home({article, footerArticle}) {
+export default function Home({article}) {
 
     return (
         <>
 
 
                     <div className="row g-0">
-                        {article?.introtext && (
-                            <div dangerouslySetInnerHTML={{ __html: article.introtext}} />
+                        {article?.content && (
+                            <div dangerouslySetInnerHTML={{ __html: article.content}} />
                         )}
                     </div>
 

@@ -1,4 +1,3 @@
-// components/Navbar.js
 import Link from 'next/link';
 import Nav from 'react-bootstrap/Nav';
 import Container from 'react-bootstrap/Container';
@@ -16,8 +15,8 @@ export default function NavbarNazarenko() {
                 <Navbar expand="md" className="an-navbar  g-0">
 
                     <Navbar.Brand href="/">
-                        <Image src={"/logo/logo.png"} alt={"GREENCAR - bundesweite Nachrüstung von Partikelfiltern für PKW und LKW"} width={319} height={66} className={"img-fluid d-none d-sm-inline"}/>
-                        <Image src={"/logo/greencar-logo-150.png"} alt={"GREENCAR - bundesweite Nachrüstung von Partikelfiltern für PKW und LKW"} width={150} height={21} className={"img-fluid d-inline d-sm-none"}/>
+                        <Image src={"/logo/logo.png"} alt={"GREENCAR - bundesweite Nachrüstung von Partikelfiltern für PKW und LKW"} width={319} height={66} className={"img-fluid d-none d-sm-inline"} priority={true}/>
+                        <Image src={"/logo/greencar-logo-150.png"} alt={"GREENCAR - bundesweite Nachrüstung von Partikelfiltern für PKW und LKW"} width={150} height={21} className={"img-fluid d-inline d-sm-none"} priority={true}/>
                     </Navbar.Brand>
                     <Navbar.Toggle aria-controls="navbar" />
                     <Navbar.Collapse id="navbar" className="mt-2 mt-md-0">

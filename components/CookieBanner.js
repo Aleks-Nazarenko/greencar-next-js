@@ -2,9 +2,10 @@ import CookieConsent from "react-cookie-consent";
 import { useEffect, useState } from 'react';
 import TagManager from 'react-gtm-module';
 import Cookies from 'js-cookie';
+import { GOOGLE_ANALYTICS_ID, GOOGLE_ADS_ID } from "@/utils/config";
 
-const GoogleAnalyticsID = 'UA-18553182-1'; // Replace with your Google Analytics ID
-const GoogleAdsID = 'AW-1039077179'; // Replace with your Google Ads Conversion ID
+const GoogleAnalyticsID = GOOGLE_ANALYTICS_ID; // Replace with your Google Analytics ID
+const GoogleAdsID = GOOGLE_ADS_ID; // Replace with your Google Ads Conversion ID
 
 const CookieBanner = () => {
     const [analyticsSelected, setAnalyticsSelected] = useState(true); // Pre-selected

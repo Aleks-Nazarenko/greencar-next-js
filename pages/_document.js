@@ -7,22 +7,22 @@ export default function Document() {
         <link
             rel="preload"
             href="/background/bg_clean.jpg"
-            as="image"
+            as="fetch"
         />
           <link
               rel="preload"
               href="/background/greencar-lkw-final.png"
-              as="image"
+              as="fetch"
           />
           <link
               rel="preload"
               href="/background/greencar-bm-final.png"
-              as="image"
+              as="fetch"
           />
           <link
               rel="preload"
               href="/background/greencar-pkw-final.png"
-              as="image"
+              as="fetch"
           />
     </Head>
       <body>

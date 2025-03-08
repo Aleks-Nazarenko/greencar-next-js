@@ -5,6 +5,8 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
+    "disabled-postbuild": "next-sitemap",
+    "generate-sitemap": "next-sitemap",
     "start": "next start",
     "lint": "next lint"
   },
@@ -24,5 +26,8 @@
     "react-gtm-module": "^2.0.11",
     "sass": "^1.79.4",
     "swiper": "^11.2.1"
+  },
+  "devDependencies": {
+    "next-sitemap": "^4.2.3"
   }
 }
