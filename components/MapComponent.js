@@ -4,6 +4,7 @@ import {JOOMLA_API_BASE} from "@/utils/config";
 import {Modal, Button} from 'react-bootstrap';
 import Link from "next/link";
 import Image from "next/image";
+import {GOOGLE_MAPS_API_KEY} from "@/utils/config";
 
 
 const MapComponent = () => {
@@ -72,7 +73,7 @@ const MapComponent = () => {
 
     return (
         <>
-            <LoadScript googleMapsApiKey={process.env.NEXT_PUBLIC_GC_MAPS_API_KEY} >
+            <LoadScript googleMapsApiKey={GOOGLE_MAPS_API_KEY} >
                 <GoogleMap
                     mapContainerStyle={containerStyle}
                     center={center}

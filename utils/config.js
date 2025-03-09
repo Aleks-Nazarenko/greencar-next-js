@@ -1,8 +1,12 @@
 export const JOOMLA_API_BASE = 'https://joomla2.nazarenko.de/index.php?option=com_nazarenkoapi';
 export const JOOMLA_URL_BASE = 'https://joomla2.nazarenko.de';
-export const GOOGLE_ANALYTICS_ID = 'UA-18553182-1';
-export const GOOGLE_ADS_ID = 'AW-1039077179';
-export const GOOGLE_CONVERSION_LABEL = "9IEpCLuYaRC7nrzvAw";
+export const GOOGLE_ANALYTICS_ID = process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS_ID;
+export const GOOGLE_ADS_ID = process.env.NEXT_PUBLIC_GOOGLE_ADS_ID;
+export const GOOGLE_CONVERSION_LABEL = process.env.NEXT_PUBLIC_GOOGLE_CONVERSION_LABEL;
+export const PAYPAL_CLIENT_ID = process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID;
+export const PAYPAL_CURRENCY = "EUR";
+export const GOOGLE_MAPS_API_KEY = process.env.NEXT_PUBLIC_GC_MAPS_API_KEY;
+
 export const trackGoogleConversion= () => {
     if (typeof window !== "undefined" && window.gtag) {
         window.gtag("event", "conversion", {

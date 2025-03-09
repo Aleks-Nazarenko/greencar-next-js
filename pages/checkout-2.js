@@ -9,6 +9,7 @@ import PayPalPlaceholder from "@/pages/PayPalPlaceholder";
 import { Modal, Button } from "react-bootstrap";
 import {JOOMLA_API_BASE} from "@/utils/config";
 import {JOOMLA_URL_BASE} from "@/utils/config";
+import {PAYPAL_CLIENT_ID, PAYPAL_CURRENCY} from "@/utils/config";
 
 function ProductImage({ src, alt, fallback }) {
     const [imgSrc, setImgSrc] = useState(src);
@@ -145,8 +146,8 @@ export default function CheckoutStep2({termsArticle})   {
     return (
         <PayPalScriptProvider
             options={{
-                "client-id": "AWlnu3flylsdsc5dJ4jLnYEyOpzqgeWE_XPAag7TfJhINzC6KnXW9RQteB9LJvE5vpbXNfzBcrI9rQ1s",
-                currency: "EUR",
+                "client-id": PAYPAL_CLIENT_ID,
+                currency: PAYPAL_CURRENCY,
             }}
         >
                     <div className={"row g-0"}>
@@ -377,7 +378,7 @@ export default function CheckoutStep2({termsArticle})   {
                                             <div className={"row g-0 p-3 p-sm-4 product-detail-view rounded-4"}>
                                                 <div>Bitte klicken Sie auf den Button unten, um Ihre Bestellung zu bestätigen und mit PayPal zu bezahlen.</div>
                                                 <div className={"w-100 pt-3"}></div>
-                                                 <div className={"col"}>
+                                                 <div className={"col-sm-6"}>
                                                      <PayPalButtons
                                                          fundingSource="paypal"
                                                          createOrder={(data, actions) => {
