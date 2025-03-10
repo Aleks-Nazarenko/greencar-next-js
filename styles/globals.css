@@ -230,6 +230,8 @@ header {z-index: 10}
 .navbar-toggler {border: none!important;}
 .navbar-toggler-icon {width: 1.8em!important;}
 
+.an-navbar .dropdown-menu{background:#F0F7FC!important;}
+
 .table {
   --bs-table-color: #666 !important;
   --bs-table-bg: #F0F7FC !important;
@@ -314,7 +316,7 @@ ul.arrow-list li svg {
 }
 
 @media (max-width: 919px) {
-  .nav-item.show.dropdown  .dropdown-menu{background:none!important; box-shadow: none!important;}
+ .an-navbar .nav-item.show.dropdown  .dropdown-menu{background:none!important; box-shadow: none!important;}
   .nav-item .dropdown-menu .nav-link.dropdown-item:hover{background-color: unset!important;}
 }
 @media (max-width: 820px) {
