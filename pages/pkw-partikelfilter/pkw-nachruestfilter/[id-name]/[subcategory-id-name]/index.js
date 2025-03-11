@@ -233,7 +233,7 @@ export default function ProductListPage({ products, categoryName, categoryId, su
                                         <td>auf Anfrage</td>
 
                                         <td>
-                                            <Link href={`/pkw-partikelfilter/pkw-nachruestfilter/${categoryId}-${categoryName}/${subcategoryId}-${subcategoryName}/${product.product_id}-${product.product_name.toLowerCase().replace(/\s+/g, '-')}`}>
+                                            <Link href={`/pkw-partikelfilter/pkw-nachruestfilter/${categoryId}-${categoryName}/${subcategoryId}-${subcategoryName}/${product.product_id}-${product.product_alias.toLowerCase().replace(/\s+/g, '-')}`}>
                                                 <button className="btn btn-primary btn-green btn-100">Details</button>
                                             </Link>
                                         </td>

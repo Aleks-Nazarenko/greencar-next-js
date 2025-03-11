@@ -47,7 +47,7 @@ export async function getStaticPaths() {
                                 params: {
                                     "id-name": `${category.category_id}-${category.category_name.toLowerCase().replace(/\s+/g, '-')}`,
                                     "subcategory-id-name": `${subcategory.category_id}-${subcategory.category_name.toLowerCase().replace(/\s+/g, '-')}`,
-                                    "product-id-name": `${product.product_id}-${product.product_name.toLowerCase().replace(/\s+/g, '-')}`,
+                                    "product-id-name": `${product.product_id}-${product.product_alias.toLowerCase().replace(/\s+/g, '-')}`,
                                 },
                             });
                         });
