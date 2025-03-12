@@ -21,6 +21,18 @@ function ProductImage({ src, alt, fallback, className }) {
         <img src={imgSrc} alt={alt} className={className} />
     );
 }
+function createSlug(name) {
+    return name
+        .toLowerCase()
+        .replace(/ä/g, "ae").replace(/ö/g, "oe").replace(/ü/g, "ue").replace(/ß/g, "ss") // Convert umlauts first!
+        .normalize("NFD") // Normalize after converting special cases
+        .replace(/[\u0300-\u036f]/g, "") // Now remove other diacritics safely
+        .replace(/\//g, '') // Joomla removes slashes, doesn’t replace
+        .replace(/\s+/g, '-') // Replace spaces with hyphens
+        .replace(/[^a-z0-9-]/g, '') // Remove special characters except "-"
+        .replace(/-+/g, '-') // Remove duplicate hyphens
+        .replace(/^-+|-+$/g, ''); // Trim leading & trailing hyphens
+}
 export async function getStaticPaths() {
     const paths = [];
 
@@ -43,11 +55,12 @@ export async function getStaticPaths() {
                         const products = await productRes.json();
                         // Generate paths for each product in the subcategory
                         products.forEach((product) => {
+                            const productAlias = product.product_alias ? createSlug(product.product_alias) : createSlug(product.product_name);
                             paths.push({
                                 params: {
                                     "id-name": `${category.category_id}-${category.category_name.toLowerCase().replace(/\s+/g, '-')}`,
                                     "subcategory-id-name": `${subcategory.category_id}-${subcategory.category_name.toLowerCase().replace(/\s+/g, '-')}`,
-                                    "product-id-name": `${product.product_id}-${product.product_alias.toLowerCase().replace(/\s+/g, '-')}`,
+                                    "product-id-name": `${product.product_id}-${productAlias}`,
                                 },
                             });
                         });
@@ -113,7 +126,7 @@ export default function ProductPage({ product, article }) {
         <>
             {product && (
                 <div className={"row g-0"}>
-                    <h1 className={"pb-0 mb-0"}>{product.product_name} für {product.modell_liste}</h1>
+                    <h1 className={"pb-0 mb-0"}>{product.product_alias ?? product.product_name} für {product.modell_liste}</h1>
                 </div>
             )}
             <div className="w-100 pb-4"></div>

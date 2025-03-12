@@ -23,7 +23,18 @@ function ProductImage({ src, alt, fallback }) {
         <img src={imgSrc} alt={alt}  />
     );
 }
-
+function createSlug(name) {
+    return name
+        .toLowerCase()
+        .replace(/ä/g, "ae").replace(/ö/g, "oe").replace(/ü/g, "ue").replace(/ß/g, "ss") // Convert umlauts first!
+        .normalize("NFD") // Normalize after converting special cases
+        .replace(/[\u0300-\u036f]/g, "") // Now remove other diacritics safely
+        .replace(/\//g, '') // Joomla removes slashes, doesn’t replace
+        .replace(/\s+/g, '-') // Replace spaces with hyphens
+        .replace(/[^a-z0-9-]/g, '') // Remove special characters except "-"
+        .replace(/-+/g, '-') // Remove duplicate hyphens
+        .replace(/^-+|-+$/g, ''); // Trim leading & trailing hyphens
+}
 export async function getStaticPaths() {
     const paths = [];
     try {
@@ -220,7 +231,7 @@ export default function ProductListPage({ products, categoryName, categoryId, su
                                                 alt={product.product_name}
                                                 fallback={`${JOOMLA_URL_BASE}/media/com_hikashop/upload/thumbnail_100X100/beispielphoto.jpg`}
                                             />
-                                            <span className={"d-block"}>{product.product_name}</span>
+                                            <span className={"d-block"}>{product.product_alias ?? product.product_name}</span>
                                         </td>
                                         <td className={"text-center"}>{product.modell_liste}</td>
                                         <td>{product.euronorm_liste}</td>
@@ -233,7 +244,7 @@ export default function ProductListPage({ products, categoryName, categoryId, su
                                         <td>auf Anfrage</td>
 
                                         <td>
-                                            <Link href={`/pkw-partikelfilter/pkw-nachruestfilter/${categoryId}-${categoryName}/${subcategoryId}-${subcategoryName}/${product.product_id}-${product.product_alias.toLowerCase().replace(/\s+/g, '-')}`}>
+                                            <Link href={`/pkw-partikelfilter/pkw-nachruestfilter/${categoryId}-${categoryName}/${subcategoryId}-${subcategoryName}/${product.product_id}-${product.product_alias ? createSlug(product.product_alias) : createSlug(product.product_name)}`}>
                                                 <button className="btn btn-primary btn-green btn-100">Details</button>
                                             </Link>
                                         </td>

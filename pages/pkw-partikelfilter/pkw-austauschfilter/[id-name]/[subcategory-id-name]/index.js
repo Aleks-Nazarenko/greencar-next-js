@@ -21,6 +21,18 @@ function ProductImage({ src, alt, fallback }) {
         <img src={imgSrc} alt={alt}  />
     );
 }
+function createSlug(name) {
+    return name
+        .toLowerCase()
+        .replace(/ä/g, "ae").replace(/ö/g, "oe").replace(/ü/g, "ue").replace(/ß/g, "ss") // Convert umlauts first!
+        .normalize("NFD") // Normalize after converting special cases
+        .replace(/[\u0300-\u036f]/g, "") // Now remove other diacritics safely
+        .replace(/\//g, '') // Joomla removes slashes, doesn’t replace
+        .replace(/\s+/g, '-') // Replace spaces with hyphens
+        .replace(/[^a-z0-9-]/g, '') // Remove special characters except "-"
+        .replace(/-+/g, '-') // Remove duplicate hyphens
+        .replace(/^-+|-+$/g, ''); // Trim leading & trailing hyphens
+}
 function replaceSlashesExceptTrailing(str) {
     const hasTrailingSlash = str.endsWith('/');
     // Remove the trailing slash temporarily for processing
@@ -243,7 +255,7 @@ export default function ProductListPage({ products, categoryName, categoryId, su
                                         </td>
                                         */}
                                         <td>
-                                            <Link href={`/pkw-partikelfilter/pkw-austauschfilter/${categoryId}-${categoryName}/${subcategoryId}-${subcategoryName}/${product.product_id}-${product.product_name.toLowerCase().replace(/\s+/g, '-')}`}>
+                                            <Link href={`/pkw-partikelfilter/pkw-austauschfilter/${categoryId}-${categoryName}/${subcategoryId}-${subcategoryName}/${product.product_id}-${createSlug(product.product_name)}`}>
                                                 <button className="btn btn-primary btn-green btn-100">Aktionpreis / Details</button>
                                             </Link>
                                         </td>
