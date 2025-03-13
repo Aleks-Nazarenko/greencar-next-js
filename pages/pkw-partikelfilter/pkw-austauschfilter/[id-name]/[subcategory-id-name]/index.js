@@ -6,6 +6,7 @@ import { JOOMLA_API_BASE } from '@/utils/config';
 import { JOOMLA_URL_BASE } from '@/utils/config';
 import NextImage from "next/image"; // Next.js Image is renamed to NextImage to avoid conflicts with the HTML Image element!!!
 import Form from 'react-bootstrap/Form';
+import {createSlug} from "@/utils/sanitizeProductSlug";
 
 function ProductImage({ src, alt, fallback }) {
     const [imgSrc, setImgSrc] = useState(src);
@@ -20,18 +21,6 @@ function ProductImage({ src, alt, fallback }) {
     return (
         <img src={imgSrc} alt={alt}  />
     );
-}
-function createSlug(name) {
-    return name
-        .toLowerCase()
-        .replace(/ä/g, "ae").replace(/ö/g, "oe").replace(/ü/g, "ue").replace(/ß/g, "ss") // Convert umlauts first!
-        .normalize("NFD") // Normalize after converting special cases
-        .replace(/[\u0300-\u036f]/g, "") // Now remove other diacritics safely
-        .replace(/\//g, '') // Joomla removes slashes, doesn’t replace
-        .replace(/\s+/g, '-') // Replace spaces with hyphens
-        .replace(/[^a-z0-9-]/g, '') // Remove special characters except "-"
-        .replace(/-+/g, '-') // Remove duplicate hyphens
-        .replace(/^-+|-+$/g, ''); // Trim leading & trailing hyphens
 }
 function replaceSlashesExceptTrailing(str) {
     const hasTrailingSlash = str.endsWith('/');

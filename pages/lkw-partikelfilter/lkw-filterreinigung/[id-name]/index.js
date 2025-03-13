@@ -7,6 +7,7 @@ import {JOOMLA_URL_BASE} from "@/utils/config";
 import {useEffect, useState} from "react";
 import {FormSelect} from "react-bootstrap";
 import NextImage from "next/image";
+import {createSlug} from "@/utils/sanitizeProductSlug";
 
 function ProductImage({ src, alt, fallback }) {
     const [imgSrc, setImgSrc] = useState(src);
@@ -113,7 +114,7 @@ function LkwFilterreinigungProductListPage({ categories, categoryId, categoryNam
                 <h2 className={"display-4 mb-0"}>Bitte wählen Sie Ihren LKW-Hersteller. Anschließend stellen wir Ihnen unser Angebot zur LKW-Filterreinigung vor.</h2>
             </div>
             <div className="w-100 pb-4"></div>
-            
+
             <div className="row g-0 p-3 p-sm-4 product-detail-view rounded-4 align-items-center">
                 <div className={"col"}>
                     {categories.length > 0 && (
@@ -189,7 +190,7 @@ function LkwFilterreinigungProductListPage({ categories, categoryId, categoryNam
                                         Auf Anfrage
                                     </td>
                                     <td>
-                                        <Link href={`/lkw-partikelfilter/lkw-filterreinigung/${categoryId}-${categoryName}/${product.product_id}-${product.product_name.toLowerCase().replace(/\s+/g, '-')}`}>
+                                        <Link href={`/lkw-partikelfilter/lkw-filterreinigung/${categoryId}-${categoryName}/${product.product_id}-${createSlug(product.product_name)}`}>
                                             <button className="btn btn-primary btn-green btn-100">Details</button>
                                         </Link>
                                     </td>

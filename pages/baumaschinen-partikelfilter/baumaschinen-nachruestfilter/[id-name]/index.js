@@ -7,7 +7,7 @@ import {JOOMLA_URL_BASE} from "@/utils/config";
 import {useEffect, useState} from "react";
 import {FormSelect} from "react-bootstrap";
 import NextImage from "next/image";
-
+import {createSlug} from "@/utils/sanitizeProductSlug";
 
 
 function ProductImage({ src, alt, fallback }) {
@@ -32,7 +32,7 @@ export async function getStaticPaths() {
         // Map the fetched categories to paths with the `id-name` format
         const paths = categories.map((category) => ({
             params: {
-                "id-name": `${category.category_id}-${category.category_name.toLowerCase().replace(/\s*\/\s*/g, '-').replace(/\./g, '').replace(/\s+/g, '-').replace(/-+/g, '-')}`
+                "id-name": `${category.category_id}-${createSlug(category.category_name)}`
             },
         }));
         return {
@@ -137,13 +137,7 @@ function BauProductListPage({ categories, categoryId, categoryName, article, pro
                                 {categories.map((category) => (
                                     <option
                                         key={category.category_id}
-                                        value={`${category.category_id}-${category.category_name
-                                            .toLowerCase()
-                                            .replace(/\s*\/\s*/g, '-') // Replace " / " with "-"
-                                            .replace(/\./g, '') // Remove dots (.)
-                                            .replace(/\s+/g, '-') // Replace spaces with "-"
-                                            .replace(/-+/g, '-') // Prevent double hyphens "--"
-                                        }`}
+                                        value={`${category.category_id}-${createSlug(category.category_name)}`}
                                     >
                                         {category.category_name}
                                     </option>
@@ -197,7 +191,7 @@ function BauProductListPage({ categories, categoryId, categoryName, article, pro
                                         {formatPrice(parseFloat(product.price_value) * VAT_SHARE)} (inkl. MwSt.)
                                     </td>
                                     <td>
-                                        <Link href={`/baumaschinen-partikelfilter/baumaschinen-nachruestfilter/${categoryId}-${categoryName}/${product.product_id}-${product.product_name.toLowerCase().replace(/\s+/g, '-')}`}>
+                                        <Link href={`/baumaschinen-partikelfilter/baumaschinen-nachruestfilter/${categoryId}-${categoryName}/${product.product_id}-${createSlug(product.product_name)}`}>
                                             <button className="btn btn-primary btn-green btn-100">Aktionpreis / Details</button>
                                         </Link>
                                     </td>
@@ -229,7 +223,7 @@ function BauProductListPage({ categories, categoryId, categoryName, article, pro
                                         <path
                                             d="m12.14 8.753-5.482 4.796c-.646.566-1.658.106-1.658-.753V3.204a1 1 0 0 1 1.659-.753l5.48 4.796a1 1 0 0 1 0 1.506z"/>
                                     </svg>
-                                    <Link href={`/baumaschinen-partikelfilter/baumaschinen-nachruestfilter/${category.category_id}-${category.category_name.toLowerCase().replace(/\s*\/\s*/g, '-').replace(/\./g, '').replace(/\s+/g, '-').replace(/-+/g, '-')}`}>{category.category_name}</Link>
+                                    <Link href={`/baumaschinen-partikelfilter/baumaschinen-nachruestfilter/${category.category_id}-${createSlug(category.category_name)}`}>{category.category_name}</Link>
                                 </li>
                             ))}
                         </ul>

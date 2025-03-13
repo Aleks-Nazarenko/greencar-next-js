@@ -7,6 +7,7 @@ import {JOOMLA_URL_BASE} from "@/utils/config";
 import {useEffect, useState} from "react";
 import {FormSelect} from "react-bootstrap";
 import NextImage from "next/image";
+import {createSlug} from "@/utils/sanitizeProductSlug";
 
 function ProductImage({ src, alt, fallback }) {
     const [imgSrc, setImgSrc] = useState(src);
@@ -188,7 +189,7 @@ function DpfEuroVIProductListPage({ categories, categoryId, categoryName, articl
                                             Auf Anfrage
                                         </td>
                                         <td>
-                                            <Link href={`/lkw-partikelfilter/dpf-euro-vi/${categoryId}-${categoryName}/${product.product_id}-${product.product_name.toLowerCase().replace(/\s+/g, '-')}`}>
+                                            <Link href={`/lkw-partikelfilter/dpf-euro-vi/${categoryId}-${categoryName}/${product.product_id}-${createSlug(product.product_name)}`}>
                                                 <button className="btn btn-primary btn-green btn-100">Details</button>
                                             </Link>
                                         </td>

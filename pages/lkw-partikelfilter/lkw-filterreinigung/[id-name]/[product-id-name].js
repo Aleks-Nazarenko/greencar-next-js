@@ -7,6 +7,7 @@ import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation } from 'swiper/modules';
 import 'swiper/swiper-bundle.css';
 import Pictos from "@/components/PictosLKW";
+import { createSlug } from '@/utils/sanitizeProductSlug';
 
 function ProductImage({ src, alt, fallback, className }) {
     const [imgSrc, setImgSrc] = useState(src);
@@ -38,10 +39,11 @@ export async function getStaticPaths() {
                 const products = await productRes.json();
                 // Generate paths for each product in the subcategory
                 products.forEach((product) => {
+                    const productName = createSlug(product.product_name);
                     paths.push({
                         params: {
                             "id-name": `${category.category_id}-${category.category_name.toLowerCase().replace(/\s+/g, '-')}`,
-                            "product-id-name": `${product.product_id}-${product.product_name.toLowerCase().replace(/\s+/g, '-')}`,
+                            "product-id-name": `${product.product_id}-${productName}`,
                         },
                     });
                 });

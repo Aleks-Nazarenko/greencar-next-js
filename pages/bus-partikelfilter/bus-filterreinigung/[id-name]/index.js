@@ -7,6 +7,7 @@ import {JOOMLA_URL_BASE} from "@/utils/config";
 import {useEffect, useState} from "react";
 import {FormSelect} from "react-bootstrap";
 import NextImage from "next/image";
+import {createSlug} from "@/utils/sanitizeProductSlug";
 
 function ProductImage({ src, alt, fallback }) {
     const [imgSrc, setImgSrc] = useState(src);
@@ -190,7 +191,7 @@ function BusFilterreinigungProductListPage({ categories, categoryId, categoryNam
                                         {formatPrice(parseFloat(product.price_value) * VAT_SHARE)} (inkl. MwSt.)
                                     </td>
                                     <td>
-                                        <Link href={`/bus-partikelfilter/bus-filterreinigung/${categoryId}-${categoryName}/${product.product_id}-${product.product_name.toLowerCase().replace(/\s+/g, '-')}`}>
+                                        <Link href={`/bus-partikelfilter/bus-filterreinigung/${categoryId}-${categoryName}/${product.product_id}-${createSlug(product.product_name)}`}>
                                             <button className="btn btn-primary btn-green btn-100">Details</button>
                                         </Link>
                                     </td>
