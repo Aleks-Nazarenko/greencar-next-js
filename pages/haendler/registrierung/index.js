@@ -200,7 +200,7 @@ const RegisterPage = () => {
                     <Row className="g-0 ">
                         <Col >
                             {errors.apiError && <div className={"w-100 form-danger pb-4"}>{errors.apiError}</div>}
-                            {successMessage && <div className={"w-100 gc-green-light pb-4"}>{successMessage}</div>}
+                            {successMessage && <div className={"w-100 gc-green-light pb-4 display-6"}>{successMessage}</div>}
                         </Col>
                     </Row>
                     <Row className="pb-4 g-0">
