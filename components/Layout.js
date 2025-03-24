@@ -29,7 +29,7 @@ export default function Layout({ children }) {
                 </div>
                 <div className={"w-100 pt-4"}/>
                 <div className="container-fluid">
-                    <div className="container-greencar container-fluid g-0">
+                    <div className="container-greencar container-fluid g-0 home-big-icons">
                         <HomeBigIcons/>
                     </div>
                 </div>

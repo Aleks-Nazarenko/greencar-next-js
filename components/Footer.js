@@ -13,7 +13,7 @@ export default function Footer() {
                     <Link href={"/datenschutzerklaerung"}>Datenschutzerklärung</Link>
                 </div>
             </div>
-            <div className="row row-cols-4 row-cols-md-auto g-0 justify-content-between align-items-center  text-center pb-2">
+            <div className="row row-cols-4 row-cols-md-auto g-0 justify-content-between align-items-center  text-center pb-2 row-footer-pics">
                 <div className={"col"}><Image className={"footer-icons img-fluid"} src={"/images/footer/winkler-logo_RGB_grau.png"} alt={"Winkler Logo"} width={100} height={65} /></div>
                 <div className={"col"}><Image className={"footer-icons img-fluid"} src={"/images/footer/ATU_Logo_2021_RGB_grau.png"} alt={"ATU Logo"} width={100} height={50} /></div>
                 <div className={"col"}><Image className={"footer-icons img-fluid"} src={"/images/footer/kraft_neu_jpg_grau-01.png"} alt={"Kraft Logo"} width={100} height={33} /></div>
