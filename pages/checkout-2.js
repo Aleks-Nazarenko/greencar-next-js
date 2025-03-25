@@ -315,6 +315,7 @@ export default function CheckoutStep2({termsArticle})   {
                                                     <div>{checkoutDetails.billingAddress.phone}</div>
                                                 </div>
                                             )}
+                                            <div className={"w-100 pb-3 d-block d-md-none"}></div>
                                             {checkoutDetails.shippingAddress && (
                                                 <div className={"col-sm-6"}>
                                                     <h3>Lieferadresse</h3>
