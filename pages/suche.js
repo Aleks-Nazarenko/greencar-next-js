@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import Link from "next/link";
 import { JOOMLA_API_BASE, JOOMLA_URL_BASE } from '@/utils/config';
+import { createSlug } from '@/utils/sanitizeProductSlug';
 
 function ProductImage({ src, alt, fallback }) {
     const [imgSrc, setImgSrc] = useState(src);
@@ -92,6 +93,7 @@ const SearchResults = () => {
                                             const category = product.categories[0] || {};
                                             let firstSlug = "";
                                             let productUrl = "";
+                                            const productName = createSlug(product.product_name);
                                             if(category.parent_parent_category_id === 2) { //Produkt is in 2 Kategorien
                                                 if (category.parent_category_id === 68) {
                                                     firstSlug = "lkw-partikelfilter/dpf-euro-vi/"; //Kategorie: LKW Nachrüstfilter
@@ -105,11 +107,11 @@ const SearchResults = () => {
                                                 if(category.parent_category_id === 470 ){
                                                     firstSlug = "lkw-partikelfilter/lkw-filterreinigung/"; //Kategorie: LKW Filterreiningung
                                                 }
-                                                productUrl = `/${firstSlug}/${category.category_id || "unknown"}-${(category.category_name || "unknown").trim().toLowerCase().replace(/\s+/g, '-')}/${product.product_id}-${product.product_name.trim().toLowerCase().replace(/\s+/g, '-')}`;
+                                                productUrl = `/${firstSlug}/${category.category_id || "unknown"}-${(category.category_name || "unknown").trim().toLowerCase().replace(/\s+/g, '-')}/${product.product_id}-${productName}`;
 
                                             }else{
                                                 firstSlug = "pkw-partikelfilter/pkw-austauschfilter/";
-                                                productUrl = `/${firstSlug}/${category.parent_category_id || "unknown"}-${(category.parent_category_name || "unknown").trim().toLowerCase().replace(/\s+/g, '-')}/${category.category_id || "unknown"}-${(category.category_name || "unknown").trim().toLowerCase().replace(/\s+/g, '-')}/${product.product_id}-${product.product_name.trim().toLowerCase().replace(/\s+/g, '-')}`;
+                                                productUrl = `/${firstSlug}/${category.parent_category_id || "unknown"}-${(category.parent_category_name || "unknown").trim().toLowerCase().replace(/\s+/g, '-')}/${category.category_id || "unknown"}-${(category.category_name || "unknown").trim().toLowerCase().replace(/\s+/g, '-')}/${product.product_id}-${productName}`;
                                             }
 
                                             return (
