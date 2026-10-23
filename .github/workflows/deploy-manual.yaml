@@ -1,0 +1,103 @@
+name: Deploy Next.js (manual)
+
+# Started by hand, e.g. from the local machine: npm run deploy:dry / npm run deploy
+on:
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: 'Dry run: only list what rsync would upload and delete'
+        type: boolean
+        default: true
+
+concurrency:
+  group: deploy  # shared with deploy.yaml, so two deploys never overlap
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+env:
+  MIN_HTML_PAGES: 2500  # live site has ~3000; fewer means the Joomla API returned incomplete data
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build Next.js application  # postbuild writes sitemap + robots.txt into out/
+        env:
+          NEXT_PUBLIC_GC_MAPS_API_KEY: ${{ secrets.NEXT_PUBLIC_GC_MAPS_API_KEY }}
+          NEXT_PUBLIC_GOOGLE_ADS_ID: ${{ secrets.NEXT_PUBLIC_GOOGLE_ADS_ID }}
+          NEXT_PUBLIC_GOOGLE_ANALYTICS_ID: ${{ secrets.NEXT_PUBLIC_GOOGLE_ANALYTICS_ID }}
+          NEXT_PUBLIC_GOOGLE_CONVERSION_LABEL: ${{ secrets.NEXT_PUBLIC_GOOGLE_CONVERSION_LABEL }}
+          NEXT_PUBLIC_PAYPAL_CLIENT_ID: ${{ secrets.NEXT_PUBLIC_PAYPAL_CLIENT_ID }}
+        run: npm run build
+
+      - name: Generate .htaccess with Joomla redirects
+        run: node scripts/generateRedirects.mjs
+
+      - name: Write version.txt
+        run: |
+          {
+            echo "commit:  $GITHUB_SHA"
+            echo "built:   $(date -u +%FT%TZ)"
+            echo "by:      $GITHUB_ACTOR"
+            echo "run:     $GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID"
+          } > out/version.txt
+          cat out/version.txt
+
+      - name: Sanity check build output
+        run: |
+          test -s out/index.html || { echo "out/index.html missing"; exit 1; }
+          test -s out/.htaccess  || { echo "out/.htaccess missing"; exit 1; }
+          pages=$(find out -name '*.html' | wc -l)
+          echo "HTML pages: $pages (minimum $MIN_HTML_PAGES)"
+          [ "$pages" -ge "$MIN_HTML_PAGES" ] || { echo "Too few pages, aborting deploy"; exit 1; }
+
+      - name: Deploy to server
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+          SERVER_USER: ${{ secrets.SERVER_USER }}
+          SERVER_HOST: ${{ secrets.SERVER_HOST }}
+          SERVER_PATH: ${{ secrets.SERVER_PATH }}
+          DRY_RUN: ${{ inputs.dry_run }}
+        run: |
+          mkdir -p ~/.ssh
+          echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          ssh-keyscan "$SERVER_HOST" >> ~/.ssh/known_hosts
+
+          DEST="$SERVER_USER@$SERVER_HOST:${SERVER_PATH%/}"
+          OPTS="-az --itemize-changes"
+          if [ "$DRY_RUN" = "true" ]; then
+            OPTS="$OPTS --dry-run"
+            echo "DRY RUN: nothing will be changed on the server"
+          fi
+
+          # 1) Upload new JS/CSS first and delete nothing, so new HTML never points at missing files
+          rsync $OPTS out/_next/ "$DEST/_next/" > rsync-next.log
+
+          # 2) Upload pages and the rest; remove stale files only after everything is uploaded.
+          #    /anfrage/ and /thank-you/ exist only on the server and are kept on purpose.
+          rsync $OPTS --delete-after \
+            --filter='P /anfrage/' \
+            --filter='P /thank-you/' \
+            out/ "$DEST/" > rsync.log
+
+          echo "_next files uploaded: $(grep -c '^<f' rsync-next.log || true)"
+          echo "Other files uploaded: $(grep -c '^<f' rsync.log || true)"
+          echo "Files deleted:        $(grep -c '^\*deleting' rsync.log || true)"
+          echo "--- Deleted outside _next (first 200):"
+          grep '^\*deleting' rsync.log | grep -v ' _next/' | head -n 200 || true
