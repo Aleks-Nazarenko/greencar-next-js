@@ -91,3 +91,9 @@ $grid-breakpoints: (
 @import "bootstrap/scss/utilities/api";
 
 // 8. Add additional custom code here
+
+// Logged-in dealers: hide everything marked is-haendler (menus, banners, Joomla article blocks).
+// The body class is set by components/DealerNotice.js; same rule as the old Joomla template.
+.haendler-angemeldet .is-haendler {
+    display: none !important;
+}

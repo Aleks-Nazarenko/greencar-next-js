@@ -9,7 +9,10 @@ export default function DealerNotice() {
     // Re-read on every route change: login and logout happen without a full page reload
     useEffect(() => {
         const storedUser = sessionStorage.getItem("user");
-        setUser(sessionStorage.getItem("authToken") && storedUser ? JSON.parse(storedUser) : null);
+        const currentUser = sessionStorage.getItem("authToken") && storedUser ? JSON.parse(storedUser) : null;
+        setUser(currentUser);
+        // Hides everything with class "is-haendler" (menus, banners, Joomla article blocks), see custom.scss
+        document.body.classList.toggle("haendler-angemeldet", !!currentUser);
     }, [router.asPath]);
 
     const handleLogout = () => {

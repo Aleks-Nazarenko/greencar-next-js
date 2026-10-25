@@ -18,7 +18,8 @@ export default function SecondaryMenu() {
                         </Dropdown.Toggle>
                         {/* 🔹 Dropdown Menu */}
                         <Dropdown.Menu className={"shadow rounded-4 mt-2"}>
-                            <Dropdown.Item href="/pkw-partikelfilter/pkw-nachruestfilter" className="d-flex align-items-center pe-2 ps-2">
+                            {/* is-haendler: hidden for logged-in dealers, see DealerNotice */}
+                            <Dropdown.Item href="/pkw-partikelfilter/pkw-nachruestfilter" className="d-flex align-items-center pe-2 ps-2 is-haendler">
                                 <Image src="/images/icons/pkw-nachruestfilter.png" alt="PKW Nachruestfilter" width={50} height={50} className="me-2  picto-50" />
                                 Nachrüstfilter
                             </Dropdown.Item>
@@ -30,7 +31,7 @@ export default function SecondaryMenu() {
                                 <Image src="/images/icons/pkw-filterreinigung.png" alt="PKW filterreinigung" width={50} height={50} className="me-2 picto-50" />
                                 Filterreinigung
                             </Dropdown.Item>
-                            <Dropdown.Item href="/pkw-partikelfilter/filterreinigung-berlin" className="d-flex align-items-center pe-2 ps-2">
+                            <Dropdown.Item href="/pkw-partikelfilter/filterreinigung-berlin" className="d-flex align-items-center pe-2 ps-2 is-haendler">
                                 <Image src="/images/icons/pkw-filterreinigung.png" alt="PKW Filterreinigung Berlin" width={50} height={50} className="me-2 picto-50" />
                                 PKW Filterreinigung Berlin
                             </Dropdown.Item>
@@ -44,7 +45,7 @@ export default function SecondaryMenu() {
                         </Dropdown.Toggle>
                         {/* 🔹 Dropdown Menu */}
                         <Dropdown.Menu  className={"shadow rounded-4 mt-2"}>
-                            <Dropdown.Item href="/lkw-partikelfilter/dpf-euro-vi" className="d-flex align-items-center pe-2 ps-2">
+                            <Dropdown.Item href="/lkw-partikelfilter/dpf-euro-vi" className="d-flex align-items-center pe-2 ps-2 is-haendler">
                                 <Image src="/images/icons/lkw-austauschfilter.png" alt="LKW DPF EURO VI" width={50} height={50} className="me-2 picto-50" />
                                 DPF EURO VI
                             </Dropdown.Item>
@@ -66,7 +67,7 @@ export default function SecondaryMenu() {
                         </Dropdown.Toggle>
                         {/* 🔹 Dropdown Menu */}
                         <Dropdown.Menu  className={"shadow rounded-4 mt-2"}>
-                            <Dropdown.Item href="/bus-partikelfilter/dpf-euro-vi" className="d-flex align-items-center pe-2 ps-2">
+                            <Dropdown.Item href="/bus-partikelfilter/dpf-euro-vi" className="d-flex align-items-center pe-2 ps-2 is-haendler">
                                 <Image src="/images/icons/bus-austauschfilter.png" alt="BUS DPF EURO VI" width={50} height={50} className="me-2 picto-50" />
                                 DPF EURO VI
                             </Dropdown.Item>
@@ -84,7 +85,7 @@ export default function SecondaryMenu() {
                         </Dropdown.Toggle>
                         {/* 🔹 Dropdown Menu */}
                         <Dropdown.Menu  className={"shadow rounded-4 mt-2"}>
-                            <Dropdown.Item href="/baumaschinen-partikelfilter/baumaschinen-nachruestfilter" className="d-flex align-items-center pe-2 ps-2">
+                            <Dropdown.Item href="/baumaschinen-partikelfilter/baumaschinen-nachruestfilter" className="d-flex align-items-center pe-2 ps-2 is-haendler">
                                 <Image src="/images/icons/bau-partikelfilter.png" alt="Baumaschinen Nachruestfilter" width={50} height={50} className="me-2 picto-50" />
                                 Nachrüstfilter
                             </Dropdown.Item>

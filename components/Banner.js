@@ -5,10 +5,11 @@ export default function Banner () {
     const router = useRouter();
     // Ensure the router is ready before accessing `router.pathname`
   //  if (!router.isReady) return null;
+    // is-haendler: banners are hidden for logged-in dealers (as on the old Joomla site), see DealerNotice
     return (
         <>
             { router.pathname === "/pkw-partikelfilter/pkw-filterreinigung"  && (
-                <>
+                <div className={"is-haendler"}>
                     <div className={"container-greencar container-fluid bg-gc-light-blue rounded-4 g-0 p-sm-4 p-3 pt-2 pb-2  shadow"}>
                         <div className={"row g-0"}>
                             <div className={"col d-flex justify-content-center"}>
@@ -17,10 +18,10 @@ export default function Banner () {
                         </div>
                     </div>
                     <div className={"w-100 pt-4"}/>
-                </>
+                </div>
             )}
             { router.pathname === "/pkw-partikelfilter/filterreinigung-berlin"  && (
-                <>
+                <div className={"is-haendler"}>
                     <div className={"container-greencar container-fluid bg-gc-light-blue rounded-4 g-0 p-sm-4 p-3 pt-2 pb-2  shadow"}>
                         <div className={"row g-0"}>
                             <div className={"col d-flex justify-content-center"}>
@@ -29,10 +30,10 @@ export default function Banner () {
                         </div>
                     </div>
                     <div className={"w-100 pt-4"}/>
-                </>
+                </div>
             )}
             { (router.pathname.startsWith( "/lkw-partikelfilter/lkw-filterreinigung") || router.pathname.startsWith("/bus-partikelfilter/bus-filterreinigung") || router.pathname.startsWith("/baumaschinen-partikelfilter/baumaschinen-filterreinigun"))  && (
-                <>
+                <div className={"is-haendler"}>
                     <div className={"container-greencar container-fluid bg-gc-light-blue rounded-4 g-0 p-sm-4 p-3 pt-2 pb-2 shadow"}>
                         <div className={"row g-0"}>
                             <div className={"col d-flex justify-content-center"}>
@@ -41,7 +42,7 @@ export default function Banner () {
                         </div>
                     </div>
                     <div className={"w-100 pt-4"}/>
-                </>
+                </div>
             )}
         </>
     );
