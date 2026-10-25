@@ -99,7 +99,7 @@ export default function CheckoutPage() {
                 city: user.ort || "",
                 firma: user.firma || "",
                 zipCode: user.plz || "",
-                anrede: user.anrede || "Herr",
+                salutation: user.anrede || "Herr",
             });
         }
     }, []);
@@ -152,6 +152,11 @@ export default function CheckoutPage() {
             setValidated(true);
             return;
         }
+        // Logged-in dealer: marked in the order e-mails (confirmOrder)
+        const storedUser = sessionStorage.getItem("user");
+        const user = sessionStorage.getItem("authToken") && storedUser ? JSON.parse(storedUser) : null;
+        const dealer = user ? { id: user.id, username: user.username, firma: user.firma || "" } : null;
+
         // Save data to sessionStorage for Step 2
         sessionStorage.setItem(
             "checkoutDetails",
@@ -160,6 +165,7 @@ export default function CheckoutPage() {
                 billingAddress,
                 shippingAddress: sameAsBilling ? billingAddress : shippingAddress,
                 paymentMethod,
+                dealer,
             })
         );
 
