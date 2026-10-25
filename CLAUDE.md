@@ -46,7 +46,13 @@ There is no test suite.
 
 **Env vars** (in `.env.local` locally, GitHub secrets in CI): `NEXT_PUBLIC_GC_MAPS_API_KEY`, `NEXT_PUBLIC_PAYPAL_CLIENT_ID`, `NEXT_PUBLIC_GOOGLE_ANALYTICS_ID`, `NEXT_PUBLIC_GOOGLE_ADS_ID`, `NEXT_PUBLIC_GOOGLE_CONVERSION_LABEL`. They are inlined at build time.
 
-**Client state (sessionStorage, no global store).** The checkout flow goes product page → `checkout.js` → `checkout-2.js` (PayPal via `@paypal/react-paypal-js`, then `confirmOrder`) → `bestellbestaetigung.js`. It passes data through the sessionStorage keys `cart`, `productOptions`, `checkoutDetails` and `lastVisitedProduct`. Dealer ("Händler") login stores `authToken` and `user` in sessionStorage, and pages check these to show dealer pricing.
+**Client state (sessionStorage, no global store).** The checkout flow goes product page → `checkout.js` → `checkout-2.js` (PayPal, then `confirmOrder`) → `bestellbestaetigung.js`. It passes data through the sessionStorage keys `cart`, `productOptions`, `checkoutDetails` and `lastVisitedProduct`. Dealer ("Händler") login stores `authToken` and `user` in sessionStorage, and pages check these to show dealer pricing.
+
+**PayPal.** `PAYPAL_MODE` in `utils/config.js` picks the method. `'redirect'` (current) sends the order e-mail, then posts a PayPal Standard form to `PAYPAL_STANDARD_URL` with `PAYPAL_BUSINESS_EMAIL` and the `GC-…` order number as `invoice`. `'buttons'` uses the `@paypal/react-paypal-js` buttons and needs a Live client ID in `NEXT_PUBLIC_PAYPAL_CLIENT_ID` (the current one is a sandbox app).
+
+**Dealers.** `components/DealerNotice.js` (in `Layout`) shows the logged-in dealer and sets `body.haendler-angemeldet`. `styles/custom.scss` then hides everything with class `is-haendler`, the same rule as the old Joomla template. Use that class in menus/banners, and in Joomla article HTML, to hide things from dealers. `checkout.js` sends `checkoutDetails.dealer` so `confirmOrder` can mark dealer orders.
+
+**Joomla API component.** Its source is not in this repo: `C:\xampp\htdocs\greencar\components\com_nazarenkoapi\controller.php` (CRLF line endings), uploaded to joomla2 by hand. `confirmOrder` only sends e-mails (shop `SHOP_EMAIL` + customer); it saves no order.
 
 **Layout and styling.** `pages/_app.js` wraps every page in `components/Layout.js` (Navbar, VehicleSwitcher, SecondaryMenu, SearchBar, Footer) and adds the cookie banner and Google Ads gtag. Styling is Bootstrap 5 / react-bootstrap with SCSS overrides in `styles/custom.scss`. Use the `@/` import alias for the repo root.
 
