@@ -7,6 +7,7 @@ import SecondaryMenu from "@/components/SecondaryMenu";
 import SearchBar from "@/components/SearchBar";
 import HomeBigIcons from "@/components/HomeBigIcons";
 import Banner from "@/components/Banner";
+import DealerNotice from "@/components/DealerNotice";
 
 
 export default function Layout({ children }) {
@@ -21,6 +22,7 @@ export default function Layout({ children }) {
             </Head>
             <header>
                 <Navbar />
+                <DealerNotice />
                 <div className={"w-100 pt-4"}/>
                 <div className="container-fluid">
                     <div className="container-greencar container-fluid g-0 p-2 ps-3 pe-3 bg-gc-light-blue rounded-4 shadow">
