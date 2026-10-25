@@ -13,6 +13,10 @@ export default function bestellBestaetigung(){
         if (savedUrl) {
             setProductUrl(savedUrl);
         }
+        // After a PayPal redirect the cart is still in sessionStorage (see checkout-2.js)
+        sessionStorage.removeItem("checkoutDetails");
+        sessionStorage.removeItem("cart");
+        sessionStorage.removeItem("productOptions");
     }, []);
     useEffect(() => {
         trackGoogleConversion();

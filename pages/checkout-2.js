@@ -9,7 +9,7 @@ import PayPalPlaceholder from "@/pages/PayPalPlaceholder";
 import { Modal, Button } from "react-bootstrap";
 import {JOOMLA_API_BASE} from "@/utils/config";
 import {JOOMLA_URL_BASE} from "@/utils/config";
-import {PAYPAL_CLIENT_ID, PAYPAL_CURRENCY} from "@/utils/config";
+import {PAYPAL_CLIENT_ID, PAYPAL_CURRENCY, PAYPAL_MODE, PAYPAL_BUSINESS_EMAIL, PAYPAL_STANDARD_URL} from "@/utils/config";
 
 function ProductImage({ src, alt, fallback }) {
     const [imgSrc, setImgSrc] = useState(src);
@@ -69,6 +69,48 @@ export default function CheckoutStep2({termsArticle})   {
             setCheckoutDetails(details);
         }
     }, [router]);
+    useEffect(() => {
+        // Customer came back from paypal.com via "Abbrechen"
+        if (router.query.paypal === 'abgebrochen') {
+            setErrors('Die PayPal-Zahlung wurde abgebrochen. Sie können es erneut versuchen oder eine andere Zahlungsmethode wählen.');
+        }
+    }, [router.query.paypal]);
+
+    // Amount to pay now; advancePayment is stored as a string ("102.61") in some product pages
+    const paypalAmount = () => Number(
+        checkoutDetails.cartItem.advancePayment
+            ? checkoutDetails.cartItem.advancePayment
+            : checkoutDetails.cartItem.totalPriceUnformatted
+    ).toFixed(2);
+
+    // PayPal Standard: post the order to paypal.com, the payment goes to PAYPAL_BUSINESS_EMAIL
+    const redirectToPayPal = (orderNumber) => {
+        const fields = {
+            cmd: '_xclick',
+            business: PAYPAL_BUSINESS_EMAIL,
+            item_name: `${checkoutDetails.cartItem.productName} (Bestellung ${orderNumber})`,
+            amount: paypalAmount(),
+            currency_code: PAYPAL_CURRENCY,
+            invoice: orderNumber,
+            no_shipping: '1',
+            charset: 'utf-8',
+            lc: 'DE',
+            return: `${window.location.origin}/bestellbestaetigung/?paymentMethod=paypal&orderNumber=${encodeURIComponent(orderNumber)}`,
+            cancel_return: `${window.location.origin}/checkout-2/?paypal=abgebrochen`,
+        };
+        const form = document.createElement('form');
+        form.method = 'POST';
+        form.action = PAYPAL_STANDARD_URL;
+        for (const [name, value] of Object.entries(fields)) {
+            const input = document.createElement('input');
+            input.type = 'hidden';
+            input.name = name;
+            input.value = value;
+            form.appendChild(input);
+        }
+        document.body.appendChild(form);
+        form.submit();
+    };
 
     const scrollToTop = () => {
         window.scrollTo({
@@ -113,7 +155,12 @@ export default function CheckoutStep2({termsArticle})   {
                 setErrors('Es ist ein Fehler aufgetreten. Bitte versuchen Sie es später erneut.');
                 scrollToTop();
             }else {
-                if (data.status === 'success') {
+                if (data.status === 'success' && checkoutDetails.paymentMethod === 'paypal' && PAYPAL_MODE === 'redirect') {
+                    // Keep sessionStorage so the customer can retry after cancelling on paypal.com;
+                    // bestellbestaetigung clears it after a successful payment
+                    setErrors('');
+                    redirectToPayPal(orderNumber);
+                } else if (data.status === 'success') {
                     // Clear sessionStorage and navigate to Thank You page
                     // alert("Order placed successfully!");
                     sessionStorage.removeItem("checkoutDetails");
@@ -149,6 +196,7 @@ export default function CheckoutStep2({termsArticle})   {
                 "client-id": PAYPAL_CLIENT_ID,
                 currency: PAYPAL_CURRENCY,
             }}
+            deferLoading={PAYPAL_MODE !== 'buttons'}
         >
                     <div className={"row g-0"}>
                         <div className={"col"}>
@@ -373,7 +421,24 @@ export default function CheckoutStep2({termsArticle})   {
                                             </Modal.Footer>
                                         </Modal>
 
-                                        {checkoutDetails.paymentMethod === "paypal" ? (termsAccepted ? (
+                                        {checkoutDetails.paymentMethod === "paypal" && PAYPAL_MODE === 'redirect' ? (
+                                            <>
+                                                <div className={"w-100 pt-4"}></div>
+                                                <div className={"row g-0 p-3 p-sm-4 product-detail-view rounded-4"}>
+                                                    <div className={"col"}>
+                                                        <h3>Zahlungsmethode PayPal</h3>
+                                                        <div>Durch Anklicken des Buttons 'Mit PayPal bezahlen' geben Sie eine verbindliche Bestellung der oben aufgelisteten Waren ab.
+                                                        Anschließend werden Sie zu PayPal weitergeleitet, um die Zahlung abzuschließen.</div>
+                                                        <div className={"row g-0 pt-4"}>
+                                                            <div className={"col-sm-6"}>
+                                                                <button className="btn btn-primary btn-light-green btn-100" onClick={handleConfirmOrder} disabled={!termsAccepted}>Mit PayPal bezahlen</button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div className={"w-100 pt-3"}></div>
+                                            </>
+                                        ) : checkoutDetails.paymentMethod === "paypal" ? (termsAccepted ? (
                                             <>
                                             <div className={"w-100 pt-4"}></div>
                                             <div className={"row g-0 p-3 p-sm-4 product-detail-view rounded-4"}>
@@ -388,9 +453,7 @@ export default function CheckoutStep2({termsArticle})   {
                                                                  purchase_units: [
                                                                      {
                                                                          amount: {
-                                                                             value: checkoutDetails.cartItem.advancePayment
-                                                                                 ? checkoutDetails.cartItem.advancePayment.toFixed(2)
-                                                                                 : checkoutDetails.cartItem.totalPriceUnformatted.toFixed(2),
+                                                                             value: paypalAmount(),
                                                                              currency_code: "EUR",
                                                                          },
                                                                          description: `Order for ${checkoutDetails.cartItem.productName}`,
