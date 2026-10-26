@@ -19,6 +19,7 @@ const RegisterPage = () => {
         strasse: "",
         plz: "",
         ort: "",
+        website: "", // honeypot, hidden from people
     });
     const [validated, setValidated] = useState(false);
     const [errors, setErrors] = useState({});
@@ -76,6 +77,7 @@ const RegisterPage = () => {
                 email: formData.email,
                 password: formData.passwort,
                 password2: formData.passwort2,
+                website: formData.website,
                 customFields: {
                     firma: formData.firma,
                     anrede: formData.anrede,
@@ -91,33 +93,30 @@ const RegisterPage = () => {
             });
             const data = await response.json();
 
-            if (!response.ok) {
+            // Joomla answers errors with HTTP 200 too, so check the status field
+            if (response.ok && data.status === 'success') {
+                setSuccessMessage(data.message);
+
+                setFormData({
+                    anrede: '',
+                    name: '',
+                    benutzername: '',
+                    email: '',
+                    email2: '',
+                    passwort: '',
+                    passwort2: '',
+                    firma: '',
+                    strasse: '',
+                    plz: '',
+                    ort: '',
+                    website: '',
+                });
+                setValidated(false);
+                scrollToTop();
+            } else {
                 console.log('Registration Error', data);
                 setErrors({ apiError: data?.message || 'Es ist ein Fehler aufgetreten. Bitte versuchen Sie es später erneut.'});
                 scrollToTop();
-            } else {
-                if (data.status === 'success') {
-                    setSuccessMessage(data.message);
-
-                    setFormData({
-                        anrede: '',
-                        name: '',
-                        benutzername: '',
-                        email: '',
-                        email2: '',
-                        passwort: '',
-                        passwort2: '',
-                        firma: '',
-                        strasse: '',
-                        plz: '',
-                        ort: '',
-                    });
-                    setValidated(false);
-                    scrollToTop();
-                } else {
-                    setErrors({ apiError: 'Ein Fehler ist aufgetreten. Versuchen Sie es später noch einmal.' });
-                    scrollToTop();
-                }
             }
         } catch (error) {
             setErrors({ apiError: 'Ein Fehler ist aufgetreten. Versuchen Sie es später noch einmal.' });
@@ -396,6 +395,19 @@ const RegisterPage = () => {
                             </Form.Group>
                         </Row>
 
+                        {/* Honeypot: invisible to people, bots fill it in */}
+                        <div aria-hidden="true" style={{position: "absolute", left: "-10000px", width: "1px", height: "1px", overflow: "hidden"}}>
+                            <label htmlFor="regWebsite">Website</label>
+                            <input
+                                type="text"
+                                id="regWebsite"
+                                name="website"
+                                tabIndex={-1}
+                                autoComplete="off"
+                                value={formData.website}
+                                onChange={handleInputChange}
+                            />
+                        </div>
                         <Row className="mb-4 g-0">
                             <Col ><span className="required">*</span> Benötigtes Feld</Col>
                         </Row>

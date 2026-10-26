@@ -26,7 +26,8 @@ const VerifyPage = () => {
 
                     const data = await response.json();
 
-                    if (response.ok) {
+                    // Joomla answers errors with HTTP 200 too, so check the status field
+                    if (response.ok && data.status === 'success') {
                         setMessage(data.message || 'Die E-Mail-Adresse wurde verifiziert. Sobald der Administrator das Konto aktiviert hat, wird automatisch eine weitere E-Mail verschickt.');
                         setError(null);
                     } else {
