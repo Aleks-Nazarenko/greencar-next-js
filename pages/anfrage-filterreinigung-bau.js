@@ -1,6 +1,8 @@
 import {JOOMLA_API_BASE,trackGoogleConversion} from "@/utils/config";
 import { Form, Button, Row, Col} from 'react-bootstrap';
-import {useState} from "react";
+import Honeypot, {honeypotValue} from "@/components/Honeypot";
+import {dealerMarker, withDealerData} from "@/utils/dealer";
+import {useState, useEffect} from "react";
 import {useRouter} from "next/router";
 
 export default function AnfrageFilterreinigungBau() {
@@ -23,6 +25,8 @@ export default function AnfrageFilterreinigungBau() {
         message: '',
         abweichend: '',
     });
+    // Logged-in dealer: fill name, e-mail, address from the account
+    useEffect(() => { setFormData(withDealerData); }, []);
 
     const [validated, setValidated] = useState(false);
     const [errors, setErrors] = useState({});
@@ -74,6 +78,8 @@ export default function AnfrageFilterreinigungBau() {
         }
         try {
             const payload = {
+                website: honeypotValue(form),
+                dealer: dealerMarker(),
                 name: formData.name,
                 email: formData.email,
                 strasse: formData.strasse,
@@ -106,7 +112,7 @@ export default function AnfrageFilterreinigungBau() {
                     setSuccessMessage('Vielen Dank für Ihre Anfrage! Sie erhalten umgehend Ihr Angebot per Email.');
                     // Trigger Google Ads Conversion tracking
                     trackGoogleConversion();
-                    setFormData({
+                    setFormData(withDealerData({
                         name: '',
                         email: '',
                         strasse: '',
@@ -121,7 +127,7 @@ export default function AnfrageFilterreinigungBau() {
                         abholdatum: '',
                         message: '',
                         abweichend: '',
-                    });
+                    }));
                     setValidated(false);
                     scrollToTop();
                 } else {
@@ -354,6 +360,7 @@ export default function AnfrageFilterreinigungBau() {
                         <Button className="btn btn-primary btn-green btn-100" type="button" onClick={() => router.push('/')}>abbrechen</Button>
                     </Col>
                 </Row>
+                <Honeypot />
             </Form>
             <div className={"w-100 pt-4"}>
                 Danach senden wir Ihnen schnellstmöglich ein Angebot und Informationen zur Filterreinigung per E-Mail. Falls wir Ihnen das Angebot und Informationen zur Filterreinigung zusätzlich per Post zusenden sollen, bitten wir um einen kurzen Hinweis.

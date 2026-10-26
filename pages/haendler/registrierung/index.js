@@ -4,6 +4,7 @@ import { Form, Button, Row, Col} from 'react-bootstrap';
 import {JOOMLA_API_BASE} from "@/utils/config";
 import {useEffect} from "react";
 import Link from "next/link";
+import Honeypot, {honeypotValue} from "@/components/Honeypot";
 
 const RegisterPage = () => {
     const router = useRouter();
@@ -19,7 +20,6 @@ const RegisterPage = () => {
         strasse: "",
         plz: "",
         ort: "",
-        website: "", // honeypot, hidden from people
     });
     const [validated, setValidated] = useState(false);
     const [errors, setErrors] = useState({});
@@ -77,7 +77,7 @@ const RegisterPage = () => {
                 email: formData.email,
                 password: formData.passwort,
                 password2: formData.passwort2,
-                website: formData.website,
+                website: honeypotValue(form),
                 customFields: {
                     firma: formData.firma,
                     anrede: formData.anrede,
@@ -109,7 +109,6 @@ const RegisterPage = () => {
                     strasse: '',
                     plz: '',
                     ort: '',
-                    website: '',
                 });
                 setValidated(false);
                 scrollToTop();
@@ -395,19 +394,7 @@ const RegisterPage = () => {
                             </Form.Group>
                         </Row>
 
-                        {/* Honeypot: invisible to people, bots fill it in */}
-                        <div aria-hidden="true" style={{position: "absolute", left: "-10000px", width: "1px", height: "1px", overflow: "hidden"}}>
-                            <label htmlFor="regWebsite">Website</label>
-                            <input
-                                type="text"
-                                id="regWebsite"
-                                name="website"
-                                tabIndex={-1}
-                                autoComplete="off"
-                                value={formData.website}
-                                onChange={handleInputChange}
-                            />
-                        </div>
+                        <Honeypot />
                         <Row className="mb-4 g-0">
                             <Col ><span className="required">*</span> Benötigtes Feld</Col>
                         </Row>

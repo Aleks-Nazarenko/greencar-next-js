@@ -1,7 +1,9 @@
 import {JOOMLA_API_BASE, JOOMLA_URL_BASE} from "@/utils/config";
 import {convertRelativeUrls} from "@/utils/convertRelativeUrls";
-import {useState} from "react";
+import {useState, useEffect} from "react";
 import { Form, Button, Row, Col} from 'react-bootstrap';
+import Honeypot, {honeypotValue} from "@/components/Honeypot";
+import {dealerMarker, withDealerData} from "@/utils/dealer";
 import Pictos from "@/components/PictosLKW";
 
 
@@ -54,6 +56,8 @@ export async function getStaticProps() {
          ort: "",
          telefon: "",
      });
+     // Logged-in dealer: fill name, e-mail, address from the account
+     useEffect(() => { setFormData(withDealerData); }, []);
      const [validated, setValidated] = useState(false);
      const [errors, setErrors] = useState({});
      const [successMessage, setSuccessMessage] = useState('');
@@ -94,6 +98,8 @@ export async function getStaticProps() {
     //     setErrorEmail("");
          try {
              const payload = {
+                 website: honeypotValue(form),
+                 dealer: dealerMarker(),
                  name: formData.name,
                  firma: formData.firma,
                  email: formData.email,
@@ -118,7 +124,7 @@ export async function getStaticProps() {
                  if (data.status === 'success') {
                      setSuccessMessage(data.message);
 
-                     setFormData({
+                     setFormData(withDealerData({
                          name: '',
                          email: '',
                          firma: '',
@@ -126,7 +132,7 @@ export async function getStaticProps() {
                          plz: '',
                          ort: '',
                          telefon: '',
-                     });
+                     }));
                      setValidated(false);
                      scrollToTop();
                  } else {
@@ -286,6 +292,7 @@ export async function getStaticProps() {
                                             <Button className={"btn btn-primary btn-green w-100"} type="button" onClick={() => router.push('/')}>abbrechen</Button>
                                         </Col>
                                     </Row>
+                                    <Honeypot />
                                 </Form>
                             </Col>
                         </Row>

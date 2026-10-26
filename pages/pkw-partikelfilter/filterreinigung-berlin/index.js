@@ -389,7 +389,7 @@ export default function FilterreinigungPage({ product,installation, delivery, ar
                                         </div>
                                         {mwSt && (
                                             <div className="col-12 col-sm-6 btn-haendlerpreis pt-2">
-                                                <Link href={`/pkw-partikelfilter/pkw-filterreinigung/anfrage-haendlerpreis`}>
+                                                <Link href={`/pkw-partikelfilter/filterreinigung-berlin/anfrage-haendlerpreis`}>
                                                     <button className="btn btn-primary btn-yellow w-100">Anfrage Händlerpreis</button>
                                                 </Link>
                                             </div>
