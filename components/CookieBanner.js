@@ -1,70 +1,48 @@
 import CookieConsent from "react-cookie-consent";
 import { useEffect, useState } from 'react';
-import TagManager from 'react-gtm-module';
 import Cookies from 'js-cookie';
-import { GOOGLE_ANALYTICS_ID, GOOGLE_ADS_ID } from "@/utils/config";
+import { CONSENT_COOKIE, CHOICES_COOKIE } from "@/utils/googleTags";
 
-const GoogleAnalyticsID = GOOGLE_ANALYTICS_ID; // Replace with your Google Analytics ID
-const GoogleAdsID = GOOGLE_ADS_ID; // Replace with your Google Ads Conversion ID
+const ANALYTICS_COOKIES = ['_ga', '_gid', '_gat', '_ga_MN7EPCDL0F', '_gat_gtag_UA_18553182_1'];
+const ADS_COOKIES = ['_gac', '_gcl_au'];
+
+// Google sets its cookies on the main domain, so try with and without the domain
+const removeCookies = (names) => {
+    const domain = typeof window !== "undefined" ? window.location.hostname.replace(/^www\./, '') : undefined;
+    for (const name of names) {
+        Cookies.remove(name);
+        Cookies.remove(name, { domain: `.${domain}` });
+    }
+};
+
+const savedChoices = () => {
+    if (Cookies.get(CONSENT_COOKIE) !== "true") return { analytics: false, ads: false };
+    try {
+        const saved = JSON.parse(Cookies.get(CHOICES_COOKIE) || "null");
+        return saved ? { analytics: !!saved.analytics, ads: !!saved.ads } : { analytics: true, ads: true };
+    } catch {
+        return { analytics: true, ads: true };
+    }
+};
+
+// Applies the visitor's choice: Google tags are loaded by window.gcApplyConsent (utils/googleTags.js)
+const applyChoices = (choices) => {
+    Cookies.set(CHOICES_COOKIE, JSON.stringify(choices), { expires: 365 });
+    if (typeof window !== "undefined" && window.gcApplyConsent) window.gcApplyConsent(choices);
+    if (!choices.analytics) removeCookies(ANALYTICS_COOKIES);
+    if (!choices.ads) removeCookies(ADS_COOKIES);
+};
 
 const CookieBanner = () => {
     const [analyticsSelected, setAnalyticsSelected] = useState(true); // Pre-selected
     const [adsSelected, setAdsSelected] = useState(true); // Pre-selected
-    const [cookiesAccepted, setCookiesAccepted] = useState(false);
 
+    // Returning visitor: remove Google cookies they didn't allow (the tags themselves are handled in _document.js)
     useEffect(() => {
-        if (cookiesAccepted) {
-            // Initialize GTM only after clicking "Accept Selected"
-            TagManager.initialize({
-                gtmId: GoogleAdsID, // Replace with your GTM ID
-                dataLayer: {
-                    analyticsConsent: analyticsSelected,
-                    adsConsent: adsSelected,
-                },
-            });
-
-            if (analyticsSelected) {
-                // Dynamically add Google Analytics script
-                const gaScript = document.createElement('script');
-                gaScript.src = `https://www.googletagmanager.com/gtag/js?id=${GoogleAnalyticsID}`;
-                gaScript.async = true;
-                document.head.appendChild(gaScript);
-
-                const gaInitScript = document.createElement('script');
-                gaInitScript.innerHTML = `
-                    window.dataLayer = window.dataLayer || [];
-                    function gtag(){dataLayer.push(arguments);}
-                    gtag('js', new Date());
-                    gtag('config', '${GoogleAnalyticsID}');
-                `;
-                document.head.appendChild(gaInitScript);
-            }
-
-            if (adsSelected) {
-                // Dynamically add Google Ads script
-                const adsInitScript = document.createElement('script');
-                adsInitScript.innerHTML = `
-                    window.dataLayer = window.dataLayer || [];
-                    function gtag(){dataLayer.push(arguments);}
-                    gtag('config', '${GoogleAdsID}');
-                `;
-                document.head.appendChild(adsInitScript);
-            }
-        } else {
-            // Remove all cookies if consent is not given
-            Cookies.remove('_ga');
-            Cookies.remove('_gid');
-            Cookies.remove('_gat');
-            Cookies.remove('_gac'); // Google Ads cookies
-            Cookies.remove('_ga_MN7EPCDL0F');
-            Cookies.remove('_gcl_au');
-            Cookies.remove('_gat_gtag_UA_18553182_1');
-        }
-    }, [cookiesAccepted, analyticsSelected, adsSelected]);
-
-    const handleAccept = () => {
-        setCookiesAccepted(true);
-    };
+        const choices = savedChoices();
+        if (!choices.analytics) removeCookies(ANALYTICS_COOKIES);
+        if (!choices.ads) removeCookies(ADS_COOKIES);
+    }, []);
 
     return (
         <CookieConsent
@@ -72,13 +50,13 @@ const CookieBanner = () => {
             buttonText="ausgewählte erlauben"
             declineButtonText="alle ablehnen"
             enableDeclineButton
-            onAccept={handleAccept} // Trigger the useEffect to set cookies
+            onAccept={() => applyChoices({ analytics: analyticsSelected, ads: adsSelected })}
             onDecline={() => {
-                setCookiesAccepted(false);
                 setAnalyticsSelected(false);
                 setAdsSelected(false);
+                applyChoices({ analytics: false, ads: false });
             }}
-            cookieName="CookieConsent"
+            cookieName={CONSENT_COOKIE}
             expires={365}
         >
             <div style={{fontSize: '14px' }}>

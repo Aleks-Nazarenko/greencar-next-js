@@ -1,9 +1,12 @@
 import { Html, Head, Main, NextScript } from "next/document";
+import { googleTagsHeadScript } from "@/utils/googleTags";
 
 export default function Document() {
   return (
     <Html lang="en">
       <Head>
+        {/* Google Ads / Analytics with Consent Mode, loaded only after cookie consent */}
+        <script dangerouslySetInnerHTML={{ __html: googleTagsHeadScript }} />
         <link
             rel="preload"
             href="/background/bg_clean.jpg"
