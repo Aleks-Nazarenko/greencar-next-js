@@ -54,6 +54,12 @@ async function fetchRedirects() {
         // Add Redirect Rules
         htaccessContent += `# Redirect old Joomla URLs to new Next.js structure\n`;
         htaccessContent += `RewriteEngine On\n\n`;
+        // Any old Joomla page "/x.html" whose new page is "/x/" (e.g. /kfz-werkstatt-filtereinbau-greencar.html,
+        // a Google Ads landing page). Keeps the query string, so the Ads click id (gclid) survives.
+        htaccessContent += `RewriteCond %{REQUEST_FILENAME} !-f\n`;
+        htaccessContent += `RewriteCond %{REQUEST_FILENAME} ^(.+)\\.html$\n`;
+        htaccessContent += `RewriteCond %1/index.html -f\n`;
+        htaccessContent += `RewriteRule ^(.+)\\.html$ /$1/ [R=301,L]\n\n`;
         htaccessContent += `Redirect 301 /pkw-partikelfilter/pkw-filterreinigung.html /pkw-partikelfilter/pkw-filterreinigung/\n`;
         htaccessContent += `Redirect 301 /pkw-partikelfilter/filterreinigung-berlin.html /pkw-partikelfilter/filterreinigung-berlin/\n`;
         htaccessContent += `Redirect 301 /pkw-partikelfilter.html /pkw-partikelfilter/\n`;
@@ -62,14 +68,27 @@ async function fetchRedirects() {
         htaccessContent += `Redirect 301 /lkw-partikelfilter.html /lkw-partikelfilter/\n`;
         htaccessContent += `Redirect 301 /lkw-partikelfilter/dpf-euro-vi.html /lkw-partikelfilter/dpf-euro-vi/\n`;
         htaccessContent += `Redirect 301 /lkw-partikelfilter/schalldaempfer-euro-vi.html /lkw-partikelfilter/schalldaempfer-euro-vi/\n`;
-        htaccessContent += `Redirect 301 /lkw-partikelfilter/filterreinigung.html /lkw-partikelfilter/filterreinigung/\n`;
+        htaccessContent += `Redirect 301 /lkw-partikelfilter/lkw-filterreinigung.html /lkw-partikelfilter/lkw-filterreinigung/\n`;
         htaccessContent += `Redirect 301 /bus-partikelfilter.html /bus-partikelfilter/\n`;
         htaccessContent += `Redirect 301 /bus-partikelfilter/bus-filterreinigung.html /bus-partikelfilter/bus-filterreinigung/\n`;
         htaccessContent += `Redirect 301 /bus-partikelfilter/dpf-euro-vi.html /bus-partikelfilter/dpf-euro-vi/\n`;
         htaccessContent += `Redirect 301 /baumaschinen-partikelfilter.html /baumaschinen-partikelfilter/\n`;
         htaccessContent += `Redirect 301 /baumaschinen-partikelfilter/baumaschinen-nachruestfilter.html /baumaschinen-partikelfilter/baumaschinen-nachruestfilter/\n`;
         htaccessContent += `Redirect 301 /baumaschinen-partikelfilter/baumaschinen-filterreinigung.html /baumaschinen-partikelfilter/baumaschinen-filterreinigung/\n`;
-        htaccessContent += `Redirect 301 /partikelfilter-reinigen.html /partikelfilter-reinigen/\n\n`;
+        htaccessContent += `Redirect 301 /partikelfilter-reinigen.html /partikelfilter-reinigen/\n`;
+        // Old URLs that Google Ads visitors opened on the live site (access logs Apr–Oct 2026)
+        htaccessContent += `Redirect 301 /partikelfilter-filterreinigung.html /partikelfilter-reinigen/\n`;
+        htaccessContent += `Redirect 301 /filterreinigung.html /partikelfilter-reinigen/\n`;
+        htaccessContent += `Redirect 301 /pkw-nachruestung.html /pkw-partikelfilter/pkw-nachruestfilter/\n`;
+        htaccessContent += `Redirect 301 /lkw-partikelfilter/lkw-nachruestfilter.html /lkw-partikelfilter/\n`;
+        htaccessContent += `Redirect 301 /pkw-partikelfilter/pkw-nachruestfilter/category/80-bmw-3er-e46.html /pkw-partikelfilter/pkw-nachruestfilter/37-bmw/80-bmw-3er-e46/\n`;
+        htaccessContent += `Redirect 301 /pkw-partikelfilter/pkw-nachruestfilter/241-vw-t4.html /pkw-partikelfilter/pkw-nachruestfilter/67-vw/241-vw-t4/\n`;
+        // Hidden Joomla landing pages (Google Ads), same price as the general PKW Filterreinigung
+        htaccessContent += `Redirect 301 /pkw-filterreinigung.html /pkw-partikelfilter/pkw-filterreinigung/\n`;
+        htaccessContent += `Redirect 301 /pkw-filterreinigung-alt.html /pkw-partikelfilter/pkw-filterreinigung/\n`;
+        htaccessContent += `Redirect 301 /pkw-filterreinigung-frankfurt.html /pkw-partikelfilter/pkw-filterreinigung/\n`;
+        htaccessContent += `Redirect 301 /pkw-filterreinigung-duesseldorf.html /pkw-partikelfilter/pkw-filterreinigung/\n`;
+        htaccessContent += `Redirect 301 /pkw-filterreinigung-stuttgart.html /pkw-partikelfilter/pkw-filterreinigung/\n\n`;
 
 
         pkw_austauschfilter.forEach(product => {
