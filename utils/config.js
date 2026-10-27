@@ -14,6 +14,10 @@ export const PAYPAL_BUSINESS_EMAIL = 'info@greencar.eu';
 // For tests: https://www.sandbox.paypal.com/cgi-bin/webscr together with a sandbox business e-mail
 export const PAYPAL_STANDARD_URL = 'https://www.paypal.com/cgi-bin/webscr';
 export const GOOGLE_MAPS_API_KEY = process.env.NEXT_PUBLIC_GC_MAPS_API_KEY;
+// PKW Nachrüstfilter are not offered at the moment. Switches the menu entries, the PKW overview tile and
+// (in config.mjs) the redirects. To re-enable: set true here and in utils/config.mjs, and move
+// disabled-pages/pkw-partikelfilter/pkw-nachruestfilter back to pages/pkw-partikelfilter/.
+export const PKW_NACHRUESTFILTER_ENABLED = false;
 
 // Google Ads conversion. Only sent when the visitor allowed Google Ads in the cookie banner
 // (window.gcAdsAllowed, utils/googleTags.js), and never for logged-in dealers: their orders

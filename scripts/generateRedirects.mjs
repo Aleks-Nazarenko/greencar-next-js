@@ -1,6 +1,6 @@
 import fs from 'fs';
 import fetch from 'node-fetch';
-import { JOOMLA_API_BASE } from "../utils/config.mjs";
+import { JOOMLA_API_BASE, PKW_NACHRUESTFILTER_ENABLED } from "../utils/config.mjs";
 import { createSlug } from "../utils/sanitizeProductSlug.mjs";
 
 const PKW_AUSTAUSCHFILTER = JOOMLA_API_BASE+"&task=getProductsByCategory&category_id=70&format=json";
@@ -16,14 +16,14 @@ const HTACCESS_FILE = "./out/.htaccess"; // Apache uses .htaccess for redirects
 async function fetchRedirects() {
     try {
         const response_pkw_austauschfilter = await fetch(PKW_AUSTAUSCHFILTER);
-        const response_pkw_nachruestfilter = await fetch(PKW_NACHRUESTFILTER);
+        const response_pkw_nachruestfilter = PKW_NACHRUESTFILTER_ENABLED ? await fetch(PKW_NACHRUESTFILTER) : null;
         const response_lkw_dpf_euro_vi = await fetch(LKW_DPF_EURO_VI);
         const response_lkw_schalldaempfer_euro_vi = await fetch(LKW_SCHALLDAEMFER_EURO_VI);
         const response_lkw_filterreinigung = await fetch(LKW_FILTERREINIGUNG);
         const response_bus_filterreinigung = await fetch(BUS_FILTERREINIGUNG);
         const response_bau_nachruestfilter = await fetch(BAU_NACHRUESTFILTER);
         if (!response_pkw_austauschfilter.ok) throw new Error("Failed to fetch PKW AUSTAUSCHFILTER data");
-        if (!response_pkw_nachruestfilter.ok) throw new Error("Failed to fetch PKW NACHRUESTFILTER data");
+        if (response_pkw_nachruestfilter && !response_pkw_nachruestfilter.ok) throw new Error("Failed to fetch PKW NACHRUESTFILTER data");
         if (!response_lkw_dpf_euro_vi.ok) throw new Error("Failed to fetch LKW DPF EURO VI data");
         if (!response_lkw_schalldaempfer_euro_vi.ok) throw new Error("Failed to fetch LKW SCHALLDAEMFER EURO VI data");
         if (!response_lkw_filterreinigung.ok) throw new Error("Failed to fetch LKW FILTERREINIGUNG data");
@@ -35,7 +35,7 @@ async function fetchRedirects() {
         const processedSubcategories = new Set();
 
         const pkw_austauschfilter = await response_pkw_austauschfilter.json();
-        const pkw_nachruestfilter = await response_pkw_nachruestfilter.json();
+        const pkw_nachruestfilter = response_pkw_nachruestfilter ? await response_pkw_nachruestfilter.json() : [];
         const lkw_dpf_euro_vi = await response_lkw_dpf_euro_vi.json();
         const lkw_schalldaempfer_euro_vi = await response_lkw_schalldaempfer_euro_vi.json();
         const lkw_filterreinigung = await response_lkw_filterreinigung.json();
@@ -54,6 +54,12 @@ async function fetchRedirects() {
         // Add Redirect Rules
         htaccessContent += `# Redirect old Joomla URLs to new Next.js structure\n`;
         htaccessContent += `RewriteEngine On\n\n`;
+        if (!PKW_NACHRUESTFILTER_ENABLED) {
+            // PKW Nachrüstfilter switched off (utils/config.mjs): every old and new URL goes to the PKW overview.
+            // Before the generic rule below, so it wins even while old Nachrüstfilter folders still exist.
+            htaccessContent += `RewriteRule ^pkw-partikelfilter/pkw-nachruestfilter([./].*)?$ /pkw-partikelfilter/ [R=301,L]\n`;
+            htaccessContent += `RewriteRule ^pkw-nachruestung\\.html$ /pkw-partikelfilter/ [R=301,L]\n\n`;
+        }
         // Any old Joomla page "/x.html" whose new page is "/x/" (e.g. /kfz-werkstatt-filtereinbau-greencar.html,
         // a Google Ads landing page). Keeps the query string, so the Ads click id (gclid) survives.
         htaccessContent += `RewriteCond %{REQUEST_FILENAME} !-f\n`;
@@ -63,7 +69,7 @@ async function fetchRedirects() {
         htaccessContent += `Redirect 301 /pkw-partikelfilter/pkw-filterreinigung.html /pkw-partikelfilter/pkw-filterreinigung/\n`;
         htaccessContent += `Redirect 301 /pkw-partikelfilter/filterreinigung-berlin.html /pkw-partikelfilter/filterreinigung-berlin/\n`;
         htaccessContent += `Redirect 301 /pkw-partikelfilter.html /pkw-partikelfilter/\n`;
-        htaccessContent += `Redirect 301 /pkw-partikelfilter/pkw-nachruestfilter.html /pkw-partikelfilter/pkw-nachruestfilter/\n`;
+        if (PKW_NACHRUESTFILTER_ENABLED) htaccessContent += `Redirect 301 /pkw-partikelfilter/pkw-nachruestfilter.html /pkw-partikelfilter/pkw-nachruestfilter/\n`;
         htaccessContent += `Redirect 301 /pkw-partikelfilter/pkw-austauschfilter.html /pkw-partikelfilter/pkw-austauschfilter/\n`;
         htaccessContent += `Redirect 301 /lkw-partikelfilter.html /lkw-partikelfilter/\n`;
         htaccessContent += `Redirect 301 /lkw-partikelfilter/dpf-euro-vi.html /lkw-partikelfilter/dpf-euro-vi/\n`;
@@ -79,10 +85,10 @@ async function fetchRedirects() {
         // Old URLs that Google Ads visitors opened on the live site (access logs Apr–Oct 2026)
         htaccessContent += `Redirect 301 /partikelfilter-filterreinigung.html /partikelfilter-reinigen/\n`;
         htaccessContent += `Redirect 301 /filterreinigung.html /partikelfilter-reinigen/\n`;
-        htaccessContent += `Redirect 301 /pkw-nachruestung.html /pkw-partikelfilter/pkw-nachruestfilter/\n`;
+        if (PKW_NACHRUESTFILTER_ENABLED) htaccessContent += `Redirect 301 /pkw-nachruestung.html /pkw-partikelfilter/pkw-nachruestfilter/\n`;
         htaccessContent += `Redirect 301 /lkw-partikelfilter/lkw-nachruestfilter.html /lkw-partikelfilter/\n`;
-        htaccessContent += `Redirect 301 /pkw-partikelfilter/pkw-nachruestfilter/category/80-bmw-3er-e46.html /pkw-partikelfilter/pkw-nachruestfilter/37-bmw/80-bmw-3er-e46/\n`;
-        htaccessContent += `Redirect 301 /pkw-partikelfilter/pkw-nachruestfilter/241-vw-t4.html /pkw-partikelfilter/pkw-nachruestfilter/67-vw/241-vw-t4/\n`;
+        if (PKW_NACHRUESTFILTER_ENABLED) htaccessContent += `Redirect 301 /pkw-partikelfilter/pkw-nachruestfilter/category/80-bmw-3er-e46.html /pkw-partikelfilter/pkw-nachruestfilter/37-bmw/80-bmw-3er-e46/\n`;
+        if (PKW_NACHRUESTFILTER_ENABLED) htaccessContent += `Redirect 301 /pkw-partikelfilter/pkw-nachruestfilter/241-vw-t4.html /pkw-partikelfilter/pkw-nachruestfilter/67-vw/241-vw-t4/\n`;
         // Hidden Joomla landing pages (Google Ads), same price as the general PKW Filterreinigung
         htaccessContent += `Redirect 301 /pkw-filterreinigung.html /pkw-partikelfilter/pkw-filterreinigung/\n`;
         htaccessContent += `Redirect 301 /pkw-filterreinigung-alt.html /pkw-partikelfilter/pkw-filterreinigung/\n`;

@@ -1,6 +1,7 @@
 import Image from "next/image";
 import { useState } from "react";
 import Dropdown from "react-bootstrap/Dropdown";
+import { PKW_NACHRUESTFILTER_ENABLED } from "@/utils/config";
 export default function SecondaryMenu() {
     const [isOpen, setIsOpen] = useState(false);
     const toggleDropdown = () => {
@@ -19,10 +20,12 @@ export default function SecondaryMenu() {
                         {/* 🔹 Dropdown Menu */}
                         <Dropdown.Menu className={"shadow rounded-4 mt-2"}>
                             {/* is-haendler: hidden for logged-in dealers, see DealerNotice */}
-                            <Dropdown.Item href="/pkw-partikelfilter/pkw-nachruestfilter" className="d-flex align-items-center pe-2 ps-2 is-haendler">
-                                <Image src="/images/icons/pkw-nachruestfilter.png" alt="PKW Nachruestfilter" width={50} height={50} className="me-2  picto-50" />
-                                Nachrüstfilter
-                            </Dropdown.Item>
+                            {PKW_NACHRUESTFILTER_ENABLED && (
+                                <Dropdown.Item href="/pkw-partikelfilter/pkw-nachruestfilter" className="d-flex align-items-center pe-2 ps-2 is-haendler">
+                                    <Image src="/images/icons/pkw-nachruestfilter.png" alt="PKW Nachruestfilter" width={50} height={50} className="me-2  picto-50" />
+                                    Nachrüstfilter
+                                </Dropdown.Item>
+                            )}
                             <Dropdown.Item href="/pkw-partikelfilter/pkw-austauschfilter" className="d-flex align-items-center pe-2 ps-2">
                                 <Image src="/images/icons/pkw-austauschfilter.png" alt="PKW Austauschfilter" width={50} height={50} className="me-2 picto-50" />
                                 Austauschfilter

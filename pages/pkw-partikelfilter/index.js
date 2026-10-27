@@ -3,7 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import {useEffect} from "react";
 import {useState} from "react";
-import {JOOMLA_API_BASE} from "@/utils/config";
+import {JOOMLA_API_BASE, PKW_NACHRUESTFILTER_ENABLED} from "@/utils/config";
 import {fixRelativeUrls} from "@/utils/fixRelativeUrl";
 
 export async function getStaticProps() {
@@ -48,7 +48,7 @@ export default function Pkw({ portalArticle }) {
                         <h2 className={"display-4 mb-0"}>Bitte wählen Sie: Partikelfilter austauschen oder Reinigung von Partikelfiltern.</h2>
                     ):
                     (
-                        <h2 className={"display-4 mb-0"}>Bitte wählen Sie: Partikelfilter nachrüsten, austauschen oder Reinigung von Partikelfiltern.</h2>
+                        <h2 className={"display-4 mb-0"}>Bitte wählen Sie: Partikelfilter {PKW_NACHRUESTFILTER_ENABLED ? "nachrüsten, " : ""}austauschen oder Reinigung von Partikelfiltern.</h2>
                     )
                 }
             </div>
@@ -87,12 +87,14 @@ export default function Pkw({ portalArticle }) {
                                             <Image className={"picto-170"} src={isHoveredAus ? "/images/icons/pkw-austauschfilter.png" : "/images/icons/pkw-austausch-portal-mi.png"} alt={"PKW Austauschfilter"} width={170} height={170} layout="responsive"/>
                                         </Link>
                                     </div>
-                                    <div className={"col-auto text-center p-3"} >
-                                        <Link className={"d-block"} href="/pkw-partikelfilter/pkw-nachruestfilter" onMouseEnter={() => setIsHoveredNach(true)} onMouseLeave={() => setIsHoveredNach(false)}>
-                                            <h6>PKW Nachruestfilter</h6>
-                                            <Image className={"picto-170"} src={isHoveredNach ? "/images/icons/pkw-nachruestfilter.png" : "/images/icons/pkw-nachruest-portal-mi.png"} alt={"PKW Austauschfilter"} width={170} height={170} layout="responsive"/>
-                                        </Link>
-                                    </div>
+                                    {PKW_NACHRUESTFILTER_ENABLED && (
+                                        <div className={"col-auto text-center p-3"} >
+                                            <Link className={"d-block"} href="/pkw-partikelfilter/pkw-nachruestfilter" onMouseEnter={() => setIsHoveredNach(true)} onMouseLeave={() => setIsHoveredNach(false)}>
+                                                <h6>PKW Nachruestfilter</h6>
+                                                <Image className={"picto-170"} src={isHoveredNach ? "/images/icons/pkw-nachruestfilter.png" : "/images/icons/pkw-nachruest-portal-mi.png"} alt={"PKW Austauschfilter"} width={170} height={170} layout="responsive"/>
+                                            </Link>
+                                        </div>
+                                    )}
                                 </>
                                 )
                             }

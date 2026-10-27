@@ -3,7 +3,7 @@ import Nav from 'react-bootstrap/Nav';
 import Container from 'react-bootstrap/Container';
 import Navbar from 'react-bootstrap/Navbar';
 import NavDropdown from 'react-bootstrap/NavDropdown';
-import {JOOMLA_URL_BASE} from "@/utils/config";
+import {JOOMLA_URL_BASE, PKW_NACHRUESTFILTER_ENABLED} from "@/utils/config";
 import Image from "next/image";
 
 
@@ -29,9 +29,11 @@ export default function NavbarNazarenko() {
                             </Link>
                             <NavDropdown title="Produkt und Preisliste">
                                 {/* is-haendler: hidden for logged-in dealers, see DealerNotice */}
-                                <NavDropdown.Item href="/pkw-partikelfilter/pkw-nachruestfilter" className="nav-link is-haendler">
-                                        Preisliste PKW Nachrüstfilter
-                                </NavDropdown.Item>
+                                {PKW_NACHRUESTFILTER_ENABLED && (
+                                    <NavDropdown.Item href="/pkw-partikelfilter/pkw-nachruestfilter" className="nav-link is-haendler">
+                                            Preisliste PKW Nachrüstfilter
+                                    </NavDropdown.Item>
+                                )}
                                 <NavDropdown.Item  href="/pkw-partikelfilter/pkw-austauschfilter" className="nav-link">
                                         Preisliste PKW Austauschfilter
                                 </NavDropdown.Item>
