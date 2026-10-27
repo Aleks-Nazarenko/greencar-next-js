@@ -17,7 +17,7 @@ permissions:
   contents: read
 
 env:
-  MIN_HTML_PAGES: 1400  # a full build has ~1600 pages; fewer means the Joomla API returned incomplete data
+  MIN_HTML_PAGES: 600  # a full build has ~700 pages (~1600 with PKW Nachrüstfilter); fewer means the Joomla API returned incomplete data
 
 jobs:
   deploy:
