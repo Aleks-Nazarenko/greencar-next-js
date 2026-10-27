@@ -94,14 +94,6 @@ export async function getStaticProps({ params }) {
 
 function BauProductListPage({ categories, categoryId, categoryName, article, products }) {
 
-    const VAT_SHARE = 1.19; // MwSt.
-    const formatPrice = (price) => {
-        return new Intl.NumberFormat('de-DE', {
-            style: 'currency',
-            currency: 'EUR',
-        }).format(price);
-    };
-
     const router = useRouter();
 
     if (router.isFallback) {
@@ -188,11 +180,11 @@ function BauProductListPage({ categories, categoryId, categoryName, article, pro
 
                                     </td>
                                     <td>
-                                        {formatPrice(parseFloat(product.price_value) * VAT_SHARE)} (inkl. MwSt.)
+                                        Auf Anfrage
                                     </td>
                                     <td>
                                         <Link href={`/baumaschinen-partikelfilter/baumaschinen-nachruestfilter/${categoryId}-${categoryName}/${product.product_id}-${createSlug(product.product_name)}`}>
-                                            <button className="btn btn-primary btn-green btn-100">Aktionpreis / Details</button>
+                                            <button className="btn btn-primary btn-green btn-100">Details</button>
                                         </Link>
                                     </td>
 

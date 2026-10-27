@@ -93,14 +93,6 @@ export async function getStaticProps({ params }) {
 
 function BusFilterreinigungProductListPage({ categories, categoryId, categoryName, article, products }) {
 
-    const VAT_SHARE = 1.19; // MwSt.
-    const formatPrice = (price) => {
-        return new Intl.NumberFormat('de-DE', {
-            style: 'currency',
-            currency: 'EUR',
-        }).format(price);
-    };
-
     const router = useRouter();
 
     if (router.isFallback) {
@@ -188,7 +180,7 @@ function BusFilterreinigungProductListPage({ categories, categoryId, categoryNam
 
                                     </td>
                                     <td>
-                                        {formatPrice(parseFloat(product.price_value) * VAT_SHARE)} (inkl. MwSt.)
+                                        Auf Anfrage
                                     </td>
                                     <td>
                                         <Link href={`/bus-partikelfilter/bus-filterreinigung/${categoryId}-${categoryName}/${product.product_id}-${createSlug(product.product_name)}`}>
