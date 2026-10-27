@@ -5,6 +5,7 @@ import {convertRelativeUrls} from "@/utils/convertRelativeUrls";
 import { JOOMLA_API_BASE } from '@/utils/config';
 import { JOOMLA_URL_BASE } from '@/utils/config';
 import Pictos from "@/components/Pictos";
+import { useStandort } from "@/utils/useStandort";
 
 function ProductImage({ src, alt, fallback, className }) {
     const [imgSrc, setImgSrc] = useState(src);
@@ -186,13 +187,9 @@ export default function FilterreinigungPage({ product,installation, delivery, ar
 
     // State to manage form selections
     const [installationOption, setInstallationOption] = useState('with'); // Default to 'with installation'
-    const [selectedLand, setSelectedLand] = useState('');
-    const [selectedCity, setSelectedCity] = useState('');
-    const [lands, setLands] = useState([]);
-    const [cities, setCities] = useState([]);
+    const { lands, cities, selectedLand, selectedCity, handleLandChange, handleCityChange } = useStandort();
     const [deliveryDesired, setDeliveryDesired] = useState('yes'); // New state to track delivery selection
 
-    const [standortId, setStandortId] = useState(null);
     const [selectedDate, setSelectedDate] = useState(() => {
         let tomorrow = new Date();
         tomorrow.setDate(tomorrow.getDate() + 1);
@@ -212,72 +209,6 @@ export default function FilterreinigungPage({ product,installation, delivery, ar
         dayAfterTomorrow = getNextValidDay(dayAfterTomorrow);
         return formatDateToGerman(dayAfterTomorrow); // Correctly format the initial value
     });
-    // Fetch lands when the component loads
-    useEffect(() => {
-        const fetchLands = async () => {
-            try {
-                const response = await fetch(`${JOOMLA_API_BASE}&task=getLands&format=json`);
-                const data = await response.json();
-                setLands(data);
-            } catch (error) {
-                console.error('Failed to fetch lands:', error);
-            }
-        };
-        fetchLands();
-    }, []);
-
-    // Fetch cities when a land is selected
-    useEffect(() => {
-        if (selectedLand) {
-            const fetchCities = async () => {
-                try {
-                    const response = await fetch(`${JOOMLA_API_BASE}&task=getCities&land_id=${selectedLand}&format=json`);
-                    const data = await response.json();
-                    setCities(data);
-                } catch (error) {
-                    console.error('Failed to fetch cities:', error);
-                }
-            };
-            fetchCities();
-        } else {
-            setCities([]); // Clear cities if no land is selected
-        }
-    }, [selectedLand]);
-    // Fetch lands and prefill based on standort_id
-    useEffect(() => {
-        const fetchInitialData = async () => {
-            try {
-
-                const storedStandortId = sessionStorage.getItem('standort_id');
-                if (storedStandortId) {
-                    setStandortId(storedStandortId);
-
-                    // Fetch the place details for the stored standort_id
-                    const placeResponse = await fetch(`${JOOMLA_API_BASE}&task=getLocation&location_id=${storedStandortId}&format=json`);
-                    const placeData = await placeResponse.json();
-
-                    if (placeData) {
-                        const { region_id, id: cityId } = placeData.data;
-
-                        // Set selectedLand and fetch cities for the region
-                        setSelectedLand(region_id);
-
-                        const citiesResponse = await fetch(`${JOOMLA_API_BASE}&task=getCities&land_id=${region_id}&format=json`);
-                        const citiesData = await citiesResponse.json();
-                        setCities(citiesData);
-
-                        // Set selectedCity
-                        setSelectedCity(cityId);
-                    }
-                }
-            } catch (error) {
-                console.error('Error fetching initial data:', error);
-            }
-        };
-
-        fetchInitialData();
-    }, []);
-
     // Handle changes in installation option
     const handleInstallationChange = (e) => {
         const selectedOption = e.target.value;
@@ -296,15 +227,6 @@ export default function FilterreinigungPage({ product,installation, delivery, ar
         setTotalPrice(newTotalPrice); console.log(newTotalPrice +' new total price');
     };
 
-    // Handle changes in land selection
-    const handleLandChange = (e) => {
-        setSelectedLand(e.target.value);
-    };
-
-    // Handle changes in city selection
-    const handleCityChange = (e) => {
-        setSelectedCity(e.target.value);
-    };
     // Handle changes in delivery desired selection
     const handleDeliveryChange = (e) => {
         const selectedDelivery = e.target.value;

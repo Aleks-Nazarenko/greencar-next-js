@@ -5,6 +5,7 @@ import {Modal, Button} from 'react-bootstrap';
 import Link from "next/link";
 import Image from "next/image";
 import {GOOGLE_MAPS_API_KEY} from "@/utils/config";
+import {saveStandortId} from "@/utils/useStandort";
 
 
 const MapComponent = () => {
@@ -42,22 +43,8 @@ const MapComponent = () => {
         e.preventDefault(); // Prevent default link navigation
 
         if (selectedShop && selectedShop.description) {
-            // Parse the description HTML
-            const parser = new DOMParser();
-            const doc = parser.parseFromString(selectedShop.description, "text/html");
-
-            // Find the <a> tag with the href attribute
-            const anchor = doc.querySelector("a.gc-a-marker");
-            if (anchor) {
-                const urlParams = new URLSearchParams(new URL(anchor.href, window.location.origin).search);
-                const standortId = urlParams.get("standort_id");
-
-                if (standortId) {
-                    // Store standort_id in sessionStorage
-                    sessionStorage.setItem("standort_id", standortId);
-                    console.log(`Stored standort_id: ${standortId}`);
-                }
-            }
+            // Use the location's own id: the standort_id in the description link is missing or wrong for some locations
+            saveStandortId(selectedShop.id);
 
             // Set modal content to the description
             setModalContent(selectedShop.description);

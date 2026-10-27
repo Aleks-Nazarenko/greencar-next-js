@@ -9,6 +9,7 @@ import { Navigation } from 'swiper/modules';
 import 'swiper/swiper-bundle.css';
 import Form from 'react-bootstrap/Form';
 import { createSlug } from '@/utils/sanitizeProductSlug';
+import { useStandort } from '@/utils/useStandort';
 function ProductImage({ src, alt, fallback, className }) {
     const [imgSrc, setImgSrc] = useState(src);
 
@@ -228,42 +229,7 @@ export default function ProductPage({ product, article, installation, delivery, 
     // State to manage form selections
     const [installationOption, setInstallationOption] = useState('with'); // Default to 'with installation'
     const [deliveryDesired, setDeliveryDesired] = useState('yes'); //Versand. Immer berechnet, keine Auswahl. Wird nur im cartItem verwendet
-    const [selectedLand, setSelectedLand] = useState('');
-    const [selectedCity, setSelectedCity] = useState('');
-    const [lands, setLands] = useState([]);
-    const [cities, setCities] = useState([]);
-
-    // Fetch lands when the component loads
-    useEffect(() => {
-        const fetchLands = async () => {
-            try {
-                const response = await fetch(`${JOOMLA_API_BASE}&task=getLands&format=json`);
-                const data = await response.json();
-                setLands(data);
-            } catch (error) {
-                console.error('Failed to fetch lands:', error);
-            }
-        };
-        fetchLands();
-    }, []);
-
-    // Fetch cities when a land is selected
-    useEffect(() => {
-        if (selectedLand) {
-            const fetchCities = async () => {
-                try {
-                    const response = await fetch(`${JOOMLA_API_BASE}&task=getCities&land_id=${selectedLand}&format=json`);
-                    const data = await response.json();
-                    setCities(data);
-                } catch (error) {
-                    console.error('Failed to fetch cities:', error);
-                }
-            };
-            fetchCities();
-        } else {
-            setCities([]); // Clear cities if no land is selected
-        }
-    }, [selectedLand]);
+    const { lands, cities, selectedLand, selectedCity, handleLandChange, handleCityChange } = useStandort();
 
     // Handle changes in installation option
     const handleInstallationChange = (e) => {
@@ -280,15 +246,6 @@ export default function ProductPage({ product, article, installation, delivery, 
         setTotalPrice(newTotalPrice);
     };
 
-    // Handle changes in land selection
-    const handleLandChange = (e) => {
-        setSelectedLand(e.target.value);
-    };
-
-    // Handle changes in city selection
-    const handleCityChange = (e) => {
-        setSelectedCity(e.target.value);
-    };
     // Handle add to cart
     const handleAddToCart = (e) => {
         e.preventDefault();
