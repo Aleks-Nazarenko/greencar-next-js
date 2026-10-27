@@ -7,13 +7,14 @@ import { useRouter } from 'next/router';
 import {JOOMLA_API_BASE} from "@/utils/config";
 import {JOOMLA_URL_BASE} from "@/utils/config";
 import {FormSelect} from "react-bootstrap";
+import {EURO_VI_CATEGORY_ID, busCategoryName, busCategorySegment} from "@/utils/busEuroVi";
 
 export async function getStaticProps() {
     // Base URL of your Joomla server (adjust this to your Joomla installation URL)
     const joomlaBaseUrl = JOOMLA_URL_BASE;
     // Fetch data from Joomla API
     const categories = await axios
-        .get(`${JOOMLA_API_BASE}&task=getSubcategories&category_id=69&format=json`)
+        .get(`${JOOMLA_API_BASE}&task=getSubcategories&category_id=${EURO_VI_CATEGORY_ID}&format=json`)
         .then((res) => res.data || []) // actually incorrect, because res.data is always an array d.h. true
         .catch((error) => {
             console.log('Failed to fetch categories:', error.message);
@@ -66,9 +67,9 @@ export default function dpfEuroVi({ categories, article }) {
                                 {categories.map(category => (
                                     <option
                                         key={category.category_id}
-                                        value={`${category.category_id}-${category.category_name.toLowerCase().replace(/\s+/g, '-')}`}
+                                        value={busCategorySegment(category)}
                                     >
-                                        {category.category_name}
+                                        {busCategoryName(category)}
                                     </option>
                                 ))}
                             </FormSelect>
@@ -99,7 +100,7 @@ export default function dpfEuroVi({ categories, article }) {
                                         <path
                                             d="m12.14 8.753-5.482 4.796c-.646.566-1.658.106-1.658-.753V3.204a1 1 0 0 1 1.659-.753l5.48 4.796a1 1 0 0 1 0 1.506z"/>
                                     </svg>
-                                    <Link href={`/bus-partikelfilter/dpf-euro-vi/${category.category_id}-${category.category_name.toLowerCase().replace(/\s+/g, '-')}`}>{category.category_name}</Link>
+                                    <Link href={`/bus-partikelfilter/dpf-euro-vi/${busCategorySegment(category)}`}>{busCategoryName(category)}</Link>
                                 </li>
                             ))}
                         </ul>
