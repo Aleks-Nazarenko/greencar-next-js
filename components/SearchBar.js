@@ -1,11 +1,9 @@
-import Image from "next/image";
 import {useState} from "react";
 import {useRouter} from "next/router";
 import Link from "next/link";
 
-
+// Green contact bar at the very top of every page: OE search, phone, inquiry button (design "Suchleiste Optionen", variant 1a)
 export default function SearchBar() {
-
 
     const [searchQuery, setSearchQuery] = useState("");
     const router = useRouter();
@@ -17,33 +15,30 @@ export default function SearchBar() {
         }
     };
     return (
-
-                <div className={"row g-0 justify-content-sm-between align-items-center"}>
-                    <div className={"col-auto d-flex justify-content-start flex-column flex-md-row"}>
-                        <div className={"col-auto pe-4 pb-2 pb-md-0"}>
-                            <Image src={"/images/icons/greencar-filter-tel.png"} alt={"telefon"} width={197} height={32} />
-                        </div>
-                        <div className={"col-auto"}>
-                            <Link href={`/anfrage-partikelfilter`}>
-                                <button className="btn btn-primary btn-yellow btn-100" style={{maxWidth:"194px"}}>Jetzt anfragen</button>
-                            </Link>
-                        </div>
-                    </div>
-                    <div className="search-container col-auto">
-                        <form onSubmit={handleSearch} className={"d-flex justify-content-end"}>
-                            <input
-                                type="text"
-                                placeholder="OE-Nummer eingeben"
-                                value={searchQuery}
-                                onChange={(e) => setSearchQuery(e.target.value)}
-                                className="search-input rounded form-control"
-                                aria-label="Suche"
-                                style={{width:"194px"}}
-                            />
-                            <button type="submit" className="search-button rounded btn ms-2">suchen</button>
-                        </form>
-                    </div>
-                </div>
-
+        <div className="gc-topbar">
+            <div className="container-greencar container-fluid gc-topbar-inner">
+                <form onSubmit={handleSearch} className="gc-topbar-search" role="search">
+                    <input
+                        type="text"
+                        placeholder="OE-Nummer suchen"
+                        value={searchQuery}
+                        onChange={(e) => setSearchQuery(e.target.value)}
+                        aria-label="OE-Nummer suchen"
+                    />
+                    <button type="submit" className="gc-topbar-search-button" aria-label="Suchen" title="Suchen">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2.5" aria-hidden="true">
+                            <circle cx="10.5" cy="10.5" r="6.5"/>
+                            <path d="M15.5 15.5L21 21"/>
+                        </svg>
+                    </button>
+                </form>
+                <a href="tel:+493041722080" className="gc-topbar-phone" aria-label="Anrufen: 030-417 220 80">
+                    <span aria-hidden="true">☎</span><span className="gc-topbar-phone-number"> 030-417 220 80</span>
+                </a>
+                <Link href="/anfrage-partikelfilter" className="gc-topbar-cta">
+                    Jetzt anfragen
+                </Link>
+            </div>
+        </div>
     );
 }

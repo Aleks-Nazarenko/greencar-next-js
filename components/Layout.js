@@ -20,15 +20,10 @@ export default function Layout({ children }) {
                 <meta name="google-site-verification" content="WiEomksCMny2d8J2OdPViePvmhxjlIrgEAze-SSyLx0" />
                 <link rel="icon" href="/favicon.ico" />
             </Head>
+            <SearchBar />
             <header>
                 <Navbar />
                 <DealerNotice />
-                <div className={"w-100 pt-4"}/>
-                <div className="container-fluid">
-                    <div className="container-greencar container-fluid g-0 p-2 ps-3 pe-3 bg-gc-light-blue rounded-4 shadow">
-                        <SearchBar />
-                    </div>
-                </div>
                 <div className={"w-100 pt-4"}/>
                 <div className="container-fluid">
                     <div className="container-greencar container-fluid g-0 home-big-icons">
