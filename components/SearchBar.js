@@ -18,7 +18,7 @@ export default function SearchBar() {
         <div className="gc-topbar">
             <div className="container-greencar container-fluid gc-topbar-inner">
                 <a href="https://karriere-greencar.de/" target="_blank" rel="noopener" className="gc-topbar-link">
-                    Karriere <span aria-hidden="true">↗</span>
+                    Karriere
                 </a>
                 <form onSubmit={handleSearch} className="gc-topbar-search" role="search">
                     <input
