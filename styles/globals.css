@@ -184,6 +184,8 @@ header {z-index: 10}
 .gc-topbar-search input{flex: 1; min-width: 0; padding: 0 10px; border: none; outline: none; background: transparent; color: #333; font-size: 14px;}
 .gc-topbar-search input::placeholder{color: #888;}
 .gc-topbar-search:focus-within{box-shadow: 0 0 0 2px #45CA25;}
+.gc-topbar-link{margin-right: auto; color: #fff!important; font-weight: 600; text-decoration: none; white-space: nowrap;}
+.gc-topbar-link:hover{text-decoration: underline;}
 .gc-topbar-phone{color: #fff!important; font-weight: 700; font-size: 17px; text-decoration: none; white-space: nowrap;}
 .gc-topbar-phone:hover{text-decoration: underline;}
 .gc-topbar-cta{background: #FF8600; color: #fff!important; font-weight: 600; padding: 4px 14px; border-radius: 4px; text-decoration: none; white-space: nowrap;}
