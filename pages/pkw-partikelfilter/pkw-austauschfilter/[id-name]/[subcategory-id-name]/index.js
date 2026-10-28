@@ -128,6 +128,13 @@ export async function getStaticProps({ params }) {
 
 export default function ProductListPage({ products, categoryName, categoryId, subcategoryName, subcategoryId, article, categories, subcategories  }) {
     const router = useRouter();
+    const VAT_SHARE = 1.19; // MwSt.
+    const formatPrice = (price) => {
+        return new Intl.NumberFormat('de-DE', {
+            style: 'currency',
+            currency: 'EUR',
+        }).format(price);
+    };
     const handleCategoryChange = (event) => {
         const selectedCategory = event.target.value;
         if (selectedCategory) {
@@ -212,7 +219,7 @@ export default function ProductListPage({ products, categoryName, categoryId, su
                                     <th>Modell</th>
                                     <th>Hubraum KW/PS</th>
                                     <th>Bauzeit</th>
-                                    {/* <th>Price</th>  */}
+                                    <th className={"is-haendler"}>Preis</th>{/* customer price; dealers see their price on the product page */}
                                     <th></th>
 
                                 </tr>
@@ -238,11 +245,11 @@ export default function ProductListPage({ products, categoryName, categoryId, su
                                         <td>
                                             {product.bauzeit_liste}
                                         </td>
-                                        {/*}
-                                        <td>
-                                            {product.product_price}
+                                        <td className={"is-haendler"}>
+                                            {product.price_value && (
+                                                <>{formatPrice(parseFloat(product.price_value) * VAT_SHARE)} (inkl. MwSt.)</>
+                                            )}
                                         </td>
-                                        */}
                                         <td>
                                             <Link href={`/pkw-partikelfilter/pkw-austauschfilter/${categoryId}-${categoryName}/${subcategoryId}-${subcategoryName}/${product.product_id}-${createSlug(product.product_name)}`}>
                                                 <button className="btn btn-primary btn-green btn-100">Aktionpreis / Details</button>
