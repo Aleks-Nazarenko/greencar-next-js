@@ -179,8 +179,8 @@ header {z-index: 10}
 .gc-topbar{position: sticky; top: 0; z-index: 20; background: #43C823; color: #fff; font-size: 15px;}
 .gc-topbar-inner{height: 38px; display: flex; align-items: center; justify-content: flex-end; gap: 20px;}
 .gc-topbar-search{height: 28px; width: 260px; display: flex; align-items: stretch; background: #fff; border-radius: 4px; overflow: hidden;}
-.gc-topbar-search-button{width: 34px; display: flex; align-items: center; justify-content: center; padding: 0; border: none; background: #45CA25; cursor: pointer;}
-.gc-topbar-search-button:hover{transition: background 0.3s; background: #008000;}
+.gc-topbar-search-button{width: 34px; display: flex; align-items: center; justify-content: center; padding: 0; border: none; background: #008000; cursor: pointer;}
+.gc-topbar-search-button:hover{transition: background 0.3s; background: #006400;}
 .gc-topbar-search input{flex: 1; min-width: 0; padding: 0 10px; border: none; outline: none; background: transparent; color: #333; font-size: 14px;}
 .gc-topbar-search input::placeholder{color: #888;}
 .gc-topbar-search:focus-within{box-shadow: 0 0 0 2px #45CA25;}
