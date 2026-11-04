@@ -13,7 +13,6 @@ export default function Anfrage() {
 
     const [formData, setFormData] = useState({
         kategorie: '',
-        produkt: '',
         name: '',
         email: '',
         strasse: '',
@@ -32,17 +31,15 @@ export default function Anfrage() {
     // Logged-in dealer: fill name, e-mail, address from the account
     useEffect(() => { setFormData(withDealerData); }, []);
 
-    // Product pages link here with ?kategorie=…&produkt=… (see utils/anfrageKategorien.js)
+    // Product pages link here with ?kategorie=… (see utils/anfrageKategorien.js)
     useEffect(() => {
         if (!router.isReady) return;
         const kategorie = findAnfrageKategorie(router.query.kategorie);
-        const produkt = typeof router.query.produkt === 'string' ? router.query.produkt.slice(0, 200) : '';
         setFormData((prevData) => ({
             ...prevData,
             kategorie: kategorie && !kategorie.redirect ? kategorie.value : prevData.kategorie,
-            produkt,
         }));
-    }, [router.isReady, router.query.kategorie, router.query.produkt]);
+    }, [router.isReady, router.query.kategorie]);
 
     const [validated, setValidated] = useState(false);
     const [errors, setErrors] = useState({});
@@ -95,7 +92,6 @@ export default function Anfrage() {
                 website: honeypotValue(form),
                 dealer: dealerMarker(),
                 kategorie: findAnfrageKategorie(formData.kategorie)?.label || '',
-                produkt: formData.produkt,
                 name: formData.name,
                 email: formData.email,
                 strasse: formData.strasse,
@@ -130,7 +126,6 @@ export default function Anfrage() {
                     trackGoogleConversion();
                     setFormData(withDealerData({
                         kategorie: '',
-                        produkt: '',
                         name: '',
                         email: '',
                         strasse: '',
@@ -199,9 +194,6 @@ export default function Anfrage() {
                         <Form.Control.Feedback type="invalid">
                             Bitte wählen Sie eine Kategorie
                         </Form.Control.Feedback>
-                        {formData.produkt && (
-                            <Form.Text>Anfrage zu: {formData.produkt}</Form.Text>
-                        )}
                     </Form.Group>
                 </Row>
                 <Row className="mb-3 g-0">

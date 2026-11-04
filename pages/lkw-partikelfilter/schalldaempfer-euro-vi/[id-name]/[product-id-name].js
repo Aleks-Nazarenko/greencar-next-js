@@ -164,7 +164,7 @@ export default function ProductPage({ product, article }) {
 
             <div className="row g-0 p-4 pb-3">
                 <div className={"col col-sm-6"}>
-                    <Link href={anfrageHref("lkw-schalldaempfer-euro-vi", `${product.product_name} (ID ${product.product_id})`)}>
+                    <Link href={anfrageHref("lkw-schalldaempfer-euro-vi")}>
                         <button className="btn btn-primary btn-yellow btn-100">Unverbindliches Angebot anfordern</button>
                     </Link>
                 </div>

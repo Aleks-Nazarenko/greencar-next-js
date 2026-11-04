@@ -1,7 +1,7 @@
 import {PKW_NACHRUESTFILTER_ENABLED} from "@/utils/config";
 
 // Categories for the "Kategorie" select on /anfrage-partikelfilter/.
-// Product pages link there with ?kategorie=<value>&produkt=<name> to pre-select one.
+// Product pages link there with ?kategorie=<value> to pre-select one.
 // Categories with `redirect` have their own form: choosing one sends the visitor there
 // (with ?kategorie=<value>, so that form can tell the shop which vehicle type it is).
 export const ANFRAGE_KATEGORIEN = [
@@ -22,9 +22,7 @@ export function findAnfrageKategorie(value) {
     return ANFRAGE_KATEGORIEN.find((k) => k.value === value) || null;
 }
 
-// Link to the general inquiry form with the category (and optionally the product) pre-selected
-export function anfrageHref(kategorie, produkt) {
-    const params = new URLSearchParams({kategorie});
-    if (produkt) params.set("produkt", produkt);
-    return `/anfrage-partikelfilter/?${params.toString()}`;
+// Link to the general inquiry form with the category pre-selected
+export function anfrageHref(kategorie) {
+    return `/anfrage-partikelfilter/?${new URLSearchParams({kategorie}).toString()}`;
 }

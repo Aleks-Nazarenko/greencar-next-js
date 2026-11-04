@@ -150,7 +150,7 @@ export default function BauNachruestFilterProductPage({ product, article }) {
 
             <div className="row g-0 p-4 pb-3">
                 <div className={"col col-sm-6"}>
-                    <Link href={anfrageHref("baumaschinen-nachruestfilter", `${product.product_name} (ID ${product.product_id})`)}>
+                    <Link href={anfrageHref("baumaschinen-nachruestfilter")}>
                         <button className="btn btn-primary btn-yellow btn-100">Unverbindliches Angebot anfordern</button>
                     </Link>
                 </div>
