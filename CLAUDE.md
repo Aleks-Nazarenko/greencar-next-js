@@ -19,7 +19,7 @@ npm run deploy       # same, real deploy to static.dpfclean.de
 gh run watch         # follow the run just started
 ```
 
-Deploys build from `master` on GitHub, so local changes must be pushed first.
+Deploys build from `master` on GitHub, so local changes must be pushed first. Pushing does not deploy; run `npm run deploy` afterwards.
 
 There is no test suite.
 
@@ -28,7 +28,7 @@ There is no test suite.
 **Fully static export.** `next.config.mjs` sets `output: 'export'`, `trailingSlash: true`, and `images.unoptimized`. That means:
 - No SSR, no ISR, no runtime API routes (`pages/api/hello.js` is a leftover and is not deployed). Don't use `getServerSideProps`, `revalidate`, middleware, or `next/image` optimization.
 - Every dynamic route must enumerate all of its paths in `getStaticPaths` with `fallback: false`.
-- Content changes in Joomla only reach the site on rebuild. `.github/workflows/deploy.yaml` rebuilds nightly (cron 02:00 UTC) and rsyncs `out/` to a LAMP/Apache server. `deploy-old.yaml` and `compare.yaml` are not the active pipeline.
+- Content changes in Joomla only reach the site on rebuild. The only active pipeline is `.github/workflows/deploy-manual.yaml` (`npm run deploy`), which builds and rsyncs `out/` to a LAMP/Apache server. Nothing deploys automatically: a push alone changes nothing on the site. `deploy.yaml` has a nightly cron (02:00 UTC), but GitHub disabled it for inactivity in July 2025 (`gh workflow list --all` shows `disabled_inactivity`). `deploy-old.yaml` and `compare.yaml` are not the active pipeline.
 - `staticPageGenerationTimeout` is 120s because builds make many sequential calls to the Joomla API.
 
 **Data fetching.** All backend calls go to `JOOMLA_API_BASE` + `&task=<name>&...&format=json`.
