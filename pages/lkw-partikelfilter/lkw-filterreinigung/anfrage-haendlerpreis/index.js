@@ -292,7 +292,7 @@ export async function getStaticProps() {
                                             <Button className={"btn btn-primary btn-green w-100"} type="submit">senden</Button>
                                         </Col>
                                         <Col sm={"4"}>
-                                            <Button className={"btn btn-primary btn-green w-100"} type="button" onClick={() => router.push('/')}>abbrechen</Button>
+                                            <Button className={"btn btn-primary btn-green w-100"} type="button" onClick={() => router.push('/lkw-partikelfilter/lkw-filterreinigung/')}>abbrechen</Button>
                                         </Col>
                                     </Row>
                                     <Honeypot />
