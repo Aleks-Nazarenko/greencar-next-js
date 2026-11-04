@@ -1,6 +1,7 @@
 import {JOOMLA_API_BASE, JOOMLA_URL_BASE} from "@/utils/config";
 import {convertRelativeUrls} from "@/utils/convertRelativeUrls";
 import {useState, useEffect} from "react";
+import {useRouter} from "next/router";
 import { Form, Button, Row, Col} from 'react-bootstrap';
 import Honeypot, {honeypotValue} from "@/components/Honeypot";
 import {dealerMarker, withDealerData} from "@/utils/dealer";
@@ -46,6 +47,8 @@ export async function getStaticProps() {
     };
 }
  export default function AnfrageHaendlerpreis({article, article2, article3}) {
+
+     const router = useRouter();
 
      const [formData, setFormData] = useState({
          name: "",
