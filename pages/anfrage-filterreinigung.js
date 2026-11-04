@@ -4,6 +4,7 @@ import Honeypot, {honeypotValue} from "@/components/Honeypot";
 import {dealerMarker, withDealerData} from "@/utils/dealer";
 import {useState, useEffect} from "react";
 import {useRouter} from "next/router";
+import {findAnfrageKategorie} from "@/utils/anfrageKategorien";
 
 
 export default function AnfrageFilterreinigung() {
@@ -26,6 +27,10 @@ export default function AnfrageFilterreinigung() {
     });
     // Logged-in dealer: fill name, e-mail, address from the account
     useEffect(() => { setFormData(withDealerData); }, []);
+
+    // Category chosen on /anfrage-partikelfilter/ (?kategorie=pkw-filterreinigung etc.), sent along to the shop
+    const kategorie = router.isReady ? findAnfrageKategorie(router.query.kategorie) : null;
+    const kategorieLabel = kategorie?.redirect === '/anfrage-filterreinigung/' ? kategorie.label : '';
 
     const [validated, setValidated] = useState(false);
     const [errors, setErrors] = useState({});
@@ -70,6 +75,7 @@ export default function AnfrageFilterreinigung() {
             const payload = {
                 website: honeypotValue(form),
                 dealer: dealerMarker(),
+                kategorie: kategorieLabel,
                 name: formData.name,
                 email: formData.email,
                 strasse: formData.strasse,
@@ -147,6 +153,7 @@ export default function AnfrageFilterreinigung() {
                 <h1 className={"mb-1"}>Anfrage</h1>
                 <Col>
                     <h4 className={"mb-0"}>Das Formular einfach ausfüllen und absenden.</h4>
+                    {kategorieLabel && <div className={"pt-2"}>Kategorie: {kategorieLabel}</div>}
                 </Col>
             </Row>
             <Form noValidate validated={validated} onSubmit={handleSubmit}>

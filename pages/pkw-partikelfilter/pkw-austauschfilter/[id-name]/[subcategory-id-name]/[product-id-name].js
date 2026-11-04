@@ -1,4 +1,5 @@
 import {convertRelativeUrls} from "@/utils/convertRelativeUrls";
+import {anfrageHref} from "@/utils/anfrageKategorien";
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
@@ -447,7 +448,7 @@ export default function ProductPage({ product, article, installation, delivery, 
 
             <div className="row g-0 p-4 pb-3">
                 <div className={"col col-sm-6"}>
-                    <Link href={`/anfrage-partikelfilter`}>
+                    <Link href={anfrageHref("pkw-austauschfilter", `${product.product_name} (ID ${product.product_id})`)}>
                         <button className="btn btn-primary btn-yellow btn-100">Unverbindliches Angebot anfordern</button>
                     </Link>
                 </div>
