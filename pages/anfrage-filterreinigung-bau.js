@@ -18,6 +18,7 @@ export default function AnfrageFilterreinigungBau() {
         telefon: '',
         hersteller: '',
         modell: '',
+        schluesselnummer: '',
         reinigungsversuche: 'nein',
         abholung: 'ja',
         abholdatum: '',
@@ -90,6 +91,7 @@ export default function AnfrageFilterreinigungBau() {
                 abholung: formData.abholung,
                 hersteller: formData.hersteller,
                 modell: formData.modell,
+                schluesselnummer: formData.schluesselnummer,
                 abholdatum: formData.abholdatum,
                 abholzeit: formData.abholzeit,
                 message: formData.message,
@@ -123,6 +125,7 @@ export default function AnfrageFilterreinigungBau() {
                         abholung: '',
                         hersteller: '',
                         modell: '',
+                        schluesselnummer: '',
                         abholzeit: '',
                         abholdatum: '',
                         message: '',
@@ -268,6 +271,21 @@ export default function AnfrageFilterreinigungBau() {
                             value={formData.modell}
                             onChange={handleInputChange}
                         />
+                    </Form.Group>
+                </Row>
+                <Row className="mb-3 g-0">
+                    <Form.Group as={Col} sm={"6"} controlId="regSchluesselnummer">
+                        <Form.Label>Schlüsselnummer <span className="required">*</span></Form.Label>
+                        <Form.Control
+                            required
+                            type="text"
+                            name="schluesselnummer"
+                            value={formData.schluesselnummer}
+                            onChange={handleInputChange}
+                        />
+                        <Form.Control.Feedback type="invalid">
+                            Bitte geben Sie die Schlüsselnummer ein
+                        </Form.Control.Feedback>
                     </Form.Group>
                 </Row>
                 <Row className="mb-3 g-0">

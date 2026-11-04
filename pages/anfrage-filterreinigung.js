@@ -21,6 +21,7 @@ export default function AnfrageFilterreinigung() {
         einbau: 'GREENCAR-Werkstatt',
         hersteller: '',
         modell: '',
+        schluesselnummer: '',
         message: '',
     });
     // Logged-in dealer: fill name, e-mail, address from the account
@@ -79,6 +80,7 @@ export default function AnfrageFilterreinigung() {
                 einbau: formData.einbau,
                 hersteller: formData.hersteller,
                 modell: formData.modell,
+                schluesselnummer: formData.schluesselnummer,
                 message: formData.message,
 
             };
@@ -109,6 +111,7 @@ export default function AnfrageFilterreinigung() {
                         einbau: '',
                         hersteller: '',
                         modell: '',
+                        schluesselnummer: '',
                         message: '',
                     }));
                     setValidated(false);
@@ -251,6 +254,21 @@ export default function AnfrageFilterreinigung() {
                             value={formData.modell}
                             onChange={handleInputChange}
                         />
+                    </Form.Group>
+                </Row>
+                <Row className="mb-3 g-0">
+                    <Form.Group as={Col} sm={"6"} controlId="regSchluesselnummer">
+                        <Form.Label>Schlüsselnummer <span className="required">*</span></Form.Label>
+                        <Form.Control
+                            required
+                            type="text"
+                            name="schluesselnummer"
+                            value={formData.schluesselnummer}
+                            onChange={handleInputChange}
+                        />
+                        <Form.Control.Feedback type="invalid">
+                            Bitte geben Sie die Schlüsselnummer ein
+                        </Form.Control.Feedback>
                     </Form.Group>
                 </Row>
                 <Row className="mb-3 g-0">
