@@ -13,19 +13,34 @@ const MapComponent = () => {
     const [selectedShop, setSelectedShop] = useState(null);
     const [showModal, setShowModal] = useState(false);
     const [modalContent, setModalContent] = useState("");
+    const [shopsError, setShopsError] = useState(false);
 
-    // Fetch shop data from Joomla API
+    // Fetch shop data from Joomla API. Joomla's own error answers (DB down, maintenance) have no
+    // `data` list, so only a list is accepted; otherwise retry once, then show a message.
     useEffect(() => {
+        let cancelled = false;
+        const loadShops = async () => {
+            const response = await fetch(`${JOOMLA_API_BASE}&task=getLocations&format=json`);
+            if (!response.ok) throw new Error(`HTTP ${response.status}`);
+            const locations = await response.json();
+            if (!Array.isArray(locations?.data)) throw new Error("No locations in the answer");
+            return locations.data;
+        };
         const fetchShops = async () => {
-            try {
-                const response = await fetch(`${JOOMLA_API_BASE}&task=getLocations&format=json`);
-                const locations = await response.json();
-                setShops(locations.data);
-            } catch (error) {
-                console.error("Failed to fetch shops:", error);
+            for (let attempt = 1; attempt <= 2; attempt++) {
+                try {
+                    const data = await loadShops();
+                    if (!cancelled) setShops(data);
+                    return;
+                } catch (error) {
+                    console.error(`Failed to fetch shops (attempt ${attempt}):`, error);
+                    if (attempt === 1) await new Promise((resolve) => setTimeout(resolve, 2000));
+                }
             }
+            if (!cancelled) setShopsError(true);
         };
         fetchShops();
+        return () => { cancelled = true; };
     }, []);
 
     // Google Maps container styles
@@ -60,6 +75,11 @@ const MapComponent = () => {
 
     return (
         <>
+            {shopsError && (
+                <div className={"form-danger pb-3"}>
+                    Die Standorte konnten nicht geladen werden. Bitte laden Sie die Seite neu.
+                </div>
+            )}
             <LoadScript googleMapsApiKey={GOOGLE_MAPS_API_KEY} >
                 <GoogleMap
                     mapContainerStyle={containerStyle}
