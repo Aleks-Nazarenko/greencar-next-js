@@ -1,0 +1,547 @@
+/*-----GENERAL LAYOUT-----*/
+body.jsn-homepage #jsn-mainbody-content {
+  background:none;
+  border:none;
+  padding:0;
+}
+body.jsn-homepage #jsn-mainbody {
+  /*wm*/
+  padding: 40px;
+}
+/*======== RIGHT MODULE =========*/
+#jsn-content .custom .jsn-modulecontent {
+  padding: 0;
+}
+#jsn-content #jsn-rightsidecontent div.jsn-modulecontainer.custom div.jsn-modulecontainer_inner {
+  background: none;
+  border: none;
+}
+.col-left {
+  float: left;
+  width: 65.7%;
+}
+.col-right {
+  float: right;
+  width: 31%;
+}
+#time img {
+  float: left;
+}
+#time {
+  background-image:-moz-linear-gradient(2% 98% 21deg,rgb(123,0,70) 0%,rgb(157,0,89) 100%);
+  background-image:-webkit-gradient(linear,2% 98%,100% 1%,color-stop(0, rgb(123,0,70)),color-stop(1, rgb(157,0,89)));
+  background-image:-webkit-linear-gradient(21deg,rgb(123,0,70) 0%,rgb(157,0,89) 100%);
+  background-image:-o-linear-gradient(21deg,rgb(123,0,70) 0%,rgb(157,0,89) 100%);
+  background-image:-ms-linear-gradient(21deg,rgb(123,0,70) 0%,rgb(157,0,89) 100%);
+  background-image:linear-gradient(21deg,rgb(123,0,70) 0%,rgb(157,0,89) 100%);
+  -ms-filter:"progid:DXImageTransform.Microsoft.gradient(startColorstr=#ff7b0046,endColorstr=#ff9d0059,GradientType=1)";
+  filter:progid:DXImageTransform.Microsoft.gradient(startColorstr=#ff7b0046,endColorstr=#ff9d0059,GradientType=1);
+  text-align: right;
+  font-size: 16px;
+  text-align: right;
+  padding: 21px 21px 22px;
+  font-family: 'Source Sans Pro', Arial, Helvetica, sans-serif;
+  margin-bottom: 10px;
+  color: #fefefe;
+}
+#time span {
+  font-size: 22px;
+  display: block;
+}
+body.jsn-homepage #jsn-mainbody-content.jsn-hasmainbody {
+  /*wm*/
+  /*A.N.
+  background-color: #fff;
+  background: none repeat scroll 0 0 rgba(255, 255, 255, 0.7);*/
+  background-color: #daeffb; /*A.N*/
+  -moz-border-radius:20px 20px 20px 20px; /* Firefox */
+  -webkit-border-radius:20px 20px 20px 20px; /* Chrome, Safari */
+  -khtml-border-radius:20px 20px 20px 20px; /* Konqueror */
+  border-radius:20px 20px 20px 20px; /* CSS3 */
+ /* behavior:url(/templates/jsn_metro_pro/css/border-radius.htc);  Internet Explorer */
+  border: none;
+}
+div.galery {
+  position: relative;
+  width: 214px;
+  height: 210px;
+  overflow: hidden;
+}
+div.galery .caption {
+  background: rgba(0,0,0,0.4);
+  color: #fff;
+  bottom: -150px;
+  height: 70px;
+  left: 0;
+  width: 100%;
+  display: inline-block;
+  position: absolute;
+  transition: all 0.3s;
+  -moz-transition: all 0.3s;
+  -webkit-transition: all 0.3s;
+}
+div.galery .caption h3,
+div.galery .caption p {
+  padding: 0 5px;
+  margin: 0px 0 5px;
+  color: #fff;
+}
+div.galery:hover .caption {
+  bottom: 0;
+}
+/*======== CONTENT =========*/
+body.jsn-homepage #jsn-pos-content-top,
+body.jsn-homepage #jsn-pos-content-top .jsn-modulecontainer {
+  background: none;
+}
+body.jsn-homepage #jsn-pos-content-top div.jsn-modulecontent {
+  padding: 0;
+}
+body.jsn-homepage #jsn-content-top #jsn-pos-content-top div.jsn-modulecontainer div.jsn-modulecontainer_inner {
+  text-align: center;
+  margin: 0 10px 0 0;
+}
+body.jsn-homepage #jsn-content-top #jsn-pos-content-top div.jsn-modulecontainer:first-child + div + div + div div.jsn-modulecontainer_inner {
+  margin-right: 0;
+}
+body.jsn-homepage #jsn-content-top div.jsn-modulecontainer div.jsn-modulecontainer_inner div div p a {
+  height:140px;
+  display:block;
+  text-align:center;
+  position:inherit;
+}
+body.jsn-homepage #jsn-content-top div.jsn-modulecontainer div.jsn-modulecontainer_inner div div p a img {
+  display:inline-block;
+  margin:20px 0;
+}
+body.jsn-homepage #jsn-content-top div.jsn-modulecontainer div.jsn-modulecontainer_inner div div p span {
+  display:block;
+  text-align:left;
+  position:absolute;
+  bottom:25px;
+  padding: 0 15px;
+  float:left;
+  color:#FFF;
+  font-family: 'Source Sans Pro', Arial, Helvetica, sans-serif;
+  font-size:16px;
+  font-weight:300;
+}
+body.jsn-homepage #jsn-content-top div.jsn-modulecontainer div.jsn-modulecontainer_inner #content-user:hover {
+  background:#1e63a2;
+  border:1px solid #2b85d7;
+}
+body.jsn-homepage #jsn-content-top div.jsn-modulecontainer div.jsn-modulecontainer_inner #content-weather:hover {
+  background:#7ea300;
+  border:1px solid #9cca00;
+}
+body.jsn-homepage #jsn-content-top div.jsn-modulecontainer div.jsn-modulecontainer_inner #content-setting:hover {
+  background:#e89e00;
+  border:1px solid #ffc600;
+}
+body.jsn-homepage #jsn-content-top div.jsn-modulecontainer div.jsn-modulecontainer_inner #content-support:hover {
+  background:#0096a9;
+  border:1px solid #00b5cc;
+}
+body.jsn-homepage #jsn-content-top div.jsn-modulecontainer div.jsn-modulecontainer_inner:hover img {
+  margin: 20px 0 20px -30px;
+}
+body.jsn-homepage #jsn-content-top div.jsn-modulecontainer div.jsn-modulecontainer_inner:hover span {
+  padding-left:35px
+}
+#jsn-article-demo {
+  width: 625px;
+  position: relative;
+  overflow: hidden;
+  background:#243b4a;
+  height:320px;
+  overflow:hidden;
+}
+#jsn-article-demo img {
+  float:left;
+}
+#jsn-article-demo .demo-caption {
+  width: 300px;
+  float: right;
+  padding: 10px 0;
+  color: #fefefe;
+  transition: all .3s;
+  -moz-transition: all .3s;
+  -webkit-transition: all .3s;
+}
+#jsn-article-demo a {
+  text-decoration:none;
+}
+#jsn-article-demo:hover .demo-caption {
+  bottom: 0
+}
+#jsn-article-demo .demo-caption h2,
+#jsn-article-demo .demo-caption p {
+  padding: 0 10px;
+  margin: 5px 0 0;
+}
+#jsn-article-demo a {
+  color: #fff;
+}
+#jsn-article-demo a.readmore {
+  background: url(../images/icons/narrow8.png) top left no-repeat;
+  height: 35px;
+  width: 35px;
+  display: inline-block;
+    text-indent: -999em;
+  float: right;
+  margin: 20px 20px 0 0;
+}
+body.jsn-direction-rtl #jsn-article-demo a.readmore {
+  left: 16px;
+  right: auto;
+  background-position: 0 -104px;
+}
+/**SLIDER**/
+body.jsn-homepage #jsn-promo-inner,
+body.jsn-homepage #jsn-promo-inner div.jsn-modulecontainer,
+body.jsn-homepage #jsn-pos-content-top,
+body.jsn-homepage .label_skitter,
+body.jsn-homepage .box_skitter {
+  background:none !important;
+}
+body.jsn-homepage .jsn-themeslider-caption-title,
+body.jsn-homepage .jsn-themeslider-caption-description {
+  display:inline-block;
+}
+body.jsn-homepage .jsn-gallery .container_skitter .label_skitter {
+  float: left;
+  width: 40% !important;
+  max-width: 50%;
+  background: none;
+  top: 10%;
+  left: 0;
+  filter: alpha(opacity=100);
+  opacity: 1;
+}
+body.jsn-homepage .box_skitter .next_button {
+  right:0;
+}
+body.jsn-homepage .box_skitter .prev_button {
+  left:0;
+}
+body.jsn-homepage .box_skitter .info_slide_dots {
+  background: none !important;
+}
+body.jsn-homepage .box_skitter .info_slide_dots .image_number {
+  width: 15px !important;
+  height: 15px !important;
+}
+
+/*wm: weitere styles*/
+div.jsn-modulecontainer ul.menu-mainmenu li.parent img,
+div.jsn-modulecontainer ul.menu-mainmenu li.last img,
+ /*A.N.*/
+div.jsn-modulecontainer ul.menu-mainmenu > li img {
+ /*width:140px;*/
+ width:100%;
+padding:10px 0 20px 0;
+}
+div.jsn-modulecontainer ul.menu-mainmenu > li.lkw-austausch-an img {
+  /*width:140px;*/
+  width: 85%;
+  padding: 39px 0 20px 0;
+}
+/*A.N.*/
+div.mainmenu_select_wrap{
+padding: 0 10px 24px 10px;
+
+}
+/*wm*/
+/*A.N.*/
+div.jsn-modulecontainer ul.menu-mainmenu > li span.menu-image-title {
+  font-size:1.5em;
+  font-weight:bold;
+}
+/*div.jsn-modulecontainer ul.menu-mainmenu li.parent span.menu-image-title,*/
+div.jsn-modulecontainer ul.menu-sidemenu li.parent span.menu-image-title,
+/*div.jsn-modulecontainer ul.menu-mainmenu li.last span.menu-image-title,*/
+div.jsn-modulecontainer ul.menu-sidemenu li.last span.menu-image-title {
+  font-size:1.5em;
+  font-weight:bold;
+}
+
+/*wm*/
+div.jsn-modulecontainer ul.menu-mainmenu li.parent ul li img {
+  width:120px;
+}
+/*wm*/
+div.jsn-modulecontainer ul.menu-sidemenu li.parent ul li img {
+  width: 50px;
+}
+
+div.jsn-modulecontainer ul.menu-mainmenu li.parent .jsn-submenu-level-1{
+/*wm*/
+  margin: 0;
+  z-index: 99999;
+}
+
+/************************************************************************************
+ mobile layout (240 - 1023): common settings for both smartphone and tablet
+*************************************************************************************/
+@media only screen and (max-width: 960px), (max-device-width: 960px) {
+  #jsn-article-demo {
+    width: 100%;
+    position: relative;
+  }
+}
+/************************************************************************************
+ tablet layout (481 - 1023): arrange modules in 2 columns and 1 side bar
+*************************************************************************************/
+@media only screen and (min-width: 481px) and (max-width: 960px), (min-device-width: 481px) and (max-device-width: 960px) {
+  #jsn-article-demo .demo-caption {
+    width: 50%;
+  }
+  .col-left,
+  .col-right {
+    width: 49%;
+  }
+  .tiles .live-tile {
+    margin-right: 10px;
+  }
+}
+/************************************************************************************
+smartphone layout (320 - 480): everything is layout in single column
+*************************************************************************************/
+@media only screen and (max-width: 480px), (max-device-width: 480px) {
+  div.galery {
+    width: auto;
+    height: auto;
+  }
+  .col-left {
+    max-width: 60%;
+    margin-right: 10px;
+  }
+  .col-right {
+    margin-right: 8px;
+  }
+  #jsn-article-demo .demo-caption {
+    width: 290px;
+  }
+  #jsn-article-demo {
+    height: auto;
+  }
+  body.jsn-homepage .label_skitter p.jsn-themeslider-caption-title,
+  body.jsn-homepage .label_skitter p.jsn-themeslider-caption-description {
+    font-size: 12px !important;
+  }
+  body.jsn-homepage .jsn-gallery .container_skitter .label_skitter {
+    max-width: 100%;
+    width: 100% !important;
+  }
+  body.jsn-homepage .label_skitter p {
+    font-size: 14px;
+  }
+}
+
+/*wm ff...*/
+#hikashop_cart{
+background-color: #AFCBAC;
+background: url("/templates/jsn_metro_pro/images/icons/icon-cart-w38.png") no-repeat 0 0 rgba(175, 203, 172, 0.9);
+border: medium none;
+border-radius: 20px;
+color: #3D3D3D;
+margin-top: 5px;
+padding: 5px 10px;
+/*width: 165px;
+text-align: right;*/
+text-indent: 32px;
+width: 100%;
+/*A.N.*/
+/*visibility:hidden;
+display:none;*/
+}
+#hikashop_cart_module{
+color: #3D3D3D;
+margin: 10px 5px 0 0;
+}
+
+#hikashop_cart a.hikashop_small_cart_clean_link {
+display: none;
+}
+
+a.hikashop_small_cart_checkout_link {
+text-decoration: none;
+color: #585555;
+text-indent: 0px;
+}
+
+a.hikashop_small_cart_checkout_link:hover {
+text-decoration: none;
+color: #fff;
+}
+
+#hikashop_cart_form_slide_toggle {
+text-indent: 0;
+}
+
+#hikashop_product_content_area, #gc_contact_form {
+float: left;
+/*A.N.
+background-color: rgba(255, 255, 255, 0.6);*/
+background-color: #f0f7fc;
+border: none;
+border-radius: 20px;
+padding: 20px;
+width: 95%;
+}
+/*A.N.*/
+.hikashop_product_page.reinigung #hikashop_product_content_area {
+padding: 5%;
+width: 90%;
+}
+/* wm */
+#gc_contact_form {
+padding: 20px 20px 0 20px;
+margin: 0 0 40px 0;
+}
+#gc_contact_form form:first-child {
+margin-top: 0px;
+}
+#person_data {
+padding-right: 20px;
+}
+#person_data td label {
+font-weight: bold;
+}
+#person_data td {
+/*width:30%;*/
+width:280px;
+}
+#person_data td input, #person_data td textarea {
+width:100%;
+}
+#person_data td label#label_einbau {
+margin-right: 15%;
+}
+#person_data td input#einbau_ja, #person_data td input#einbau_nein, #person_data td input.rein_versuch, #person_data td input.ein_aus_bau_radio, #person_data td input.abhol_class, #person_data td input#abweich_check {
+width:20px!important;
+min-height: 10px;
+background:none;
+border:none;
+}
+/*wm*/
+#person_data table#abweich_adresse,
+#person_data table.contact_table {
+background:#fff;
+border: 1px solid  green;
+border-radius: 10px;
+margin: 20px 20px 20px 0;
+padding: 20px 50px 20px 20px;
+width: 100%
+}
+#person_data table#pkw_fahrzeugdaten {
+margin-bottom: 0!important;
+padding-bottom: 0!important;
+border-bottom: 0;
+border-radius: 10px 10px 0 0;
+}
+#person_data table#hsn_tsn {
+margin-top: 0!important;
+padding-top: 0!important;
+border-top: 0;
+border-radius: 0 0 10px 10px;
+}
+#person_data div#einbau_data_title {
+margin-top: 50px;
+}
+#person_data table#contact_standard {
+margin-left: 0!important;
+}
+
+#containment-wrapper {
+/*    background-image: url("/images/stories/filtereinbau-deutschland-greencar-neu.png");
+    background-position: left top;
+    background-repeat: no-repeat;
+    background-size: contain;
+    height: 1082px;
+    width: 860px; */
+    position: relative;
+  /*  height: height;*/
+    width: 100%;
+    min-width:740px;
+}
+#containment-wrapper #werkstattkarte { width: 100%; height:auto;}
+
+.gm-style-iw + div {
+    display: none;
+}
+
+#link-zurueck-d-karte a{ font-weight:bold; color:#008000;}
+#link-zurueck-d-karte a:hover { color:#7bdb33;}
+#link-zurueck-d-karte {  padding-top:20px;}
+
+.mapprint {display:none;}
+
+#umweltzone-titel{font-weight:bold;}
+
+.gc-marker a, .gc-a-marker { font-weight:bold; color:#008000;}
+.gc-a-marker:hover { text-decoration: underline;}
+.gm-svpc { display:none;}
+
+.greencar-standort-map { padding-bottom: 20px;}
+
+#seitenpikts_wrap {
+    padding-top: 20px;
+}
+.greencar_shopvote { display:block; padding-bottom:6px;}
+
+.subcategories_listing_an{width:45%; float:left;}
+.subcategories_listing_an .hikashop_category_list {margin: 5px 0 5px 0;}
+.subcategories_listing_an .hikashop_category_list select {width: 100%;}
+.subcategories_listing_an_lkw {margin-left: 10px;}
+
+@media only screen and (max-width: 1280px) {
+  .subcategories_listing_an{width:40%;}
+}
+@media only screen and (max-width: 690px) {
+  .subcategories_listing_an {
+    width: 37%;
+  }
+}
+@media only screen and (max-width: 600px) {
+  .subcategories_listing_an{width:90%;}
+  .subcategories_listing_an_lkw {margin-left: 0;}
+}
+
+#cookieNotice{
+  width: 400px;
+  padding: 20px;
+  background: #fff;
+  position: fixed;
+  bottom: 0;
+  border-radius: 20px;
+  text-align: left;
+}
+#cookieNotice a {color: #45ca25;}
+#cookieNoticeCloser {font-weight: bold; cursor: pointer;}
+.dsg-link {color:#45ca25;}
+
+.quantity_orig_austausch #gc_product_add_default_btn {width:100%;}
+
+.hikashop_product_right_part.reinigung.orig-austausch-filter-links, .hikashop_product_right_part.reinigung.orig-austausch-filter-rechts { float:none; width:90%; padding:2%;}
+
+@media (min-width: 780px){
+ .hikashop_product_right_part.reinigung.orig-austausch-filter-links, .hikashop_product_right_part.reinigung.orig-austausch-filter-rechts { float:left; width:45%; padding:1%;}
+  .hikashop_product_right_part.reinigung.orig-austausch-filter-links {margin-right:1%;}
+}
+.hikashop_product_page.reinigung #hikashop_product_content_area_filtereinsatz{ padding:0; width:100%}
+.hikashop_product_right_part.reinigung.orig-austausch-filter-links #hikashop_main_image{width:100%;}
+.hikashop_product_right_part.reinigung.orig-austausch-filter-links .hikashop_product_stock_wrap{float:none;}
+span.hikashop_product_price_with_options_main2 {color: #008000;font-weight: bold;}
+.hikashop_product_right_part.reinigung.orig-austausch-filter-rechts .picker_header{ font-weight:bold; color:#008000; padding-top:15px;}
+.hikashop_product_right_part.reinigung.orig-austausch-filter-rechts #hikashop_product_custom_item_abholdatum_info{padding-top:0; margin-bottom:15px;}
+.hikashop_product_right_part.reinigung.orig-austausch-filter-rechts #hikashop_product_custom_item_abholdatum_info table{margin:0;}
+
+.hidden {display:none!important;}
+
+.regform-ueber{color: #008000; font-size:1.5em; font-weight: bold;}
+.jsn-formRow-input select {width:auto;}
+div.com-user div.default-login { width:100%; margin:0}
+.gruen {color:#7BDB33;}
+
+ul.jsn-pagination li a, ul.jsn-pagination li span{border-radius: 10px!important;}
